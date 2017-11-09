@@ -24,7 +24,6 @@ import javax.inject.Provider;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.component.util.DefaultParameterizedType;
 import org.xwiki.filemanager.File;
 import org.xwiki.filemanager.FileSystem;
@@ -48,12 +47,13 @@ import static org.mockito.Mockito.*;
 public class DefaultFileSystemTest
 {
     @Rule
-    public MockitoComponentMockingRule<FileSystem> mocker = new MockitoComponentMockingRule<FileSystem>(
-        DefaultFileSystem.class);
+    public MockitoComponentMockingRule<FileSystem> mocker = new MockitoComponentMockingRule<>(DefaultFileSystem.class);
 
     private XWikiContext xcontext;
 
-    private ComponentManager componentManager;
+    private Provider<Folder> folderProvider;
+
+    private Provider<File> fileProvider;
 
     @Before
     public void configure() throws Exception
@@ -66,10 +66,10 @@ public class DefaultFileSystemTest
         when(xcontext.getWiki()).thenReturn(wiki);
         when(xcontext.getUserReference()).thenReturn(new DocumentReference("wiki", "Users", "mflorea"));
 
-        componentManager = mock(ComponentManager.class);
-        Provider<ComponentManager> componentManagerProvider =
-            mocker.getInstance(new DefaultParameterizedType(null, Provider.class, ComponentManager.class));
-        when(componentManagerProvider.get()).thenReturn(componentManager);
+        this.folderProvider =
+            this.mocker.registerMockComponent(new DefaultParameterizedType(null, Provider.class, Folder.class));
+        this.fileProvider =
+            this.mocker.registerMockComponent(new DefaultParameterizedType(null, Provider.class, File.class));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class DefaultFileSystemTest
         when(folderDocument.isNew()).thenReturn(false);
 
         DefaultFolder expectedFolder = spy(new DefaultFolder());
-        when(componentManager.getInstance(Folder.class)).thenReturn(expectedFolder);
+        when(this.folderProvider.get()).thenReturn(expectedFolder);
 
         Folder actualFolder = mocker.getComponentUnderTest().getFolder(folderReference);
 
@@ -98,7 +98,7 @@ public class DefaultFileSystemTest
         when(fileDocument.isNew()).thenReturn(false);
 
         DefaultFile expectedFile = spy(new DefaultFile());
-        when(componentManager.getInstance(File.class)).thenReturn(expectedFile);
+        when(this.fileProvider.get()).thenReturn(expectedFile);
 
         File actualFile = mocker.getComponentUnderTest().getFile(fileReference);
 

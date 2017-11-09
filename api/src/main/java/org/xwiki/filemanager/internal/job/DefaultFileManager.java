@@ -38,8 +38,10 @@ import org.xwiki.filemanager.job.BatchPathRequest;
 import org.xwiki.filemanager.job.FileManager;
 import org.xwiki.filemanager.job.MoveRequest;
 import org.xwiki.filemanager.job.PackRequest;
+import org.xwiki.job.Job;
 import org.xwiki.job.JobException;
-import org.xwiki.job.JobManager;
+import org.xwiki.job.JobExecutor;
+import org.xwiki.job.JobStatusStore;
 import org.xwiki.job.event.status.JobStatus;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.observation.EventListener;
@@ -76,7 +78,13 @@ public class DefaultFileManager implements FileManager
      * Handles the execution of the file system jobs.
      */
     @Inject
-    private JobManager jobManager;
+    private JobExecutor jobExecutor;
+
+    /**
+     * Used to access the status of finished jobs.
+     */
+    @Inject
+    private JobStatusStore jobStatusStore;
 
     /**
      * The queue of active (unfinished) jobs.
@@ -90,7 +98,7 @@ public class DefaultFileManager implements FileManager
     {
         MoveRequest moveRequest = createMoveRequest(paths, destination, MoveJob.JOB_TYPE);
 
-        this.jobManager.addJob(MoveJob.JOB_TYPE, moveRequest);
+        this.jobExecutor.execute(MoveJob.JOB_TYPE, moveRequest);
         return addToQueue(moveRequest);
     }
 
@@ -99,7 +107,7 @@ public class DefaultFileManager implements FileManager
     {
         MoveRequest moveRequest = createMoveRequest(paths, destination, CopyJob.JOB_TYPE);
 
-        this.jobManager.addJob(CopyJob.JOB_TYPE, moveRequest);
+        this.jobExecutor.execute(CopyJob.JOB_TYPE, moveRequest);
         return addToQueue(moveRequest);
     }
 
@@ -108,7 +116,7 @@ public class DefaultFileManager implements FileManager
     {
         BatchPathRequest deleteRequest = initBatchPathRequest(new BatchPathRequest(), paths, DeleteJob.JOB_TYPE);
 
-        this.jobManager.addJob(DeleteJob.JOB_TYPE, deleteRequest);
+        this.jobExecutor.execute(DeleteJob.JOB_TYPE, deleteRequest);
         return addToQueue(deleteRequest);
     }
 
@@ -118,14 +126,20 @@ public class DefaultFileManager implements FileManager
         PackRequest packRequest = initBatchPathRequest(new PackRequest(), paths, PackJob.JOB_TYPE);
         packRequest.setOutputFileReference(outputFileReference);
 
-        this.jobManager.addJob(PackJob.JOB_TYPE, packRequest);
+        this.jobExecutor.execute(PackJob.JOB_TYPE, packRequest);
         return addToQueue(packRequest);
     }
 
     @Override
     public JobStatus getJobStatus(String jobId)
     {
-        return this.jobManager.getJobStatus(getJobStatusId(jobId));
+        List<String> jobStatusId = getJobStatusId(jobId);
+        Job job = this.jobExecutor.getJob(jobStatusId);
+        if (job != null) {
+            return job.getStatus();
+        } else {
+            return this.jobStatusStore.getJobStatus(jobStatusId);
+        }
     }
 
     @Override

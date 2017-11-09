@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.xwiki.bridge.DocumentAccessBridge;
@@ -58,6 +59,7 @@ import org.xwiki.script.service.ScriptService;
  */
 @Component
 @Named("drive")
+@Singleton
 public class DriveScriptService implements ScriptService
 {
     /**
@@ -299,9 +301,8 @@ public class DriveScriptService implements ScriptService
             Collection<Path> paths = ((BatchPathRequest) jobStatus.getRequest()).getPaths();
             if (paths != null && paths.size() > 0) {
                 Path firstPath = paths.iterator().next();
-                DocumentReference reference =
-                    firstPath.getFileReference() != null ? firstPath.getFileReference() : firstPath
-                        .getFolderReference();
+                DocumentReference reference = firstPath.getFileReference() != null ? firstPath.getFileReference()
+                    : firstPath.getFolderReference();
                 return reference != null && reference.getLastSpaceReference().equals(currentDriveReference);
             }
         }

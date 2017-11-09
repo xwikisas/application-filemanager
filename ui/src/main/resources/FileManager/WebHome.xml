@@ -40,27 +40,34 @@
   <syntaxId>xwiki/2.0</syntaxId>
   <hidden>false</hidden>
   <content>{{velocity}}
-#set ($columnsProperties = {
-  'doc.name': {"type":"text","size":10,"link":"view"},
-  '_attachments': {"sortable":false,"filterable":false,"html":true},
-  '_actions': {"sortable":false,"filterable":false,"html":true,"actions":["edit","delete"]}
-})
-#set ($options = {
-  'className': 'FileManager.FileManagerClass',
-  'translationPrefix': 'filemanager.livetable.',
-  'tagCloud': true,
-  'rowCount': 15,
-  'maxPages': 10,
-  'selectedColumn': 'doc.name',
-  'defaultOrder': 'asc'
-})
-## Add the filter by selected tags
-  #if($request.tag)
-    #set ($discard = $options.put('selectedTags',["${request.tag}"]))
-  #end
-##
-#set ($columns = ['doc.name', '_attachments', '_actions'])
-#livetable('filemanager' $columns $columnsProperties $options)
+#set ($driveClassReference = $services.model.createDocumentReference('', 'FileManagerCode', 'DriveClass'))
+#if (!$services.licensing.licensor.hasLicensureForEntity($driveClassReference))
+  {{error}}
+    {{translation key="fileManager.noValidLicense" /}}
+  {{/error}}
+#else
+  #set ($columnsProperties = {
+    'doc.name': {"type":"text","size":10,"link":"view"},
+    '_attachments': {"sortable":false,"filterable":false,"html":true},
+    '_actions': {"sortable":false,"filterable":false,"html":true,"actions":["edit","delete"]}
+  })
+  #set ($options = {
+    'className': 'FileManager.FileManagerClass',
+    'translationPrefix': 'filemanager.livetable.',
+    'tagCloud': true,
+    'rowCount': 15,
+    'maxPages': 10,
+    'selectedColumn': 'doc.name',
+    'defaultOrder': 'asc'
+  })
+  ## Add the filter by selected tags
+    #if($request.tag)
+      #set ($discard = $options.put('selectedTags',["${request.tag}"]))
+    #end
+  ##
+  #set ($columns = ['doc.name', '_attachments', '_actions'])
+  #livetable('filemanager' $columns $columnsProperties $options)
+#end
 {{/velocity}}</content>
   <object>
     <name>FileManager.WebHome</name>

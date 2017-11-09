@@ -176,10 +176,8 @@
 
 #macro (displayDrive)
   {{html clean="false"}}
-  #set ($discard = $xwiki.ssx.use('FileManagerCode.TreeWidget'))
-  ## We can use this instead if WebJars are supported.
-  ## #set ($discard = $xwiki.linkx.use($services.webjars.url('org.xwiki.platform:xwiki-platform-tree-webjar',
-  ##   'tree.min.css', {'evaluate': true}), {'type': 'text/css', 'rel': 'stylesheet'}))
+  #set ($discard = $xwiki.linkx.use($services.webjars.url('org.xwiki.platform:xwiki-platform-tree-webjar',
+    'tree.min.css', {'evaluate': true}), {'type': 'text/css', 'rel': 'stylesheet'}))
   #set ($discard = $xwiki.ssfx.use('js/xwiki/table/livetable.css', true))
   #set ($discard = $xwiki.ssfx.use('uicomponents/pagination/pagination.css', 'true'))
   #set ($discard = $xwiki.ssx.use('FileManagerCode.LiveTableFilter'))
@@ -574,32 +572,15 @@
 */
 require.config({
   paths: {
-    angular: [
-      '//ajax.googleapis.com/ajax/libs/angularjs/$angularVersion/angular.min',
-      "$!services.webjars.url('angularjs', 'angular.min.js')"
-    ],
-    'angular-resource': [
-      '//ajax.googleapis.com/ajax/libs/angularjs/$angularVersion/angular-resource.min',
-      "$!services.webjars.url('angularjs', 'angular-resource.min.js')"
-    ],
-    'angular-ui-bootstrap': [
-      '//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/$angularUIBootstrapVersion/ui-bootstrap-tpls.min',
-      "$!services.webjars.url('angular-ui-bootstrap', 'ui-bootstrap-tpls.min.js')"
-    ],
-    fileUploadHTML5Shim: [
-      '//cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/$angularFileUploadVersion/angular-file-upload-html5-shim.min',
-      "$!services.webjars.url('angular-file-upload', 'angular-file-upload-html5-shim.min.js')"
-    ],
-    fileUpload: [
-      '//cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/$angularFileUploadVersion/angular-file-upload.min',
-      "$!services.webjars.url('angular-file-upload', 'angular-file-upload.min.js')"
-    ],
-    jsTree: [
-      '//cdnjs.cloudflare.com/ajax/libs/jstree/$jsTreeVersion/jstree.min',
-      "$!services.webjars.url('jstree', 'jstree.min.js')"
-    ],
-    JobRunner: "$xwiki.getAttachmentURL('FileManagerCode.JobRunner', 'jobRunner.min')",
-    xtree: "$xwiki.getAttachmentURL('FileManagerCode.TreeWidget', 'tree.min')",
+    angular: "$!services.webjars.url('angularjs', 'angular.min.js')",
+    'angular-resource': "$!services.webjars.url('angularjs', 'angular-resource.min.js')",
+    'angular-ui-bootstrap': "$!services.webjars.url('angular-ui-bootstrap', 'ui-bootstrap-tpls.min.js')",
+    fileUploadHTML5Shim: "$!services.webjars.url('angular-file-upload', 'angular-file-upload-html5-shim.min.js')",
+    fileUpload: "$!services.webjars.url('angular-file-upload', 'angular-file-upload.min.js')",
+    jsTree: "$!services.webjars.url('jstree', 'jstree.min.js')",
+    JobRunner: "$!services.webjars.url('org.xwiki.platform:xwiki-platform-job-webjar', 'jobRunner.min')",
+    'tree-finder': "$!services.webjars.url('org.xwiki.platform:xwiki-platform-tree-webjar', 'finder.min')",
+    tree: "$!services.webjars.url('org.xwiki.platform:xwiki-platform-tree-webjar', 'tree.min')",
     pagination: '$xwiki.getURL("FileManagerCode.Pagination", "jsx", "language=$xcontext.language")',
     liveTable: '$xwiki.getURL("FileManagerCode.LiveTable", "jsx", "language=$xcontext.language")',
     liveTableFilters: '$xwiki.getURL("FileManagerCode.LiveTableFilter", "jsx", "language=$xcontext.language")',
@@ -625,7 +606,7 @@ require.config({
   }
 });
 
-require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-bootstrap', 'fileUpload', 'xtree', 'liveTable'], function($, angular, JobRunner) {</code>
+require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-bootstrap', 'fileUpload', 'tree', 'liveTable'], function($, angular, JobRunner) {</code>
     </property>
     <property>
       <name>Require Start &amp; Configuration</name>

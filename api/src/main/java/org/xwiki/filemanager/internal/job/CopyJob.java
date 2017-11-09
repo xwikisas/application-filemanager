@@ -61,15 +61,16 @@ public class CopyJob extends MoveJob
             return;
         }
 
-        notifyPushLevelProgress(paths.size());
+        this.progressManager.pushLevelProgress(paths.size(), this);
 
         try {
             for (Path path : paths) {
+                this.progressManager.startStep(this);
                 copy(path, destination);
-                notifyStepPropress();
+                this.progressManager.endStep(this);
             }
         } finally {
-            notifyPopLevelProgress();
+            this.progressManager.popLevelProgress(this);
         }
     }
 
@@ -223,20 +224,22 @@ public class CopyJob extends MoveJob
         Path destinationPath = new Path(destination);
         List<DocumentReference> childFolderReferences = source.getChildFolderReferences();
         List<DocumentReference> childFileReferences = source.getChildFileReferences();
-        notifyPushLevelProgress(childFolderReferences.size() + childFileReferences.size());
+        this.progressManager.pushLevelProgress(childFolderReferences.size() + childFileReferences.size(), this);
 
         try {
             for (DocumentReference childFileReference : childFileReferences) {
+                this.progressManager.startStep(this);
                 copyFile(childFileReference, destinationPath);
-                notifyStepPropress();
+                this.progressManager.endStep(this);
             }
 
             for (DocumentReference childFolderReference : childFolderReferences) {
+                this.progressManager.startStep(this);
                 copyFolder(childFolderReference, destinationPath);
-                notifyStepPropress();
+                this.progressManager.endStep(this);
             }
         } finally {
-            notifyPopLevelProgress();
+            this.progressManager.popLevelProgress(this);
         }
     }
 }

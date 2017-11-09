@@ -20,17 +20,16 @@
 package org.xwiki.filemanager.internal.job;
 
 import java.io.ByteArrayInputStream;
-import java.io.StringWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipFile;
 
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.io.IOUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -85,7 +84,7 @@ public class PackJobTest extends AbstractJobTest
         File key = mockFile("key.pub", "Projects");
         when(fileSystem.canView(key.getReference())).thenReturn(false);
 
-        mockFolder("Concerto", "Projects", Collections.<String> emptyList(), Arrays.asList("pom.xml"));
+        mockFolder("Concerto", "Projects", Collections.<String>emptyList(), Arrays.asList("pom.xml"));
         File pom = mockFile("pom.xml", "m&y p?o#m.x=m$l", "Concerto");
         setFileContent(pom, "foo");
 
@@ -99,25 +98,27 @@ public class PackJobTest extends AbstractJobTest
 
         PackRequest request = new PackRequest();
         request.setPaths(Arrays.asList(new Path(projects.getReference()), new Path(null, readme.getReference())));
-        request.setOutputFileReference(new AttachmentReference("out.zip",
-            new DocumentReference("wiki", "Space", "Page")));
+        request
+            .setOutputFileReference(new AttachmentReference("out.zip", new DocumentReference("wiki", "Space", "Page")));
 
         PackJob job = (PackJob) execute(request);
 
         ZipFile zip = new ZipFile(new java.io.File(testFolder.getRoot(), "temp/filemanager/wiki/Space/Page/out.zip"));
         List<String> folders = new ArrayList<String>();
         Map<String, String> files = new HashMap<String, String>();
-        Enumeration<ZipArchiveEntry> entries = zip.getEntries();
-        while (entries.hasMoreElements()) {
-            ZipArchiveEntry entry = entries.nextElement();
+        zip.stream().forEach(entry -> {
             if (entry.isDirectory()) {
                 folders.add(entry.getName());
-            } else if (zip.canReadEntryData(entry)) {
-                StringWriter writer = new StringWriter();
-                IOUtils.copy(zip.getInputStream(entry), writer);
-                files.put(entry.getName(), writer.toString());
+            } else {
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
+                try {
+                    IOUtils.copy(zip.getInputStream(entry), output);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                files.put(entry.getName(), output.toString());
             }
-        }
+        });
         zip.close();
 
         assertEquals(Arrays.asList(projects.getName() + '/', projects.getName() + "/Concerto/"), folders);

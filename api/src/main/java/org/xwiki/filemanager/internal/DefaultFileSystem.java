@@ -25,12 +25,13 @@ import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.filemanager.Document;
 import org.xwiki.filemanager.File;
 import org.xwiki.filemanager.FileSystem;
 import org.xwiki.filemanager.Folder;
 import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.security.authorization.ContextualAuthorizationManager;
+import org.xwiki.security.authorization.Right;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.XWikiException;
@@ -59,10 +60,22 @@ public class DefaultFileSystem implements FileSystem
     private Provider<XWikiContext> xcontextProvider;
 
     /**
-     * Provides the component manager.
+     * Provides folder component instances.
      */
     @Inject
-    private Provider<ComponentManager> componentManagerProvider;
+    private Provider<Folder> folderProvider;
+
+    /**
+     * Provides file component instances.
+     */
+    @Inject
+    private Provider<File> fileProvider;
+
+    /**
+     * Used to check access rights.
+     */
+    @Inject
+    private ContextualAuthorizationManager authorization;
 
     @Override
     public Folder getFolder(DocumentReference folderReference)
@@ -73,7 +86,7 @@ public class DefaultFileSystem implements FileSystem
             if (document.isNew()) {
                 return null;
             } else {
-                Folder folder = componentManagerProvider.get().getInstance(Folder.class);
+                Folder folder = this.folderProvider.get();
                 if (folder instanceof AbstractDocument) {
                     ((AbstractDocument) folder).setDocument(document);
                     return folder;
@@ -98,7 +111,7 @@ public class DefaultFileSystem implements FileSystem
             if (document.isNew()) {
                 return null;
             } else {
-                File file = componentManagerProvider.get().getInstance(File.class);
+                File file = this.fileProvider.get();
                 if (file instanceof AbstractDocument) {
                     ((AbstractDocument) file).setDocument(document);
                     return file;
@@ -124,38 +137,19 @@ public class DefaultFileSystem implements FileSystem
     @Override
     public boolean canView(DocumentReference reference)
     {
-        return hasRight(reference, "view");
+        return this.authorization.hasAccess(Right.VIEW, reference);
     }
 
     @Override
     public boolean canEdit(DocumentReference reference)
     {
-        return hasRight(reference, "edit");
+        return this.authorization.hasAccess(Right.EDIT, reference);
     }
 
     @Override
     public boolean canDelete(DocumentReference reference)
     {
-        return hasRight(reference, "delete");
-    }
-
-    /**
-     * Determine if the current user has the specified right on the specified document.
-     * 
-     * @param reference the reference to the document to check the right for
-     * @param right the right to check
-     * @return {@code true} if the current user has the specified right on the referenced document, {@code false}
-     *         otherwise
-     */
-    private boolean hasRight(DocumentReference reference, String right)
-    {
-        XWikiContext context = xcontextProvider.get();
-        try {
-            return context.getWiki().getRightService()
-                .hasAccessLevel(right, context.getUser(), reference.toString(), context);
-        } catch (XWikiException e) {
-            return false;
-        }
+        return this.authorization.hasAccess(Right.DELETE, reference);
     }
 
     @Override

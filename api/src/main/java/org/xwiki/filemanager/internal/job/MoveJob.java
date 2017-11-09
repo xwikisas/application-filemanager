@@ -21,11 +21,11 @@ package org.xwiki.filemanager.internal.job;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.filemanager.File;
 import org.xwiki.filemanager.FileSystem;
@@ -35,8 +35,8 @@ import org.xwiki.filemanager.internal.reference.DocumentNameSequence;
 import org.xwiki.filemanager.job.MoveRequest;
 import org.xwiki.filemanager.job.OverwriteQuestion;
 import org.xwiki.filemanager.reference.UniqueDocumentReferenceGenerator;
-import org.xwiki.job.internal.AbstractJob;
-import org.xwiki.job.internal.DefaultJobStatus;
+import org.xwiki.job.AbstractJob;
+import org.xwiki.job.DefaultJobStatus;
 import org.xwiki.model.reference.DocumentReference;
 
 /**
@@ -108,15 +108,16 @@ public class MoveJob extends AbstractJob<MoveRequest, DefaultJobStatus<MoveReque
      */
     private void move(Collection<Path> paths, DocumentReference destination)
     {
-        notifyPushLevelProgress(paths.size());
+        this.progressManager.pushLevelProgress(paths.size(), this);
 
         try {
             for (Path path : paths) {
+                this.progressManager.startStep(this);
                 move(path, destination);
-                notifyStepPropress();
+                this.progressManager.endStep(this);
             }
         } finally {
-            notifyPopLevelProgress();
+            this.progressManager.popLevelProgress(this);
         }
     }
 
@@ -149,7 +150,7 @@ public class MoveJob extends AbstractJob<MoveRequest, DefaultJobStatus<MoveReque
         }
 
         Folder folder = fileSystem.getFolder(folderReference);
-        if (folder != null && !ObjectUtils.equals(folder.getParentReference(), newParentReference)) {
+        if (folder != null && !Objects.equals(folder.getParentReference(), newParentReference)) {
             if (fileSystem.canEdit(folderReference)) {
                 Folder newParent = fileSystem.getFolder(newParentReference);
                 if (newParent != null) {
@@ -230,19 +231,22 @@ public class MoveJob extends AbstractJob<MoveRequest, DefaultJobStatus<MoveReque
     {
         List<DocumentReference> childFolderReferences = source.getChildFolderReferences();
         List<DocumentReference> childFileReferences = source.getChildFileReferences();
-        notifyPushLevelProgress(childFolderReferences.size() + childFileReferences.size() + 1);
+        this.progressManager.pushLevelProgress(childFolderReferences.size() + childFileReferences.size() + 1, this);
 
         try {
             for (DocumentReference childReference : childFolderReferences) {
+                this.progressManager.startStep(this);
                 moveFolder(childReference, destination);
-                notifyStepPropress();
+                this.progressManager.endStep(this);
             }
 
             for (DocumentReference childReference : childFileReferences) {
+                this.progressManager.startStep(this);
                 moveFile(childReference, source.getReference(), destination);
-                notifyStepPropress();
+                this.progressManager.endStep(this);
             }
 
+            this.progressManager.startStep(this);
             // Delete the source folder if it's empty.
             if (source.getChildFolderReferences().isEmpty() && source.getChildFileReferences().isEmpty()) {
                 if (fileSystem.canDelete(source.getReference())) {
@@ -251,9 +255,9 @@ public class MoveJob extends AbstractJob<MoveRequest, DefaultJobStatus<MoveReque
                     this.logger.error("You are not allowed to delete the folder [{}].", source.getReference());
                 }
             }
-            notifyStepPropress();
+            this.progressManager.endStep(this);
         } finally {
-            notifyPopLevelProgress();
+            this.progressManager.popLevelProgress(this);
         }
     }
 
@@ -269,7 +273,7 @@ public class MoveJob extends AbstractJob<MoveRequest, DefaultJobStatus<MoveReque
         DocumentReference newParentReference)
     {
         File file = fileSystem.getFile(fileReference);
-        if (file != null && !ObjectUtils.equals(oldParentReference, newParentReference)) {
+        if (file != null && !Objects.equals(oldParentReference, newParentReference)) {
             if (fileSystem.canEdit(fileReference)) {
                 Folder newParent = fileSystem.getFolder(newParentReference);
                 if (newParent != null) {
@@ -364,6 +368,8 @@ public class MoveJob extends AbstractJob<MoveRequest, DefaultJobStatus<MoveReque
                     return question.isOverwrite();
                 } catch (InterruptedException e) {
                     this.logger.warn("Overwrite question has been interrupted.");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } else {
                 return overwriteAll;
@@ -424,7 +430,7 @@ public class MoveJob extends AbstractJob<MoveRequest, DefaultJobStatus<MoveReque
                     // If the new parent is not specified we assume the parent doesn't change.
                     newParentReference = folder.getParentReference();
                 }
-                if (ObjectUtils.equals(newParentReference, folder.getParentReference())
+                if (Objects.equals(newParentReference, folder.getParentReference())
                     && newPath.getFileReference().equals(oldReference)) {
                     // No move (same parent) and no rename (same reference).
                     return;
@@ -465,8 +471,8 @@ public class MoveJob extends AbstractJob<MoveRequest, DefaultJobStatus<MoveReque
                 renameFolder(folder, newPath.getFileReference());
             }
         } else {
-            this.logger.error("A folder with the same name [{}] already exists under [{}]", newPath.getFileReference()
-                .getName(), newParent.getReference());
+            this.logger.error("A folder with the same name [{}] already exists under [{}]",
+                newPath.getFileReference().getName(), newParent.getReference());
         }
     }
 
@@ -592,7 +598,7 @@ public class MoveJob extends AbstractJob<MoveRequest, DefaultJobStatus<MoveReque
      */
     protected DocumentReference getUniqueReference(DocumentReference documentReference)
     {
-        return this.uniqueDocRefGenerator.generate(documentReference.getLastSpaceReference(), new DocumentNameSequence(
-            documentReference.getName()));
+        return this.uniqueDocRefGenerator.generate(documentReference.getLastSpaceReference(),
+            new DocumentNameSequence(documentReference.getName()));
     }
 }

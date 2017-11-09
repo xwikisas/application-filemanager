@@ -19,10 +19,6 @@
  */
 package org.xwiki.filemanager.internal.job;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,11 +34,15 @@ import org.xwiki.filemanager.job.BatchPathRequest;
 import org.xwiki.filemanager.job.FileManager;
 import org.xwiki.filemanager.job.MoveRequest;
 import org.xwiki.filemanager.job.PackRequest;
-import org.xwiki.job.JobManager;
+import org.xwiki.job.JobExecutor;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.observation.EventListener;
 import org.xwiki.test.mockito.MockitoComponentMockingRule;
+
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Unit tests for {@link DefaultFileManager}.
@@ -53,10 +53,10 @@ import org.xwiki.test.mockito.MockitoComponentMockingRule;
 public class DefaultFileManagerTest
 {
     @Rule
-    public MockitoComponentMockingRule<FileManager> mocker = new MockitoComponentMockingRule<FileManager>(
-        DefaultFileManager.class);
+    public MockitoComponentMockingRule<FileManager> mocker =
+        new MockitoComponentMockingRule<>(DefaultFileManager.class);
 
-    private JobManager jobManager;
+    private JobExecutor jobExecutor;
 
     private Queue<String> activeJobQueue;
 
@@ -66,7 +66,7 @@ public class DefaultFileManagerTest
     @Before
     public void configure() throws Exception
     {
-        jobManager = mocker.getInstance(JobManager.class);
+        jobExecutor = mocker.getInstance(JobExecutor.class);
 
         activeJobQueue = (Queue<String>) mock(EventListener.class, withSettings().extraInterfaces(Queue.class));
         mocker.registerComponent(EventListener.class, "ActiveFileSystemJobQueue", activeJobQueue);
@@ -84,7 +84,7 @@ public class DefaultFileManagerTest
         String jobId = mocker.getComponentUnderTest().move(paths, destination);
 
         ArgumentCaptor<MoveRequest> request = ArgumentCaptor.forClass(MoveRequest.class);
-        verify(jobManager).addJob(eq(MoveJob.JOB_TYPE), request.capture());
+        verify(jobExecutor).execute(eq(MoveJob.JOB_TYPE), request.capture());
         assertEquals(Arrays.asList(FileManager.JOB_ID_PREFIX, jobId), request.getValue().getId());
         assertArrayEquals(paths.toArray(), request.getValue().getPaths().toArray());
         assertEquals(destination, request.getValue().getDestination());
@@ -104,7 +104,7 @@ public class DefaultFileManagerTest
         String jobId = mocker.getComponentUnderTest().copy(paths, destination);
 
         ArgumentCaptor<MoveRequest> request = ArgumentCaptor.forClass(MoveRequest.class);
-        verify(jobManager).addJob(eq(CopyJob.JOB_TYPE), request.capture());
+        verify(jobExecutor).execute(eq(CopyJob.JOB_TYPE), request.capture());
         assertEquals(Arrays.asList(FileManager.JOB_ID_PREFIX, jobId), request.getValue().getId());
         assertArrayEquals(paths.toArray(), request.getValue().getPaths().toArray());
         assertEquals(destination, request.getValue().getDestination());
@@ -122,7 +122,7 @@ public class DefaultFileManagerTest
         String jobId = mocker.getComponentUnderTest().delete(paths);
 
         ArgumentCaptor<BatchPathRequest> request = ArgumentCaptor.forClass(BatchPathRequest.class);
-        verify(jobManager).addJob(eq(DeleteJob.JOB_TYPE), request.capture());
+        verify(jobExecutor).execute(eq(DeleteJob.JOB_TYPE), request.capture());
         assertEquals(Arrays.asList(FileManager.JOB_ID_PREFIX, jobId), request.getValue().getId());
         assertArrayEquals(paths.toArray(), request.getValue().getPaths().toArray());
         assertEquals(currentUserReference, request.getValue().getProperty("user.reference"));
@@ -141,7 +141,7 @@ public class DefaultFileManagerTest
         String jobId = mocker.getComponentUnderTest().pack(paths, outputFileReference);
 
         ArgumentCaptor<PackRequest> request = ArgumentCaptor.forClass(PackRequest.class);
-        verify(jobManager).addJob(eq(PackJob.JOB_TYPE), request.capture());
+        verify(jobExecutor).execute(eq(PackJob.JOB_TYPE), request.capture());
         assertEquals(Arrays.asList(FileManager.JOB_ID_PREFIX, jobId), request.getValue().getId());
         assertArrayEquals(paths.toArray(), request.getValue().getPaths().toArray());
         assertEquals(outputFileReference, request.getValue().getOutputFileReference());

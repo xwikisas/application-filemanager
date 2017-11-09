@@ -35,7 +35,7 @@
   <date>1455092543000</date>
   <contentUpdateDate>1455092530000</contentUpdateDate>
   <version>1.1</version>
-  <title>Preferences</title>
+  <title>$services.localization.render('admin.preferences.title')</title>
   <defaultTemplate/>
   <validationScript/>
   <comment/>
