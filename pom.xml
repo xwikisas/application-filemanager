@@ -33,6 +33,9 @@
   <name>File Manager Application (Pro) Parent POM</name>
   <version>2.1-SNAPSHOT</version>
   <description>Application to manage a hierarchy of folders and files. It embeds viewers for many known file types, such as office and PDF.</description>
+   <properties>
+    <licensing.version>1.6</licensing.version>
+  </properties>
   <scm>
     <connection>scm:git:git://github.com/xwikisas/application-filemanager.git</connection>
     <developerConnection>scm:git:git@github.com:xwikisas/application-filemanager.git</developerConnection>
