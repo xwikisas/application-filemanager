@@ -39,7 +39,7 @@
   <minorEdit>false</minorEdit>
   <syntaxId>plain/1.0</syntaxId>
   <hidden>true</hidden>
-  <content>fileManager.noValidLicense=There is no valid license for the File Manager Application (Pro).
+  <content>fileManager.extension.name=File Manager Application (Pro)
 
 fileManager.tree.allFiles=All Files
 fileManager.tree.orphanFiles=Orphan Files
