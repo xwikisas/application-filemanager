@@ -154,7 +154,7 @@
       <!-- PDF documents -->
       <groupId>com.xwiki.pdfviewer</groupId>
       <artifactId>macro-pdfviewer-ui</artifactId>
-      <version>1.7</version>
+      <version>1.8</version>
       <type>xar</type>
       <scope>runtime</scope>
     </dependency>
