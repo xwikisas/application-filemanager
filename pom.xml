@@ -36,6 +36,10 @@
    <properties>
     <licensing.version>1.8</licensing.version>
   </properties>
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/xwikisas/application-filemanager/issues</url>
+  </issueManagement>
   <scm>
     <connection>scm:git:git://github.com/xwikisas/application-filemanager.git</connection>
     <developerConnection>scm:git:git@github.com:xwikisas/application-filemanager.git</developerConnection>
