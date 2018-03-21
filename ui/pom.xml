@@ -34,6 +34,7 @@
   <properties>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>File Manager Application (Pro)</xwiki.extension.name>
+    <xwiki.extension.category>application</xwiki.extension.category>
     <!-- Don't run CLIRR here since there's no Java code. -->
     <xwiki.clirr.skip>true</xwiki.clirr.skip>
     <!-- The list of documents that have an implicit unlimited free license. The users can view these documents without
