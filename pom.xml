@@ -25,7 +25,7 @@
   <parent>
     <groupId>com.xwiki.parent</groupId>
     <artifactId>xwikisas-parent-platform</artifactId>
-    <version>8.5</version>
+    <version>8.4-10</version>
   </parent>
   <groupId>com.xwiki.filemanager</groupId>
   <artifactId>application-filemanager-pom</artifactId>
@@ -34,7 +34,7 @@
   <version>2.3-SNAPSHOT</version>
   <description>Application to manage a hierarchy of folders and files. It embeds viewers for many known file types, such as office and PDF.</description>
    <properties>
-    <licensing.version>1.8</licensing.version>
+    <licensing.version>1.12.1</licensing.version>
   </properties>
   <issueManagement>
     <system>GitHub</system>
