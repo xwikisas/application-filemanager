@@ -42,6 +42,10 @@
     <xwiki.extension.licensing.publicDocuments>
       FileManager.WebHome
     </xwiki.extension.licensing.publicDocuments>
+    <xwiki.extension.licensing.excludedDocuments>
+      FileManager.WebPreferences,
+      FileManagerCode.WebPreferences
+    </xwiki.extension.licensing.excludedDocuments>
   </properties>
   <dependencies>
     <dependency>
