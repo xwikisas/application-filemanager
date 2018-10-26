@@ -2708,7 +2708,6 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
 #files img.icon,
 .jobs img.avatar {
   height: 16px;
-  vertical-align: bottom;
 }
 #files thead.xwiki-livetable-display-header td.xwiki-livetable-display-header-filter input {
   /* Overwrite the default padding. */
@@ -2813,9 +2812,6 @@ table.pane-splitter .pane-content {
   opacity: .65
   pointer-events: none;
   -webkit-box-shadow: none;
-}
-.no-bootstrap .btn img.icon {
-  vertical-align: bottom;
 }
 .no-bootstrap .btn-group &gt; .btn:focus {
   outline: 0 none;
@@ -2967,9 +2963,6 @@ li.download .progress-info {
 li.upload .upload-file {
   margin-bottom: 2px;
 }
-li.upload .upload-file .icon {
-  vertical-align: bottom;
-}
 .file-drop-zone {
   background-color: $theme.pageBackgroundColor;
   border: 3px dashed $theme.borderColor;
@@ -2990,7 +2983,6 @@ li.download .progress-container {
 }
 li.download img.icon {
   padding-left: 3px;
-  vertical-align: bottom;
 }
 
 /**
@@ -3001,6 +2993,7 @@ li.download img.icon {
   border-radius: 4px;
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1) inset;
   height: 15px;
+  margin: 3px 0;
   overflow: hidden;
 }
 .progress-bar {
