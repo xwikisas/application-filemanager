@@ -345,7 +345,7 @@
 
 #macro (fileUploadStatusTemplate)
   &lt;div class="upload-file"&gt;
-    &lt;span file="upload.file"&gt;&lt;/span&gt;
+    &lt;span file="upload.file" icon="{{upload.status == 'Aborted' ? 'exclamation' : ''}}"&gt;&lt;/span&gt;
     &lt;span class="upload-file-path"&gt;
       &lt;span ng-if="upload.status == 'Done'"&gt;({{ upload.file.size | bytes }}) {{ upload.file.date | timeAgo }}&lt;/span&gt;
       $services.localization.render('fileManager.action.upload.destinationPath', ['{{upload.path.join(" / ")}}'])
@@ -1580,13 +1580,10 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
       template: '&lt;img ng-src="{{icon}}" alt="{{type}}" title="{{type}}" class="icon" /&gt; '
         + '&lt;a href="{{url}}" ng-if="url"&gt;{{file.name}}&lt;/a&gt;&lt;span ng-if="!url"&gt;{{file.name || file.id || "-"}}&lt;/span&gt;',
       link: function(scope, element, attrs) {
-        scope.icon = "$xwiki.getSkinFile('icons/silk/page_white.png')";
-        scope.type = 'Attachment';
-        var icon = getIcon(scope.file.name || scope.file.id || '');
-        if (icon) {
-          scope.icon = scope.icon.replace('page_white', icon.name);
-          scope.type = icon.type;
-        }
+        var iconURL = "$xwiki.getSkinFile('icons/silk/page_white.png')";
+        var icon = getIcon(scope.file.name || scope.file.id || '') || {};
+        scope.icon = iconURL.replace('page_white', attrs.icon || icon.name || 'page_white');
+        scope.type = attrs.type || icon.type || 'Attachment';
         scope.$watch('file.id', function(newValue, oldValue) {
           scope.url = scope.file.id &amp;&amp; scope.file.name ? new XWiki.Document(scope.file.id).getURL() : null;
         });
