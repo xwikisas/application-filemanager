@@ -1878,9 +1878,15 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
         upload.loaded = event.loaded;
         upload.total = event.total;
       }).success(function(data, status, headers, config) {
-        upload.status = 'Done';
-        upload.file = data;
-        endUpload(upload, uploads);
+        // The server might not always return an HTTP error code when the upload fails so we should check if the
+        // response matches our expectations.
+        if (typeof data === 'object' &amp;&amp; data !== null &amp;&amp; data.id) {
+          upload.status = 'Done';
+          upload.file = data;
+          endUpload(upload, uploads);
+        } else {
+          upload.abort();
+        }
       }).error(function() {
         upload.abort();
       });
@@ -2928,6 +2934,9 @@ ul.downloads li.download:hover {
 li.upload .progress-container {
   margin-right: 20px;
   position: relative;
+}
+li.upload .progress-container.Aborted {
+  margin-right: 0;
 }
 li.upload progress,
 li.download progress {
