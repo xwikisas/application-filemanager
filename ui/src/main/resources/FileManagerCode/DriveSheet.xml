@@ -575,8 +575,7 @@ require.config({
     angular: "$!services.webjars.url('angularjs', 'angular.min.js')",
     'angular-resource': "$!services.webjars.url('angularjs', 'angular-resource.min.js')",
     'angular-ui-bootstrap': "$!services.webjars.url('angular-ui-bootstrap', 'ui-bootstrap-tpls.min.js')",
-    fileUploadHTML5Shim: "$!services.webjars.url('angular-file-upload', 'angular-file-upload-html5-shim.min.js')",
-    fileUpload: "$!services.webjars.url('angular-file-upload', 'angular-file-upload.min.js')",
+    fileUpload: "$!services.webjars.url('angular-file-upload', 'angular-file-upload-all.min.js')",
     jsTree: "$!services.webjars.url('jstree', 'jstree.min.js')",
     JobRunner: "$!services.webjars.url('org.xwiki.platform:xwiki-platform-job-webjar', 'jobRunner.min')",
     'tree-finder': "$!services.webjars.url('org.xwiki.platform:xwiki-platform-tree-webjar', 'finder.min')",
@@ -587,7 +586,6 @@ require.config({
   },
   shim: {
     angular: {
-      deps: ['fileUploadHTML5Shim'],
       exports: 'angular'
     },
     'angular-resource': {
@@ -1867,11 +1865,19 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
       upload.status = 'InProgress';
       upload.start = new Date().getTime();
       var parentFolder = upload.path[upload.path.length - 1];
+      var parameters = {
+        action: 'createFile',
+        form_token: formToken
+      };
+      if (!window.FormData || new FormData().__isFileAPIShim) {
+        parameters.legacyBrowser = true;
+        parameters.outputSyntax = 'plain';
+      }
       upload.request = ${escapetool.d}upload.upload({
         // We need to put the parameters in the URL because if the size of the uploaded file is greater than the
         // configured maximum upload size then an exception is thrown before the parameters are read from the body of
         // the multi-part request, preventing us from detecting and handling the error on the server.
-        url: new XWiki.Document(parentFolder).getURL('get', 'action=createFile&amp;form_token=' + formToken),
+        url: new XWiki.Document(parentFolder).getURL('get', $.param(parameters)),
         file: upload.file,
         fileFormDataName: 'filepath'
       }).progress(function(event) {

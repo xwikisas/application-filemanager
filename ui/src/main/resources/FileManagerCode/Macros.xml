@@ -429,7 +429,20 @@
       #end
       #set ($discard = $fileDoc.addAttachment($fileName, $bytes))
       #set ($discard = $fileDoc.save('File created'))
-      #set ($discard = $response.sendRedirect($fileDoc.getURL('get', 'outputSyntax=plain')))
+      #if ($request.legacyBrowser == 'true')
+        ## See https://github.com/danialfarid/ng-file-upload/issues/163 (IE9 Post just hangs in there, does not return
+        ## anything) Because of the Flash limitation/bug there need to be a response body coming back from the server in
+        ## order for the success and error callbacks to work properly.
+        #getFile($fileDoc $data)
+        #set ($discard = $response.setContentType('text/html'))
+        $!jsontool.serialize({
+          'status': 200,
+          'statusText': 'OK',
+          'response': $data
+        })
+      #else
+        #set ($discard = $response.sendRedirect($fileDoc.getURL('get', 'outputSyntax=plain')))
+      #end
     #else
       ## Forbidden
       #set ($discard = $response.sendError(403, 'You are not allowed to perform this action.'))
