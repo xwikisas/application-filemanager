@@ -564,13 +564,7 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>/*
-#set ($angularVersion = '1.3.8')
-#set ($angularFileUploadVersion = '1.6.1')
-#set ($angularUIBootstrapVersion = '0.12.0')
-#set ($jsTreeVersion = '3.0.8')
-*/
-require.config({
+      <code>require.config({
   paths: {
     angular: "$!services.webjars.url('angularjs', 'angular.min.js')",
     'angular-resource': "$!services.webjars.url('angularjs', 'angular-resource.min.js')",
