@@ -39,13 +39,9 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>{{include reference="Licenses.Code.VelocityMacros"/}}
-
-{{velocity}}
+  <content>{{velocity}}
 #set ($driveClassReference = $services.model.createDocumentReference('', 'FileManagerCode', 'DriveClass'))
-#if (!$services.licensing.licensor.hasLicensureForEntity($driveClassReference))
-  {{error}}#getMissingLicenseMessage('fileManager.extension.name'){{/error}}
-#else
+#if ($services.licensing.licensor.hasLicensureForEntity($driveClassReference))
   #set ($columnsProperties = {
     'doc.name': {"type":"text","size":10,"link":"view"},
     '_attachments': {"sortable":false,"filterable":false,"html":true},
