@@ -574,9 +574,9 @@
     JobRunner: "$!services.webjars.url('org.xwiki.platform:xwiki-platform-job-webjar', 'jobRunner.min')",
     'tree-finder': "$!services.webjars.url('org.xwiki.platform:xwiki-platform-tree-webjar', 'finder.min')",
     tree: "$!services.webjars.url('org.xwiki.platform:xwiki-platform-tree-webjar', 'tree.min')",
-    pagination: '$xwiki.getURL("FileManagerCode.Pagination", "jsx", "language=$xcontext.language")',
-    liveTable: '$xwiki.getURL("FileManagerCode.LiveTable", "jsx", "language=$xcontext.language")',
-    liveTableFilters: '$xwiki.getURL("FileManagerCode.LiveTableFilter", "jsx", "language=$xcontext.language")',
+    pagination: '$xwiki.getURL("FileManagerCode.Pagination", "jsx", "language=$xcontext.locale")',
+    liveTable: '$xwiki.getURL("FileManagerCode.LiveTable", "jsx", "language=$xcontext.locale")',
+    liveTableFilters: '$xwiki.getURL("FileManagerCode.LiveTableFilter", "jsx", "language=$xcontext.locale")',
   },
   shim: {
     angular: {

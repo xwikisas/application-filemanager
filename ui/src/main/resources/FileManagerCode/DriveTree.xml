@@ -176,7 +176,7 @@
 
 #macro (addFolderChildNodes $parentFolderDoc $children)
   #getChildFolders($parentFolderDoc $childFolders)
-  #addFolderNodes($parentFolderDoc.name $childFolders $children)
+  #addFolderNodes($parentFolderDoc.documentReference.name $childFolders $children)
 #end
 
 #macro (addFolderNodes $parentId $folders $children)

@@ -175,7 +175,7 @@
  &lt;div&gt; 
    &lt;span class="publisher"&gt;$msg.get('core.viewers.attachments.author', [$!{xwiki.getUserName($attach.author)}])&lt;/span&gt;
     &lt;span class="date"&gt;$msg.get('core.viewers.attachments.date', [$!{xwiki.formatDate($attach.date)}])&lt;/span&gt;
-    &lt;span class="size"&gt;(#dynamicsize($attach.filesize))&lt;/span&gt;
+    &lt;span class="size"&gt;(#dynamicsize($attach.longsize))&lt;/span&gt;
  &lt;/div&gt;
 #end
 &lt;/div&gt;
