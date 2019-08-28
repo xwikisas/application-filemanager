@@ -356,7 +356,7 @@
     'date': $fileDoc.date,
     'creator': $fileDoc.creator,
     'author': $fileDoc.author,
-    'size': $attach.longsize,
+    'size': $attach.filesize,
     'mediaType': $attach.mimeType,
     'version': $fileDoc.version,
     'description': $fileDoc.display('description'),
