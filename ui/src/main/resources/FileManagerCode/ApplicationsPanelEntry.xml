@@ -179,7 +179,7 @@ target=FileManager.WebHome
 icon=icon:folder</parameters>
     </property>
     <property>
-      <scope>wiki</scope>
+      <scope>global</scope>
     </property>
   </object>
 </xwikidoc>
