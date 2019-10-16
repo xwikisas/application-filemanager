@@ -20,6 +20,7 @@
 package org.xwiki.filemanager.internal.reference;
 
 import java.util.Iterator;
+import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -91,7 +92,7 @@ public class DefaultUniqueDocumentReferenceGenerator
     {
         // Initialize the cache.
         CacheConfiguration cacheConfiguration = new CacheConfiguration();
-        cacheConfiguration.setConfigurationId("unique.documentReference");
+        cacheConfiguration.setConfigurationId(UUID.randomUUID().toString());
         LRUEvictionConfiguration lru = new LRUEvictionConfiguration();
         lru.setMaxEntries(1000);
         // Discard after 1 hour.
