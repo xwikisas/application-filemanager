@@ -163,6 +163,9 @@
   #set ($parameters = {'space': $doc.space})
   #getFilesStatement('' 'doc.space = :space' $parameters $statement)
   #getFiles($statement $parameters $data)
+  #foreach ($item in $data['list'])
+    #set ($discard = $item.put('showFolders', true))
+  #end
 #end
 
 #macro (getOrphanFiles)
@@ -1564,13 +1567,23 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
       return null;
     };
 
+    // Since folders are created under FileManager.WebHome page, this shouldn't be seen in folders hierarchy.
+    // Also, don't show anything for orphaned folders.
+    var getFolders = function(paths) {
+      var folders = paths.filter(path =&gt; path != 'WebHome');
+      return folders.reverse();
+    }
+
     return {
       restrict: 'A',
       scope: {
         'file': '='
       },
       template: '&lt;img ng-src="{{icon}}" alt="{{type}}" title="{{type}}" class="icon" /&gt; '
-        + '&lt;a href="{{url}}" ng-if="url"&gt;{{file.name}}&lt;/a&gt;&lt;span ng-if="!url"&gt;{{file.name || file.id || "-"}}&lt;/span&gt;',
+        + '&lt;a href="{{url}}" ng-if="url"&gt;{{file.name}}&lt;/a&gt;&lt;span ng-if="!url"&gt;{{file.name || file.id || "-"}}&lt;/span&gt;'
+        + `&lt;div&gt;&lt;span ng-if="file.showFolders" class="folders" ng-repeat="folder in file.folders"&gt;
+            {{folder}}&lt;span ng-if="!$last"&gt; / &lt;/span&gt;
+          &lt;/span&gt;&lt;/div&gt;`,
       link: function(scope, element, attrs) {
         var iconURL = "$xwiki.getSkinFile('icons/silk/page_white.png')";
         var icon = getIcon(scope.file.name || scope.file.id || '') || {};
@@ -1579,6 +1592,9 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
         scope.$watch('file.id', function(newValue, oldValue) {
           scope.url = scope.file.id &amp;&amp; scope.file.name ? new XWiki.Document(scope.file.id).getURL() : null;
         });
+        if (scope.file.paths) {
+          scope.file.folders = getFolders(scope.file.paths[0]);
+        }
       }
     }
   });
@@ -2712,6 +2728,13 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
 #files thead.xwiki-livetable-display-header td.xwiki-livetable-display-header-filter input {
   /* Overwrite the default padding. */
   padding: 2px;
+}
+
+#files .folders {
+  color: #777777;
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: none;
 }
 
 /**
