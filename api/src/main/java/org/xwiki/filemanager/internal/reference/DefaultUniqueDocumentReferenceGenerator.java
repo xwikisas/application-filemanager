@@ -100,13 +100,12 @@ public class DefaultUniqueDocumentReferenceGenerator
         // Initialize the cache.
         CacheConfiguration cacheConfiguration = new CacheConfiguration();
         String uniqueDocumentReference = "unique.documentReference";
-        String namespace = null;
         // Change name of configuration depending on where is the application installed, on farm or subwiki.
         if (componentManager instanceof NamespacedComponentManager) {
-            namespace = ((NamespacedComponentManager) componentManager).getNamespace();
-        }
-        if (namespace != null) {
-            uniqueDocumentReference += "." + namespace;
+            String namespace = ((NamespacedComponentManager) componentManager).getNamespace();
+            if (namespace != null) {
+                uniqueDocumentReference += "." + namespace;
+            }
         }
         cacheConfiguration.setConfigurationId(uniqueDocumentReference);
         LRUEvictionConfiguration lru = new LRUEvictionConfiguration();
