@@ -20,7 +20,6 @@
 package org.xwiki.filemanager.internal.reference;
 
 import java.util.Iterator;
-import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,6 +32,8 @@ import org.xwiki.cache.config.CacheConfiguration;
 import org.xwiki.cache.eviction.LRUEvictionConfiguration;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentLifecycleException;
+import org.xwiki.component.manager.ComponentManager;
+import org.xwiki.component.manager.NamespacedComponentManager;
 import org.xwiki.component.phase.Disposable;
 import org.xwiki.component.phase.Initializable;
 import org.xwiki.component.phase.InitializationException;
@@ -69,6 +70,12 @@ public class DefaultUniqueDocumentReferenceGenerator
      */
     private Cache<Boolean> documentReferenceCache;
 
+    /**
+     * Used to get the namespace.
+     */
+    @Inject
+    private ComponentManager componentManager;
+
     @Override
     public synchronized DocumentReference generate(SpaceReference spaceReference, Iterator<String> documentNameSequence)
     {
@@ -92,7 +99,17 @@ public class DefaultUniqueDocumentReferenceGenerator
     {
         // Initialize the cache.
         CacheConfiguration cacheConfiguration = new CacheConfiguration();
-        cacheConfiguration.setConfigurationId(UUID.randomUUID().toString());
+        String uniqueDocumentReference = "unique.documentReference";
+        String namespace = null;
+        // Change name of configuration depending on where is the application installed, on farm or subwiki.
+        if (componentManager instanceof NamespacedComponentManager) {
+            namespace = ((NamespacedComponentManager) componentManager).getNamespace();
+        }
+        if (namespace != null) {
+            namespace = namespace.split("wiki:", 2)[1];
+            uniqueDocumentReference += "." + namespace;
+        }
+        cacheConfiguration.setConfigurationId(uniqueDocumentReference);
         LRUEvictionConfiguration lru = new LRUEvictionConfiguration();
         lru.setMaxEntries(1000);
         // Discard after 1 hour.
