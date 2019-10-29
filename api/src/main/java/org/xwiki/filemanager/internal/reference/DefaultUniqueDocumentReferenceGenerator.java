@@ -106,7 +106,6 @@ public class DefaultUniqueDocumentReferenceGenerator
             namespace = ((NamespacedComponentManager) componentManager).getNamespace();
         }
         if (namespace != null) {
-            namespace = namespace.split("wiki:", 2)[1];
             uniqueDocumentReference += "." + namespace;
         }
         cacheConfiguration.setConfigurationId(uniqueDocumentReference);
