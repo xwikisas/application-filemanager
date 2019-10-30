@@ -163,6 +163,8 @@
   #set ($parameters = {'space': $doc.space})
   #getFilesStatement('' 'doc.space = :space' $parameters $statement)
   #getFiles($statement $parameters $data)
+  ## We want to show the path to a file in the livetable only for All Files view, in case the same file name exists
+  ## in different folders.
   #foreach ($item in $data['list'])
     #set ($discard = $item.put('showFolders', true))
   #end
@@ -1568,11 +1570,16 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
     };
 
     // Since folders are created under FileManager.WebHome page, this shouldn't be seen in folders hierarchy.
-    // Also, don't show anything for orphaned folders.
+    // Also, don't show anything for orphan files.
     var getFolders = function(paths) {
-      var folders = paths.filter(path =&gt; path != 'WebHome');
+      var folders = [];
+      for (var i = 0; i &lt; paths.length; i++) {
+        if (paths[i] != 'WebHome') {
+          folders.push(paths[i]);
+        }
+      }
       return folders.reverse();
-    }
+    };
 
     return {
       restrict: 'A',
@@ -1580,11 +1587,11 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
         'file': '='
       },
       template: '&lt;img ng-src="{{icon}}" alt="{{type}}" title="{{type}}" class="icon" /&gt; '
-        + `&lt;a href="{{url}}" ng-if="url"&gt;{{file.name}}&lt;/a&gt;
-          &lt;span ng-if="!url"&gt;{{file.name || file.id || "-"}}&lt;/span&gt;`
-        + `&lt;div&gt;&lt;span ng-if="file.showFolders" class="folders" ng-repeat="folder in file.folders"&gt;
-            {{folder}}&lt;span ng-if="!$last"&gt; / &lt;/span&gt;
-          &lt;/span&gt;&lt;/div&gt;`,
+        + '&lt;a href="{{url}}" ng-if="url"&gt;{{file.name}}&lt;/a&gt;'
+        + '&lt;span ng-if="!url"&gt;{{file.name || file.id || "-"}}&lt;/span&gt;'
+        + '&lt;div ng-if="file.showFolders"&gt;'
+        + '&lt;span class="folder" ng-repeat="folder in file.folders"&gt;{{folder}}&lt;/span&gt;'
+        + '&lt;/div&gt;',
       link: function(scope, element, attrs) {
         var iconURL = "$xwiki.getSkinFile('icons/silk/page_white.png')";
         var icon = getIcon(scope.file.name || scope.file.id || '') || {};
@@ -2731,11 +2738,15 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
   padding: 2px;
 }
 
-#files .folders {
+#files .folder {
   color: #777777;
   font-size: 12px;
   font-weight: 400;
   text-transform: none;
+}
+
+#files .folder + .folder:before {
+  content: ' / ';
 }
 
 /**
