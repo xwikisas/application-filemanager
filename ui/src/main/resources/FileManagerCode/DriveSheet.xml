@@ -1572,12 +1572,9 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
     // Since folders are created under FileManager.WebHome page, this shouldn't be seen in folders hierarchy.
     // Also, don't show anything for orphan files.
     var getFolders = function(paths) {
-      var folders = [];
-      for (var i = 0; i &lt; paths.length; i++) {
-        if (paths[i] != 'WebHome') {
-          folders.push(paths[i]);
-        }
-      }
+      var folders = paths.filter(function(path) {
+        return path != 'WebHome';
+      });
       return folders.reverse();
     };
 
@@ -2740,8 +2737,8 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
 
 #files .folder {
   color: #777777;
-  font-size: 12px;
-  font-weight: 400;
+  font-size: small;
+  font-weight: normal;
   text-transform: none;
 }
 

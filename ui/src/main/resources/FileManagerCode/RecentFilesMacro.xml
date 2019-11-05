@@ -296,14 +296,13 @@
 ## Arrange paths: keep only folders names and reverse them.
 #macro(getFileFolders $fileDoc $folders)
   #getFilePaths($fileDoc $paths)
-  #set ($paths = $paths[0])
   #set ($folders = [])
-  #set ($size = $mathtool.sub($paths.size(), 1))
-  #foreach($i in [$size..0])
-    #if ($paths[$i] != 'WebHome')
-      #set ($discard = $folders.add($paths[$i]))
+  #foreach ($path in $paths[0])
+    #if ($path != 'WebHome')
+      #set ($discard = $folders.add($path))
     #end
   #end
+  #set ($discard = $collectionstool.reverse($folders))
   #set ($folders = $stringtool.join($folders, ' / '))
 #end
 #set ($discard = $xwiki.ssx.use('FileManagerCode.RecentFilesMacro'))
@@ -324,13 +323,14 @@
     #getFileFolders($fileDoc $paths)
     #set ($fileUrl = $fileDoc.getURL('view'))
     #set ($creatorUrl = $xwiki.getDocument($file.creator).getURL('view'))
-    * {{html}}
+    * {{html clean='false'}}
       #mimetypeimg($file.mediaType.toLowerCase() $file.name.toLowerCase())
-      &lt;a href="$fileUrl" title="$folders"&gt;$file.name&lt;/a&gt;
-      &lt;span&gt;$services.localization.render('fileManager.recentFiles.creator')&lt;/span&gt;
+      &lt;a href="$fileUrl" title="$escapetool.xml($folders)"&gt;$escapetool.xml($file.name)&lt;/a&gt;
+      &lt;span&gt;$escapetool.xml($services.localization.render('fileManager.recentFiles.creator'))&lt;/span&gt;
       &lt;a href="$creatorUrl"&gt;$xwiki.getUserName($file.creator, false)&lt;/a&gt;
       &lt;span&gt;
-        $services.localization.render('fileManager.recentFiles.creationDate', [$xwiki.formatDate($file.creationDate)])
+        $escapetool.xml($services.localization.render(
+          'fileManager.recentFiles.creationDate', [$xwiki.formatDate($file.creationDate)]))
       &lt;/span&gt;
     {{/html}}
     #set ($i = $i + 1)
