@@ -115,7 +115,7 @@ fileManager.timeAgo.year=A year ago
 fileManager.timeAgo.years={0} years ago
 
 # Recent Files Macro
-fileManager.recentFiles.creator=by {0}
+fileManager.recentFiles.creator=by
 fileManager.recentFiles.creationDate=on {0}
 fileManager.recentFiles.noFiles=There are no files yet
 fileManager.recentFiles.addFiles=Add files
