@@ -71,6 +71,7 @@
         fileManager.action.deleteFilesHint=Die gewählte Datei löschen
         fileManager.action.deleteFilesConfirmation=Sind Sie sicher, dass Sie die gewählte Datei(en) löschen möchten?
         fileManager.action.deleteFoldersConfirmation=Sind Sie sicher, dass Sie die gewählte Ordner(n) löschen möchten?
+        fileManager.action.deleteError=Es ist ein Fehler bei der Löschung aufgetreten (theError).
         fileManager.action.back=Zurück
         fileManager.action.backToFileList=Zurück zur Dateiliste
         fileManager.action.backToFileManager=Zurück zum File Manager
