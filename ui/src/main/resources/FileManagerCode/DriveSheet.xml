@@ -1832,7 +1832,15 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
           if (window.confirm("$services.localization.render('fileManager.action.deleteFilesConfirmation')")) {
             // Clear the selection.
             scope.selection = {};
-            scope.drive['delete'](getPaths(files)).done(refreshLiveTable);
+            scope.drive['delete'](getPaths(files)).done(function(result) {
+              if(result.error) {
+                new XWiki.widgets.Notification(
+                  '$escapetool.json($services.localization.render("fileManager.action.deleteError"))'
+                    .replace('theError', result.error),
+                  'error');
+              }
+              refreshLiveTable(result);
+            });
           }
         };
       }
