@@ -506,7 +506,7 @@
         'user': "$!jobStatus.request.getProperty('user.reference')",
         'paths': $pathsAsJSON
       },
-      'error': "#if($jobStatus.error) $jobStatus.error #end",
+      'error': $jsontool.serialize($jobStatus.error),
       'log': {},
       'progress': {
         'offset': $jobStatus.progress.offset,
