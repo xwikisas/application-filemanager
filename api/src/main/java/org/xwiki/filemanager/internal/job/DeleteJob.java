@@ -73,9 +73,6 @@ public class DeleteJob extends AbstractJob<BatchPathRequest, DefaultJobStatus<Ba
         this.progressManager.pushLevelProgress(paths.size(), this);
 
         try {
-            if (new java.io.File("/tmp/breaknow").isFile()) {
-                throw new RuntimeException("Intentionally breaking.");
-            }
             for (Path path : paths) {
                 this.progressManager.startStep(this);
                 delete(path);
