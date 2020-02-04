@@ -37,7 +37,7 @@ import org.xwiki.model.reference.DocumentReference;
 
 /**
  * Deletes files and folders.
- * 
+ *
  * @version $Id$
  * @since 2.0M1
  */
@@ -73,6 +73,9 @@ public class DeleteJob extends AbstractJob<BatchPathRequest, DefaultJobStatus<Ba
         this.progressManager.pushLevelProgress(paths.size(), this);
 
         try {
+            if (new java.io.File("/tmp/breaknow").isFile()) {
+                throw new RuntimeException("Intentionally breaking.");
+            }
             for (Path path : paths) {
                 this.progressManager.startStep(this);
                 delete(path);
@@ -85,7 +88,7 @@ public class DeleteJob extends AbstractJob<BatchPathRequest, DefaultJobStatus<Ba
 
     /**
      * Deletes the specified file or folder.
-     * 
+     *
      * @param path the path to delete
      */
     private void delete(Path path)
@@ -100,7 +103,7 @@ public class DeleteJob extends AbstractJob<BatchPathRequest, DefaultJobStatus<Ba
     /**
      * Deletes a file from one of its parent folders. If the given parent folder reference is {@code null} then the file
      * is deleted from all of its parent folders.
-     * 
+     *
      * @param fileReference the file to delete
      * @param parentReference the folder the file should be deleted from, {@code null} if the file should be delete from
      *            all parents
@@ -129,7 +132,7 @@ public class DeleteJob extends AbstractJob<BatchPathRequest, DefaultJobStatus<Ba
 
     /**
      * Deletes the folder with the given reference.
-     * 
+     *
      * @param folderReference the reference to the folder to delete
      */
     private void deleteFolder(DocumentReference folderReference)

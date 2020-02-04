@@ -418,13 +418,15 @@
       ## Add the file object.
       #set ($discard = $fileDoc.newObject('FileManagerCode.FileClass').set('description', "$!request.description"))
       ## Add the attachment.
-      ## find the attachment among the fields of this form-submission
-      #set($fileuploadFiles = $xwiki.fileupload.getFileItems())
-      #set($inputstream = "")
-      #foreach($fileitem in $fileuploadFiles)
-        #if('filepath'==$fileitem.getFieldName()) #set($inputstream = $fileitem.getInputStream()) #end
+      ## Find the attachment among the fields of this form-submission.
+      #set($fileUploadFiles = $xwiki.fileupload.getFileItems())
+      #set($inputStream = "")
+      #foreach($fileItem in $fileUploadFiles)
+        #if('filepath'==$fileItem.getFieldName())
+          #set($inputStream = $fileItem.getInputStream())
+        #end
       #end
-      #set ($discard = $fileDoc.addAttachment($fileName, $inputstream))
+      #set ($discard = $fileDoc.addAttachment($fileName, $inputStream))
       #set ($discard = $fileDoc.save('File created'))
       #if ($request.legacyBrowser == 'true')
         ## See https://github.com/danialfarid/ng-file-upload/issues/163 (IE9 Post just hangs in there, does not return
