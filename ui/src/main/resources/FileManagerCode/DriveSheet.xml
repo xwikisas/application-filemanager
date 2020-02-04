@@ -1836,7 +1836,7 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
               if(result.error) {
                 new XWiki.widgets.Notification(
                   '$escapetool.json($services.localization.render("fileManager.action.deleteError"))'
-                    .replace('theError', result.error),
+                    .replace('__error__', result.error),
                   'error');
               }
               refreshLiveTable(result);
