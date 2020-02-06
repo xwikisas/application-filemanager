@@ -419,11 +419,11 @@
       #set ($discard = $fileDoc.newObject('FileManagerCode.FileClass').set('description', "$!request.description"))
       ## Add the attachment.
       ## Find the attachment among the fields of this form-submission.
-      #set($fileUploadFiles = $xwiki.fileupload.getFileItems())
-      #set($inputStream = "")
-      #foreach($fileItem in $fileUploadFiles)
-        #if('filepath'==$fileItem.getFieldName())
-          #set($inputStream = $fileItem.getInputStream())
+      #set ($fileUploadFiles = $xwiki.fileupload.getFileItems())
+      #set ($inputStream = "")
+      #foreach ($fileItem in $fileUploadFiles)
+        #if ('filepath' == $fileItem.getFieldName())
+          #set ($inputStream = $fileItem.getInputStream())
         #end
       #end
       #set ($discard = $fileDoc.addAttachment($fileName, $inputStream))
