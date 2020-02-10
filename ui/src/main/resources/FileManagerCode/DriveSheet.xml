@@ -1834,7 +1834,7 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
             scope.selection = {};
             scope.drive['delete'](getPaths(files)).done(function(result) {
               if (result.error) {
-                  var message = $jsontool.serialize( ##
+                  var message = $jsontool.serialize(
                     $services.localization.render('fileManager.action.deleteError', ['__error__']));
                   new XWiki.widgets.Notification(message.replace('__error__', result.error), 'error');
               }
