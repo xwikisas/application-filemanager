@@ -418,14 +418,15 @@
       ## Add the file object.
       #set ($discard = $fileDoc.newObject('FileManagerCode.FileClass').set('description', "$!request.description"))
       ## Add the attachment.
-      ## FIXME: Get the file content as an input stream instead of a byte array, but for this we need to expose
-      ## getFileItemInputStream in the public API of the fileupload plugin (or use a script service).
-      #set ($bytes = $xwiki.fileupload.getFileItemData('filepath'))
-      #if (!$bytes)
-        ## Empty file (unfortunately getFileItemData returns null instead of an empty byte array).
-        #set ($bytes = [])
+      ## Find the attachment among the fields of this form-submission.
+      #set ($fileUploadFiles = $xwiki.fileupload.getFileItems())
+      #set ($inputStream = "")
+      #foreach ($fileItem in $fileUploadFiles)
+        #if ('filepath' == $fileItem.getFieldName())
+          #set ($inputStream = $fileItem.getInputStream())
+        #end
       #end
-      #set ($discard = $fileDoc.addAttachment($fileName, $bytes))
+      #set ($discard = $fileDoc.addAttachment($fileName, $inputStream))
       #set ($discard = $fileDoc.save('File created'))
       #if ($request.legacyBrowser == 'true')
         ## See https://github.com/danialfarid/ng-file-upload/issues/163 (IE9 Post just hangs in there, does not return
@@ -505,6 +506,7 @@
         'user': "$!jobStatus.request.getProperty('user.reference')",
         'paths': $pathsAsJSON
       },
+      'error': $jobStatus.error,
       'log': {},
       'progress': {
         'offset': $jobStatus.progress.offset,
