@@ -19,9 +19,10 @@
  */
 package org.xwiki.filemanager.job;
 
-import java.io.Serializable;
-
+import org.xwiki.job.AbstractJobStatus;
 import org.xwiki.job.event.status.JobStatus;
+import org.xwiki.logging.LoggerManager;
+import org.xwiki.observation.ObservationManager;
 import org.xwiki.stability.Unstable;
 
 /**
@@ -31,13 +32,8 @@ import org.xwiki.stability.Unstable;
  * @since 2.0M2
  */
 @Unstable
-public class PackJobStatus extends JobStatusAdapter implements Serializable
+public class PackJobStatus extends AbstractJobStatus<PackRequest>
 {
-    /**
-     * Serialization identifier.
-     */
-    private static final long serialVersionUID = 1L;
-
     /**
      * The number of bytes written so far in the output ZIP file.
      */
@@ -49,13 +45,21 @@ public class PackJobStatus extends JobStatusAdapter implements Serializable
     private long outputFileSize;
 
     /**
-     * Creates a new job status by extending the provided (default) job status.
-     * 
-     * @param jobStatus the (default) job status to extend
+     * The URL used to download the output ZIP file.
      */
-    public PackJobStatus(JobStatus jobStatus)
+    private String downloadURL;
+
+    /**
+     * @param request the request provided when started the job
+     * @param parentJobStatus the status of the parent job (i.e. the status of the job that started this one); pass
+     *            {@code null} if this job hasn't been started by another job (i.e. if this is not a sub-job)
+     * @param observationManager the observation manager component
+     * @param loggerManager the logger manager component
+     */
+    public PackJobStatus(PackRequest request, JobStatus parentJobStatus, ObservationManager observationManager,
+        LoggerManager loggerManager)
     {
-        super(jobStatus);
+        super(request, parentJobStatus, observationManager, loggerManager);
     }
 
     /**
@@ -92,5 +96,23 @@ public class PackJobStatus extends JobStatusAdapter implements Serializable
     public void setOutputFileSize(long outputFileSize)
     {
         this.outputFileSize = outputFileSize;
+    }
+
+    /**
+     * @return the URL used to download the output ZIP file
+     */
+    public String getDownloadURL()
+    {
+        return downloadURL;
+    }
+
+    /**
+     * Sets the URL used to download the output ZIP file.
+     * 
+     * @param downloadURL the URL used to download the output ZIP file
+     */
+    public void setDownloadURL(String downloadURL)
+    {
+        this.downloadURL = downloadURL;
     }
 }

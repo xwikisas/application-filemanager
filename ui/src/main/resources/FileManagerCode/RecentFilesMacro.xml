@@ -209,6 +209,23 @@
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
       </contentDescription>
+      <contentJavaType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <multiSelect>0</multiSelect>
+        <name>contentJavaType</name>
+        <number>8</number>
+        <picker>1</picker>
+        <prettyName>Macro content type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentJavaType>
       <contentType>
         <cache>0</cache>
         <disabled>0</disabled>
@@ -216,7 +233,7 @@
         <multiSelect>0</multiSelect>
         <name>contentType</name>
         <number>7</number>
-        <prettyName>Macro content type</prettyName>
+        <prettyName>Macro content availability</prettyName>
         <relationalStorage>0</relationalStorage>
         <separator>|</separator>
         <separators>|</separators>
@@ -292,9 +309,9 @@
     <property>
       <code>{{include reference="FileManagerCode.Macros" /}}
 
-{{velocity}}
+{{velocity output="false"}}
 ## Arrange paths: keep only folders names and reverse them.
-#macro(getFileFolders $fileDoc $folders)
+#macro(getFileFolders $fileDoc)
   #getFilePaths($fileDoc $paths)
   #set ($folders = [])
   #foreach ($path in $paths[0])
@@ -305,22 +322,41 @@
   #set ($discard = $collectionstool.reverse($folders))
   #set ($folders = $stringtool.join($folders, ' / '))
 #end
+
+#macro (resolveDriveReference $return)
+  #if ("$!xcontext.macro.params.drive" != '')
+    #set ($driveReference = $services.model.resolveDocument($xcontext.macro.params.drive))
+  #else
+    #getDriveReference($driveReference)
+    #if (!$xwiki.getDocument($driveReference).getObject('FileManagerCode.DriveClass'))
+      #set ($driveReference = $services.model.resolveDocument('FileManager.WebHome'))
+    #end
+  #end
+  #set ($return = $NULL)
+  #setVariable("$return" $driveReference)
+#end
+{{/velocity}}
+
+{{velocity}}
 #set ($discard = $xwiki.ssx.use('FileManagerCode.RecentFilesMacro'))
-#set ($statement = 'from doc.object(FileManagerCode.FileClass) as file order by doc.creationDate desc')
+#resolveDriveReference($driveReference)
+#set ($statement = 'from doc.object(FileManagerCode.FileClass) as file ' +
+  'where doc.space = :space order by doc.creationDate desc')
 #set ($fetchLimit = 100)
 #set ($viewLimit = $mathtool.toInteger($xcontext.macro.params.limit))
 #if (!$viewLimit || $viewLimit &lt; 1)
   #set ($viewLimit = 5)
 #end
 ## We retrieve the most recent $fetchLimit files and then list the fist $viewLimit files the current user can view.
-#set ($results = $services.query.xwql($statement).setLimit($fetchLimit).execute())
+#set ($results = $services.query.xwql($statement).bindValue('space',
+  $services.model.serialize($driveReference.parent, 'local')).setLimit($fetchLimit).execute())
 (% class="filemanager-recent" %)
 #set ($i = 0)
 #foreach($result in $results)
   #set ($fileDoc = $xwiki.getDocument($result))
   #if ($fileDoc)
     #getFile($fileDoc $file)
-    #getFileFolders($fileDoc $paths)
+    #getFileFolders($fileDoc)
     #set ($fileUrl = $fileDoc.getURL('view'))
     #set ($creatorUrl = $xwiki.getDocument($file.creator).getURL('view'))
     * {{html clean='false'}}
@@ -341,17 +377,19 @@
 #end
 #if ($i == 0)
   * {{translation key="fileManager.recentFiles.noFiles"/}}
-  #set($spaceReference = $services.model.resolveSpace("FileManager"))
-  #if($services.security.authorization.hasAccess("edit", $spaceReference))
-    * [[{{translation key="fileManager.recentFiles.addFiles"/}}&gt;&gt;FileManager.WebHome||queryString="#?driveNode=WebHome"]]
+  #if ($services.security.authorization.hasAccess('edit', $driveReference.parent))
+    * [[{{translation key="fileManager.recentFiles.addFiles"/}}&gt;&gt;$driveReference||queryString="#?driveNode=$escapetool.url($driveReference.name)"]]
   #end
 #else
-  * [[{{translation key="fileManager.recentFiles.seeAllFiles"/}}&gt;&gt;FileManager.WebHome||queryString="#?driveNode=%2FallFiles"]]
+  * [[{{translation key="fileManager.recentFiles.seeAllFiles"/}}&gt;&gt;$driveReference||queryString="#?driveNode=%2FallFiles"]]
 #end
 {{/velocity}}</code>
     </property>
     <property>
       <contentDescription/>
+    </property>
+    <property>
+      <contentJavaType/>
     </property>
     <property>
       <contentType>No content</contentType>
@@ -427,6 +465,15 @@
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
     </class>
     <property>
       <defaultValue>5</defaultValue>
@@ -439,6 +486,87 @@
     </property>
     <property>
       <name>limit</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>FileManagerCode.RecentFilesMacro</name>
+    <number>1</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>1f69be2c-a4a6-4460-830f-dc6e4bdfbdbc</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>The drive from which to list the recent files, specified as a page reference. It defaults to the current drive, if available, otherwise to the initial drive ('FileManager').</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>drive</name>
+    </property>
+    <property>
+      <type>org.xwiki.model.reference.DocumentReference</type>
     </property>
   </object>
 </xwikidoc>

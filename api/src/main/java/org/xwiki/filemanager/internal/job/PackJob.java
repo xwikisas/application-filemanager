@@ -19,11 +19,12 @@
  */
 package org.xwiki.filemanager.internal.job;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -34,18 +35,20 @@ import javax.inject.Named;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.io.IOUtils;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.environment.Environment;
 import org.xwiki.filemanager.FileSystem;
 import org.xwiki.filemanager.Folder;
 import org.xwiki.filemanager.Path;
 import org.xwiki.filemanager.job.PackJobStatus;
 import org.xwiki.filemanager.job.PackRequest;
 import org.xwiki.job.AbstractJob;
-import org.xwiki.job.DefaultJobStatus;
 import org.xwiki.job.Job;
 import org.xwiki.job.event.status.JobStatus;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.resource.ResourceReferenceSerializer;
+import org.xwiki.resource.temporary.TemporaryResourceReference;
+import org.xwiki.resource.temporary.TemporaryResourceStore;
+import org.xwiki.url.ExtendedURL;
 
 /**
  * Packs multiple files and folders (including the child files and sub-folders) in a single ZIP archive.
@@ -54,8 +57,8 @@ import org.xwiki.model.reference.DocumentReference;
  * @since 2.0M2
  */
 @Component
-@Named(PackJob.JOB_TYPE + "/actual")
-public class PackJob extends AbstractJob<PackRequest, DefaultJobStatus<PackRequest>>
+@Named(PackJob.JOB_TYPE)
+public class PackJob extends AbstractJob<PackRequest, PackJobStatus>
 {
     /**
      * The id of the job.
@@ -63,14 +66,23 @@ public class PackJob extends AbstractJob<PackRequest, DefaultJobStatus<PackReque
     public static final String JOB_TYPE = "fileManager/pack";
 
     /**
-     * The default URL encoding.
-     */
-    private static final String UTF8 = "UTF-8";
-
-    /**
      * The module name used when creating temporary files.
      */
     private static final String MODULE_NAME = "filemanager";
+
+    /**
+     * Used to create the temporary output ZIP file.
+     */
+    @Inject
+    private TemporaryResourceStore temporaryResourceStore;
+
+    /**
+     * Used to obtain the URL to download the output ZIP file.
+     */
+    @Inject
+    @Named("standard/tmp")
+    private ResourceReferenceSerializer<TemporaryResourceReference, ExtendedURL>
+        urlTemporaryResourceReferenceSerializer;
 
     /**
      * The pseudo file system.
@@ -78,23 +90,18 @@ public class PackJob extends AbstractJob<PackRequest, DefaultJobStatus<PackReque
     @Inject
     private FileSystem fileSystem;
 
-    /**
-     * Used to access the temporary directory.
-     */
-    @Inject
-    private Environment environment;
-
-    /**
-     * Wraps the internal {@link DefaultJobStatus} and adds custom data such as the number of bytes written and the size
-     * of the output file. We wrap {@link DefaultJobStatus} instead of extending the class because the constructor of
-     * {@link DefaultJobStatus} has suffered a breaking change in XCOMMONS-811.
-     */
-    private PackJobStatus packJobStatus;
-
     @Override
     public String getType()
     {
         return JOB_TYPE;
+    }
+
+    @Override
+    protected PackJobStatus createNewStatus(PackRequest request)
+    {
+        Job currentJob = this.jobContext.getCurrentJob();
+        JobStatus currentJobStatus = currentJob != null ? currentJob.getStatus() : null;
+        return new PackJobStatus(request, currentJobStatus, this.observationManager, this.loggerManager);
     }
 
     @Override
@@ -105,7 +112,11 @@ public class PackJob extends AbstractJob<PackRequest, DefaultJobStatus<PackReque
             return;
         }
 
-        File outputFile = getTemporaryFile(getRequest().getOutputFileReference());
+        AttachmentReference outputFileReference = getRequest().getOutputFileReference();
+        TemporaryResourceReference temporaryResourceReference = new TemporaryResourceReference(MODULE_NAME,
+            Collections.singletonList(outputFileReference.getName()), outputFileReference.getParent());
+        File outputFile = this.temporaryResourceStore.createTemporaryFile(temporaryResourceReference,
+            new ByteArrayInputStream(new byte[] {}));
         ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(outputFile));
         String pathPrefix = "";
 
@@ -119,39 +130,11 @@ public class PackJob extends AbstractJob<PackRequest, DefaultJobStatus<PackReque
             }
         } finally {
             IOUtils.closeQuietly(zip);
-            getPackStatus().setOutputFileSize(outputFile.length());
+            getStatus().setOutputFileSize(outputFile.length());
+            getStatus().setDownloadURL(
+                this.urlTemporaryResourceReferenceSerializer.serialize(temporaryResourceReference).serialize());
             this.progressManager.popLevelProgress(this);
         }
-    }
-
-    /**
-     * Creates a temporary file that can be accessed through the 'temp' action, e.g.:
-     * {@code /xwiki/temp/Space/Page/filemanager/file.zip} .
-     * 
-     * @param fileReference the reference to the temporary file to create
-     * @return the temporary file
-     * @throws Exception if it fails to create the temporary file
-     */
-    private File getTemporaryFile(AttachmentReference fileReference) throws Exception
-    {
-        // Encode to avoid illegal characters in file paths.
-        DocumentReference accessDocRef = fileReference.getDocumentReference();
-        String encodedWiki = URLEncoder.encode(accessDocRef.getWikiReference().getName(), UTF8);
-        String encodedSpace = URLEncoder.encode(accessDocRef.getLastSpaceReference().getName(), UTF8);
-        String encodedPage = URLEncoder.encode(accessDocRef.getName(), UTF8);
-        String encodedFileName = URLEncoder.encode(fileReference.getName(), UTF8);
-
-        // Create a temporary directory to hold the file.
-        String path = String.format("temp/%s/%s/%s/%s/", MODULE_NAME, encodedWiki, encodedSpace, encodedPage);
-        File tempDir = new File(this.environment.getTemporaryDirectory(), path);
-        if (!((tempDir.exists() || tempDir.mkdirs()) && tempDir.isDirectory() && tempDir.canWrite())) {
-            String message = "Failed to create temporary directory [%s].";
-            throw new Exception(String.format(message, path));
-        }
-
-        File file = new File(tempDir, encodedFileName);
-        file.deleteOnExit();
-        return file;
     }
 
     /**
@@ -187,7 +170,7 @@ public class PackJob extends AbstractJob<PackRequest, DefaultJobStatus<PackReque
                 zip.putNextEntry(new ZipArchiveEntry(path));
                 long bytesWritten = IOUtils.copyLarge(file.getContent(), zip);
                 zip.closeEntry();
-                getPackStatus().setBytesWritten(getPackStatus().getBytesWritten() + bytesWritten);
+                getStatus().setBytesWritten(getStatus().getBytesWritten() + bytesWritten);
             } catch (IOException e) {
                 this.logger.warn("Failed to pack file [{}].", fileReference, e);
             }
@@ -234,22 +217,5 @@ public class PackJob extends AbstractJob<PackRequest, DefaultJobStatus<PackReque
                 this.progressManager.popLevelProgress(this);
             }
         }
-    }
-
-    /**
-     * @return the extended job status
-     */
-    public PackJobStatus getPackStatus()
-    {
-        // The internal AbstractJob and AbstractJobStatus classes have been refactored in XWiki 7.4M1 by XCOMMONS-880
-        // which seems to have broken the runtime compatibility in the sense that some protected fields and some public
-        // methods are not accessible anymore after they have been moved higher in the class hierarchy (and in a
-        // different package). The workaround I found is to cast 'this' to the interface/class that provides the public
-        // method I want to access.
-        JobStatus defaultJobStatus = ((Job) this).getStatus();
-        if (this.packJobStatus == null && defaultJobStatus != null) {
-            this.packJobStatus = new PackJobStatus(defaultJobStatus);
-        }
-        return this.packJobStatus;
     }
 }

@@ -20,57 +20,55 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.1">
+<xwikidoc version="1.4" reference="FileManagerCode.DriveTemplate" locale="">
   <web>FileManagerCode</web>
-  <name>DownloadSheet</name>
+  <name>DriveTemplate</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <creationDate>1409669727000</creationDate>
-  <parent>FileManagerCode.DownloadClass</parent>
+  <creationDate>1603806828000</creationDate>
+  <parent>Main.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1409752737000</date>
-  <contentUpdateDate>1409752737000</contentUpdateDate>
+  <date>1603806843000</date>
+  <contentUpdateDate>1603806828000</contentUpdateDate>
   <version>1.1</version>
   <title/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{velocity}}
-#set ($message = $NULL)
-#set ($jobId = $doc.getValue('jobId'))
-#if ("$!jobId" != '')
-  #set ($jobStatus = $services.drive.getJobStatus($jobId))
-  #if ($jobStatus)
-    #set ($fileName = $jobStatus.request.outputFileReference.name)
-    #if ("$!fileName" != '')
-      #if ($jobStatus.state != 'FINISHED')
-        #set ($message = "The package is not ready for download ($jobStatus.state / $jobStatus.progress.offset).")
-      #end
-    #else
-      #set ($message = 'Invalid job type.')
-    #end
-  #else
-    #set ($message = "There's no job with the specified id: $jobId")
-  #end
-#else
-  #set ($message = 'The job id is not specified.')
-#end
-#if ($message)
-  #if ($xcontext.action == 'get')
-    $response.sendError(404, $message)
-  #else
-    {{info}}$message{{/info}}
-  #end
-#else
-  #if ($xcontext.action == 'get')
-    $response.sendRedirect($jobStatus.downloadURL)
-  #else
-    [[Download $fileName&gt;&gt;path:$jobStatus.downloadURL]]
-  #end
-#end
-{{/velocity}}</content>
+  <content/>
+  <object>
+    <name>FileManagerCode.DriveTemplate</name>
+    <number>0</number>
+    <className>FileManagerCode.DriveClass</className>
+    <guid>c96c3b68-0d9a-49e0-bd81-d382ab07a227</guid>
+    <class>
+      <name>FileManagerCode.DriveClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <name>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <script>{{velocity}}$doc.plainTitle{{/velocity}}</script>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.ComputedFieldClass</classType>
+      </name>
+    </class>
+    <property>
+      <name/>
+    </property>
+  </object>
 </xwikidoc>

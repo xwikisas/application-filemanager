@@ -105,7 +105,8 @@ public class DefaultFolder extends AbstractDocument implements Folder
                 "from doc.object(FileManagerCode.FolderClass) as folder"
                     + " where doc.space = :space and doc.parent = :parent";
             Query query = queryManager.createQuery(statement, Query.XWQL);
-            query.bindValue(PARAMETER_SPACE, getReference().getLastSpaceReference().getName());
+            query.bindValue(PARAMETER_SPACE,
+                this.localEntityReferenceSerializer.serialize(getReference().getLastSpaceReference()));
             query.bindValue("parent", localEntityReferenceSerializer.serialize(getReference()));
             query.setWiki(getReference().getWikiReference().getName());
             List<DocumentReference> childFolderReferences = new LinkedList<DocumentReference>();
@@ -127,7 +128,8 @@ public class DefaultFolder extends AbstractDocument implements Folder
                 "from doc.object(FileManagerCode.FileClass) as file where doc.space = :space"
                     + " and :tag member of doc.object(XWiki.TagClass).tags";
             Query query = queryManager.createQuery(statement, Query.XWQL);
-            query.bindValue(PARAMETER_SPACE, getReference().getLastSpaceReference().getName());
+            query.bindValue(PARAMETER_SPACE,
+                this.localEntityReferenceSerializer.serialize(getReference().getLastSpaceReference()));
             query.bindValue("tag", getReference().getName());
             query.setWiki(getReference().getWikiReference().getName());
             List<DocumentReference> childFolderReferences = new LinkedList<DocumentReference>();

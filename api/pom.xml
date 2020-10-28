@@ -32,7 +32,7 @@
   <packaging>jar</packaging>
   <description>APIs to manage files and folders.</description>
   <properties>
-    <xwiki.jacoco.instructionRatio>0.80</xwiki.jacoco.instructionRatio>
+    <xwiki.jacoco.instructionRatio>0.81</xwiki.jacoco.instructionRatio>
   </properties>
   <dependencies>
     <dependency>
@@ -53,6 +53,12 @@
     <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-model</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
+    <!-- Used to create temporary files when packing files and folders. -->
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-resource-temporary</artifactId>
       <version>${platform.version}</version>
     </dependency>
     <dependency>
@@ -97,6 +103,58 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0-M1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.revapi</groupId>
+        <artifactId>revapi-maven-plugin</artifactId>
+        <configuration>
+          <analysisConfiguration><![CDATA[
+            {
+              "revapi": {
+                "ignore" : [
+                  {
+                    "code": "java.class.removed",
+                    "old": "class org.xwiki.filemanager.job.JobStatusAdapter",
+                    "justification": "This class was used to overcome a problem that is not present anymore."
+                  },
+                  {
+                    "code": "java.method.numberOfParametersChanged",
+                    "old": "method void org.xwiki.filemanager.job.PackJobStatus::<init>(org.xwiki.job.event.status.JobStatus)",
+                    "new": "method void org.xwiki.filemanager.job.PackJobStatus::<init>(org.xwiki.filemanager.job.PackRequest, org.xwiki.job.event.status.JobStatus, org.xwiki.observation.ObservationManager, org.xwiki.logging.LoggerManager)",
+                    "justification": "PackJobStatus is now extending AbstractJobStatus."
+                  },
+                  {
+                    "code": "java.class.noLongerInheritsFromClass",
+                    "old": "class org.xwiki.filemanager.job.PackJobStatus",
+                    "new": "class org.xwiki.filemanager.job.PackJobStatus",
+                    "justification": "PackJobStatus no longer extends JobStatusAdapter."
+                  },
+                  {
+                    "code": "java.class.noLongerImplementsInterface",
+                    "old": "class org.xwiki.filemanager.job.PackJobStatus",
+                    "new": "class org.xwiki.filemanager.job.PackJobStatus",
+                    "justification": "PackJobStatus no longer implements Serializable."
+                  },
+                  {
+                    "code": "java.class.removed",
+                    "old": "class org.xwiki.filemanager.internal.job.AbstractJobAdapter",
+                    "justification": "Internal API"
+                  },
+                  {
+                    "code": "java.method.removed",
+                    "old": "method org.xwiki.filemanager.job.PackJobStatus org.xwiki.filemanager.internal.job.PackJob::getPackStatus()",
+                    "justification": "Internal API"
+                  },
+                  {
+                    "code": "java.class.removed",
+                    "old": "class org.xwiki.filemanager.internal.job.PackJobAdapter",
+                    "justification": "Internal API"
+                  }
+                ]
+              }
+            }
+          ]]></analysisConfiguration>
+        </configuration>
       </plugin>
     </plugins>
   </build>

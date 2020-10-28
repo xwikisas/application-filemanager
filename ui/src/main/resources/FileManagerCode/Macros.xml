@@ -48,15 +48,10 @@
 #set ($selectOrphanFolders = "from doc.object(FileManagerCode.FolderClass) as folder where doc.space = :space and $hasNoParent")
 
 #macro (getDrive $driveDoc $return)
-  #if ($doc.title != '')
-    #set ($name = $doc.plainTitle)
-  #else
-    #set ($name = $doc.space)
-  #end
   #set ($return = $NULL)
   #setVariable("$return", {
     'id': $doc.documentReference.name,
-    'name': $name,
+    'name': $doc.plainTitle,
     'canCreate': $hasCreatePage
   })
 #end
@@ -152,7 +147,7 @@
   #if ("$!parent" == '')
     #set ($parent = $doc.documentReference.name)
   #end
-  #set ($parentReference = $services.model.createDocumentReference($doc.wiki, $doc.space, $parent))
+  #set ($parentReference = $services.model.createDocumentReference($parent, $doc.documentReference.lastSpaceReference))
   $response.sendRedirect($xwiki.getURL($folderReference, 'save', $escapetool.url({
     'title': $name,
     'parent': $services.model.serialize($parentReference, 'compactwiki'),
@@ -376,7 +371,7 @@
     #set ($docNameInTags = 'doc.name in (:tags)')
     #set ($isFolderOrDrive = "doc.fullName = obj.name and obj.className in ('FileManagerCode.FolderClass', 'FileManagerCode.DriveClass')")
     #set ($statement = ", BaseObject obj where doc.space = :docSpace and $isFolderOrDrive and $docNameInTags")
-    #foreach ($parentId in $services.query.hql($statement).bindValue('docSpace', $doc.space).bindValue('tags', $tags).execute())
+    #foreach ($parentId in $services.query.hql($statement).bindValue('docSpace', $fileDoc.space).bindValue('tags', $tags).execute())
       #set ($parentReference = $services.model.resolveDocument($parentId, 'explicit', $fileDoc.documentReference))
       #set ($parentDoc = $xwiki.getDocument($parentReference))
       #set ($path = [])
@@ -459,7 +454,8 @@
     #set ($driveReference = $services.model.resolveDocument($drives.get(0), 'explicit', $doc.documentReference))
   #else
     ## Fall-back on the space home page.
-    #set ($driveReference = $services.model.createDocumentReference($doc.wiki, $doc.space, 'WebHome'))
+    #set ($driveReference = $services.model.createDocumentReference('WebHome',
+      $doc.documentReference.lastSpaceReference))
   #end
   #set ($return = $NULL)
   #setVariable("$return" $driveReference)

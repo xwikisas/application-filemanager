@@ -34,7 +34,6 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.xwiki.environment.Environment;
 import org.xwiki.filemanager.File;
 import org.xwiki.filemanager.Folder;
 import org.xwiki.filemanager.Path;
@@ -42,10 +41,15 @@ import org.xwiki.filemanager.job.PackRequest;
 import org.xwiki.job.Job;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.resource.temporary.TemporaryResourceReference;
+import org.xwiki.resource.temporary.TemporaryResourceStore;
 import org.xwiki.test.mockito.MockitoComponentMockingRule;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link PackJob}.
@@ -61,6 +65,8 @@ public class PackJobTest extends AbstractJobTest
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
 
+    private TemporaryResourceStore temporaryResourceStore;
+
     @Override
     protected MockitoComponentMockingRule<Job> getMocker()
     {
@@ -72,8 +78,7 @@ public class PackJobTest extends AbstractJobTest
     {
         super.configure();
 
-        Environment environment = mocker.getInstance(Environment.class);
-        when(environment.getTemporaryDirectory()).thenReturn(testFolder.getRoot());
+        this.temporaryResourceStore = this.mocker.getInstance(TemporaryResourceStore.class);
     }
 
     @Test
@@ -98,12 +103,20 @@ public class PackJobTest extends AbstractJobTest
 
         PackRequest request = new PackRequest();
         request.setPaths(Arrays.asList(new Path(projects.getReference()), new Path(null, readme.getReference())));
-        request
-            .setOutputFileReference(new AttachmentReference("out.zip", new DocumentReference("wiki", "Space", "Page")));
+        AttachmentReference packReference =
+            new AttachmentReference("out.zip", new DocumentReference("wiki", Arrays.asList("Path", "To"), "Page"));
+        request.setOutputFileReference(packReference);
+
+        TemporaryResourceReference packResourceReference = new TemporaryResourceReference("filemanager",
+            Collections.singletonList("out.zip"), packReference.getParent());
+        java.io.File packFile = new java.io.File(testFolder.getRoot(), "temp/filemanager/wiki/Path/To/Page/out.zip");
+        packFile.getParentFile().mkdirs();
+        packFile.createNewFile();
+        when(this.temporaryResourceStore.createTemporaryFile(eq(packResourceReference), any())).thenReturn(packFile);
 
         PackJob job = (PackJob) execute(request);
 
-        ZipFile zip = new ZipFile(new java.io.File(testFolder.getRoot(), "temp/filemanager/wiki/Space/Page/out.zip"));
+        ZipFile zip = new ZipFile(packFile);
         List<String> folders = new ArrayList<String>();
         Map<String, String> files = new HashMap<String, String>();
         zip.stream().forEach(entry -> {
@@ -125,8 +138,8 @@ public class PackJobTest extends AbstractJobTest
         assertEquals(2, files.size());
         assertEquals("blah", files.get(readme.getName()));
         assertEquals("foo", files.get(projects.getName() + "/Concerto/" + pom.getName()));
-        assertEquals(("blah" + "foo").getBytes().length, job.getPackStatus().getBytesWritten());
-        assertTrue(job.getPackStatus().getOutputFileSize() > 0);
+        assertEquals(("blah" + "foo").getBytes().length, job.getStatus().getBytesWritten());
+        assertTrue(job.getStatus().getOutputFileSize() > 0);
     }
 
     private void setFileContent(File file, String content)

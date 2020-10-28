@@ -128,7 +128,10 @@ fileManager.panel.RecentFiles.header=Recent Files
 rendering.macro.fileManager.recentFiles.name=Recent Files
 rendering.macro.fileManager.recentFiles.description=Lists the files that have been recently uploaded through the File Manager.
 rendering.macro.fileManager.recentFiles.parameter.limit.name=limit
-rendering.macro.fileManager.recentFiles.parameter.limit.description=The maximum number of files to list.</content>
+rendering.macro.fileManager.recentFiles.parameter.limit.description=The maximum number of files to list.
+
+fileManager.drive.templateProvider.name=Drive
+fileManager.drive.templateProvider.description=Groups files and folders</content>
   <object>
     <name>FileManagerCode.Translations</name>
     <number>0</number>

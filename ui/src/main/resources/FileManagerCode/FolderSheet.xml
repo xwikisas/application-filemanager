@@ -101,19 +101,21 @@
   #getFolder($doc $folder)
   (% class="listing" %)(((
   #if ($folder.path.size() &gt; 0)
-    #set ($reference = $services.model.createDocumentReference($doc.wiki, $doc.space, $folder.path.get(0)))
+    #set ($reference = $services.model.createDocumentReference($folder.path.get(0),
+      $doc.documentReference.lastSpaceReference))
     * [[image:icon:folder||class="icon"]] [[..&gt;&gt;$reference]]
   #end
   ## List the child folders.
   #getChildFolders($doc $folders)
   #foreach ($childFolder in $folders.list)
-    #set ($reference = $services.model.createDocumentReference($doc.wiki, $doc.space, $childFolder.id))
+    #set ($reference = $services.model.createDocumentReference($childFolder.id,
+      $doc.documentReference.lastSpaceReference))
     * [[image:icon:folder||class="icon"]] [[$childFolder.name&gt;&gt;$reference]]
   #end
   ## List the child files.
   #getChildFiles($doc $files)
   #foreach ($file in $files.list)
-    #set ($reference = $services.model.createDocumentReference($doc.wiki, $doc.space, $file.id))
+    #set ($reference = $services.model.createDocumentReference($file.id, $doc.documentReference.lastSpaceReference))
     * {{html}}#mimetypeimg($file.mediaType.toLowerCase() $file.name.toLowerCase()){{/html}} [[$file.name&gt;&gt;$reference]]
   #end
   )))

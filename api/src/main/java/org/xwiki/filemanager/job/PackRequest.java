@@ -58,8 +58,8 @@ public class PackRequest extends BatchPathRequest
      * on this document can access the output file. The {@code name} property of the given {@link AttachmentReference}
      * will be used as the name of the output ZIP file.
      * <p>
-     * The output file is a temporary file (deleted automatically when the server is stopped) that can be accessed
-     * through the 'temp' action, e.g.: {@code /xwiki/temp/Space/Page/filemanager/file.zip} .
+     * The output file is a temporary file (deleted automatically when the server is stopped) that can be accessed as a
+     * temporary resource.
      * 
      * @param outputFileReference the reference to the output ZIP file
      */

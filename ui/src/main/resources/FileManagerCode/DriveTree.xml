@@ -78,8 +78,7 @@
   #elseif ($nodeId == '/orphanFolders')
     #addOrphanFolderNodes($children)
   #else
-    ## Don't use resolve because the node id is the name of a document and it can contain a dot.
-    #set ($nodeRef = $services.model.createDocumentReference($doc.wiki, $doc.space, $nodeId))
+    #set ($nodeRef = $services.model.createDocumentReference($nodeId, $doc.documentReference.lastSpaceReference))
     #set ($nodeDoc = $xwiki.getDocument($nodeRef))
     #if ($nodeDoc.getObject('FileManagerCode.DriveClass'))
       #addDriveChildNodes($nodeDoc $children)
@@ -193,7 +192,8 @@
 
 #macro (addFolderNode $folder $children)
   ## Extend the folder data with tree-related info.
-  #set ($folderReference = $services.model.createDocumentReference($doc.wiki, $doc.space, $folder.id))
+  #set ($folderReference = $services.model.createDocumentReference($folder.id,
+    $doc.documentReference.lastSpaceReference))
   #set ($discard = $folder.putAll({
     'type': 'folder',
     'validChildren': ['folder', 'pagination'],
@@ -323,7 +323,7 @@
 
 #macro (getNodePath $nodeId $return)
   ## Don't use resolve because the node id is the name of a document and it can contain a dot.
-  #set ($folderRef = $services.model.createDocumentReference($doc.wiki, $doc.space, $nodeId))
+  #set ($folderRef = $services.model.createDocumentReference($nodeId, $doc.documentReference.lastSpaceReference))
   #set ($folderDoc = $xwiki.getDocument($folderRef))
   #set ($path = [])
   #getPath($folderDoc $path)

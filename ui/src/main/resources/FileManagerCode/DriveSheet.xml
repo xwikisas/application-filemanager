@@ -144,7 +144,8 @@
 
 #macro (getDownloadDocument $name $title $return)
   #set ($downloadId = "Download-${xcontext.userReference.name}-$name")
-  #set ($downloadDocRef = $services.model.createDocumentReference($doc.wiki, $doc.space, $downloadId))
+  #set ($downloadDocRef = $services.model.createDocumentReference($downloadId,
+    $doc.documentReference.lastSpaceReference))
   #set ($downloadDoc = $xwiki.getDocument($downloadDocRef))
   #set ($discard = $downloadDoc.setHidden(true))
   #set ($discard = $downloadDoc.setTitle($title))
@@ -699,13 +700,17 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
 
   var defaultParams = {
     outputSyntax: 'plain',
-    space: XWiki.currentSpace,
     page: XWiki.currentPage
   };
 
-  // The colon ':' is a special character for entity references so we use '!' instead to create the URL and then replace
-  // it with ':' so that Angular can find the parameter.
-  var url = new XWiki.Document('!page', '!space').getURL('get').replace(/\/!/g, '/:');
+  // Note that the space part is fixed because we know that all the files and folders of a given drive are stored in the
+  // same space (the drive space). We'll have to change this when files and folders are going to be stored as nested
+  // pages (but it's not going to be easy because the URL template doesn't support parameters that are paths, e.g. the
+  // space path, so we'll probably have to use an URL dispatcher).
+  // We use '!' instead of ':' to mark the URL path parameter because otherwise ':' gets URL encoded when getURL() is
+  // called and so Angular cannot find the parameter. We replace '!' with ':' after the URL is computed.
+  // See https://docs.angularjs.org/api/ngResource/service/$resource#usage .
+  var url = new XWiki.Document('!page').getURL('get').replace(/\/!/g, '/:');
 
   var addGET = function(api, data) {
     api['get' + data.substr(0, 1).toUpperCase() + data.substr(1)] = {
