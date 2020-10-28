@@ -222,7 +222,7 @@
   #set ($joinAttachments = false)
   #set ($storedColumns = {
     'name': 'attach.filename',
-    'size': 'attach.filesize',
+    'size': 'attach.longSize',
     'creationDate': 'doc.creationDate',
     'date': 'doc.date',
     'creator': 'doc.creator',
@@ -338,7 +338,7 @@
     ## Fail safe.
     #set ($attach = {
       'filename': $fileDoc.plainTitle,
-      'filesize': 0
+      'longSize': 0
     })
   #end
   #set ($canDeleteFileDoc = $fileDoc.hasAccessLevel('delete'))
@@ -350,7 +350,7 @@
     'date': $fileDoc.date,
     'creator': $fileDoc.creator,
     'author': $fileDoc.author,
-    'size': $attach.filesize,
+    'size': $attach.longSize,
     'mediaType': $attach.mimeType,
     'version': $fileDoc.version,
     'description': $fileDoc.display('description'),

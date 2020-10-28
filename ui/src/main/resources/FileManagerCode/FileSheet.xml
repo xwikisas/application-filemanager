@@ -207,7 +207,7 @@
 #end
 
 #macro (openTextFile $attachment)
-  #if ($attachment.filesize &lt; 500000)
+  #if ($attachment.longSize &lt; 500000)
     #set ($language = $stringtool.substringAfterLast($attachment.filename, '.'))
     #if (!$language)
       #set ($language = 'none')
