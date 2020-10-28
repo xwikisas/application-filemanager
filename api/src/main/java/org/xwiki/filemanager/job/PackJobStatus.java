@@ -50,16 +50,17 @@ public class PackJobStatus extends AbstractJobStatus<PackRequest>
     private String downloadURL;
 
     /**
+     * @param jobType the type of the job
      * @param request the request provided when started the job
      * @param parentJobStatus the status of the parent job (i.e. the status of the job that started this one); pass
      *            {@code null} if this job hasn't been started by another job (i.e. if this is not a sub-job)
      * @param observationManager the observation manager component
      * @param loggerManager the logger manager component
      */
-    public PackJobStatus(PackRequest request, JobStatus parentJobStatus, ObservationManager observationManager,
-        LoggerManager loggerManager)
+    public PackJobStatus(String jobType, PackRequest request, JobStatus parentJobStatus,
+        ObservationManager observationManager, LoggerManager loggerManager)
     {
-        super(request, parentJobStatus, observationManager, loggerManager);
+        super(jobType, request, parentJobStatus, observationManager, loggerManager);
     }
 
     /**

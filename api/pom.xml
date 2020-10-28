@@ -66,18 +66,6 @@
       <artifactId>xwiki-platform-oldcore</artifactId>
       <version>${platform.version}</version>
     </dependency>
-    <dependency>
-      <!-- Required for packing files and folders into ZIP archives -->
-      <!-- To be replaced with java.util.zip after we move to Java 7 -->
-      <!-- http://bugs.java.com/bugdatabase/view_bug.do?bug_id=4244499 -->
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-compress</artifactId>
-    </dependency>
-    <dependency>
-      <!-- Required for IOUtils -->
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-    </dependency>
     <!-- Test dependencies -->
     <dependency>
       <groupId>org.xwiki.commons</groupId>
@@ -98,12 +86,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
       </plugin>
-      <!-- See SUREFIRE-1588 (Surefire manifest jar classloading broken on latest Debian/Ubuntu Java8) -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M1</version>
-      </plugin>
       <plugin>
         <groupId>org.revapi</groupId>
         <artifactId>revapi-maven-plugin</artifactId>
@@ -120,7 +102,11 @@
                   {
                     "code": "java.method.numberOfParametersChanged",
                     "old": "method void org.xwiki.filemanager.job.PackJobStatus::<init>(org.xwiki.job.event.status.JobStatus)",
-                    "new": "method void org.xwiki.filemanager.job.PackJobStatus::<init>(org.xwiki.filemanager.job.PackRequest, org.xwiki.job.event.status.JobStatus, org.xwiki.observation.ObservationManager, org.xwiki.logging.LoggerManager)",
+                    "new": "method void org.xwiki.filemanager.job.PackJobStatus::<init>(java.lang.String, org.xwiki.filemanager.job.PackRequest, org.xwiki.job.event.status.JobStatus, org.xwiki.observation.ObservationManager, org.xwiki.logging.LoggerManager)",
+                    "package": "org.xwiki.filemanager.job",
+                    "classSimpleName": "PackJobStatus",
+                    "methodName": "<init>",
+                    "elementKind": "constructor",
                     "justification": "PackJobStatus is now extending AbstractJobStatus."
                   },
                   {
@@ -149,6 +135,28 @@
                     "code": "java.class.removed",
                     "old": "class org.xwiki.filemanager.internal.job.PackJobAdapter",
                     "justification": "Internal API"
+                  },
+                  {
+                    "code": "java.method.returnTypeChangedCovariantly",
+                    "old": "method org.xwiki.job.Request org.xwiki.filemanager.job.JobStatusAdapter::getRequest() @ org.xwiki.filemanager.job.PackJobStatus",
+                    "new": "method R org.xwiki.job.AbstractJobStatus<R extends org.xwiki.job.Request>::getRequest() @ org.xwiki.filemanager.job.PackJobStatus",
+                    "oldType": "org.xwiki.job.Request",
+                    "newType": "org.xwiki.filemanager.job.PackRequest",
+                    "package": "org.xwiki.filemanager.job",
+                    "classSimpleName": "PackJobStatus",
+                    "methodName": "getRequest",
+                    "elementKind": "method",
+                    "justification": "Not a real API breackage"
+                  },
+                  {
+                    "code": "java.class.nonFinalClassInheritsFromNewClass",
+                    "old": "class org.xwiki.filemanager.job.PackJobStatus",
+                    "new": "class org.xwiki.filemanager.job.PackJobStatus",
+                    "superClass": "org.xwiki.job.AbstractJobStatus<org.xwiki.filemanager.job.PackRequest>",
+                    "package": "org.xwiki.filemanager.job",
+                    "classSimpleName": "PackJobStatus",
+                    "elementKind": "class",
+                    "justification": "PackJobStatus no longer extends JobStatusAdapter."
                   }
                 ]
               }

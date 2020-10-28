@@ -92,7 +92,7 @@ public class DefaultFile extends AbstractDocument implements File
             XWikiAttachment oldAttachment = attachments.get(0);
             try {
                 document.removeAttachment(oldAttachment, false);
-                document.addAttachment(name, oldAttachment.getContentInputStream(getContext()), getContext());
+                document.setAttachment(name, oldAttachment.getContentInputStream(getContext()), getContext());
             } catch (Exception e) {
                 logger.error("Failed to rename file [{}] to [{}].", oldAttachment.getReference(), name, e);
             }
@@ -158,7 +158,8 @@ public class DefaultFile extends AbstractDocument implements File
         BaseObject tagObject = getDocument().getXObject(TAG_CLASS_REFERENCE);
         if (tagObject != null) {
             try {
-                List<String> tags = (List<String>) ((BaseProperty) tagObject.get(PROPERTY_TAGS)).getValue();
+                @SuppressWarnings("unchecked")
+                List<String> tags = (List<String>) ((BaseProperty<?>) tagObject.get(PROPERTY_TAGS)).getValue();
                 if (tags != null) {
                     for (String tag : tags) {
                         references.add(new DocumentReference(tag, getReference().getLastSpaceReference()));

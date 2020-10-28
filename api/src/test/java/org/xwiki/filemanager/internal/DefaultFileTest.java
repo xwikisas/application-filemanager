@@ -43,9 +43,16 @@ import com.xpn.xwiki.objects.BaseObject;
 import com.xpn.xwiki.objects.BaseProperty;
 import com.xpn.xwiki.objects.PropertyInterface;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 
 /**
  * Unit tests for {@link DefaultFile}.
@@ -105,7 +112,7 @@ public class DefaultFileTest
 
         verify(file.getDocument()).clone();
         verify(file.getDocument()).setTitle("index.html");
-        verify(file.getDocument()).addAttachment(eq("index.html"), same(content), any(XWikiContext.class));
+        verify(file.getDocument()).setAttachment(eq("index.html"), same(content), any(XWikiContext.class));
         verify(file.getDocument()).removeAttachment(attachment, false);
     }
 
@@ -128,15 +135,16 @@ public class DefaultFileTest
         BaseObject tagObject = mock(BaseObject.class);
         when(file.getDocument().getXObject(DefaultFile.TAG_CLASS_REFERENCE)).thenReturn(tagObject);
 
-        BaseProperty tagsProperty = mock(BaseProperty.class, withSettings().extraInterfaces(PropertyInterface.class));
+        BaseProperty<?> tagsProperty =
+            mock(BaseProperty.class, withSettings().extraInterfaces(PropertyInterface.class));
         when(tagObject.get("tags")).thenReturn((PropertyInterface) tagsProperty);
         when(tagsProperty.getValue()).thenReturn(Arrays.asList("Concerto", "Resilience"));
 
         DocumentReference fileReference = new DocumentReference("tech", "FileSystem", "status.xml");
         when(file.getDocument().getDocumentReference()).thenReturn(fileReference);
 
-        assertEquals(Arrays.asList(new DocumentReference("tech", "FileSystem", "Concerto"), new DocumentReference(
-            "tech", "FileSystem", "Resilience")), file.getParentReferences());
+        assertEquals(Arrays.asList(new DocumentReference("tech", "FileSystem", "Concerto"),
+            new DocumentReference("tech", "FileSystem", "Resilience")), file.getParentReferences());
     }
 
     @Test
@@ -145,8 +153,8 @@ public class DefaultFileTest
         BaseObject tagObject = mock(BaseObject.class);
         when(file.getDocument().getXObject(DefaultFile.TAG_CLASS_REFERENCE)).thenReturn(null, tagObject);
 
-        when(file.getDocument().getDocumentReference()).thenReturn(
-            new DocumentReference("chess", "FileSystem", "Carol"));
+        when(file.getDocument().getDocumentReference())
+            .thenReturn(new DocumentReference("chess", "FileSystem", "Carol"));
         DocumentReference firstParent = new DocumentReference("chess", "FileSystem", "Alice");
         DocumentReference secondParent = new DocumentReference("math", "FileSystem", "Bob");
         Collection<DocumentReference> parentReferences = file.getParentReferences();
@@ -168,7 +176,7 @@ public class DefaultFileTest
         when(file.getDocument().getXObject(DefaultFile.TAG_CLASS_REFERENCE)).thenReturn(null, tagObject);
 
         // Initialize the parent references. Should be empty.
-        Collection<DocumentReference> parentReferences = file.getParentReferences();
+        file.getParentReferences();
 
         file.updateParentReferences();
 

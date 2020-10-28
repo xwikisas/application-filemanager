@@ -101,7 +101,7 @@ public class PackJob extends AbstractJob<PackRequest, PackJobStatus>
     {
         Job currentJob = this.jobContext.getCurrentJob();
         JobStatus currentJobStatus = currentJob != null ? currentJob.getStatus() : null;
-        return new PackJobStatus(request, currentJobStatus, this.observationManager, this.loggerManager);
+        return new PackJobStatus(getType(), request, currentJobStatus, this.observationManager, this.loggerManager);
     }
 
     @Override
@@ -117,19 +117,17 @@ public class PackJob extends AbstractJob<PackRequest, PackJobStatus>
             Collections.singletonList(outputFileReference.getName()), outputFileReference.getParent());
         File outputFile = this.temporaryResourceStore.createTemporaryFile(temporaryResourceReference,
             new ByteArrayInputStream(new byte[] {}));
-        ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(outputFile));
         String pathPrefix = "";
 
         this.progressManager.pushLevelProgress(paths.size(), this);
 
-        try {
+        try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(outputFile))) {
             for (Path path : paths) {
                 this.progressManager.startStep(this);
                 pack(path, zip, pathPrefix);
                 this.progressManager.endStep(this);
             }
         } finally {
-            IOUtils.closeQuietly(zip);
             getStatus().setOutputFileSize(outputFile.length());
             getStatus().setDownloadURL(
                 this.urlTemporaryResourceReferenceSerializer.serialize(temporaryResourceReference).serialize());

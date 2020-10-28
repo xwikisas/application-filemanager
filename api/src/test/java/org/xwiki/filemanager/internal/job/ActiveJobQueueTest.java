@@ -19,8 +19,6 @@
  */
 package org.xwiki.filemanager.internal.job;
 
-import static org.junit.Assert.*;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,6 +28,9 @@ import org.xwiki.filemanager.job.FileManager;
 import org.xwiki.job.event.JobFinishedEvent;
 import org.xwiki.observation.EventListener;
 import org.xwiki.test.mockito.MockitoComponentMockingRule;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link ActiveJobQueue}.

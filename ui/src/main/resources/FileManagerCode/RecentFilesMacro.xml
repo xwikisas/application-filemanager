@@ -20,19 +20,19 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.1">
+<xwikidoc version="1.3" reference="FileManagerCode.RecentFilesMacro" locale="">
   <web>FileManagerCode</web>
   <name>RecentFilesMacro</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <creationDate>1421654809000</creationDate>
+  <creationDate>1603876505000</creationDate>
   <parent>FileManagerCode.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1422870134000</date>
-  <contentUpdateDate>1422860061000</contentUpdateDate>
+  <date>1603876505000</date>
+  <contentUpdateDate>1603876505000</contentUpdateDate>
   <version>1.1</version>
   <title>Recent Files Macro</title>
   <comment/>
@@ -72,14 +72,16 @@
         <prettyName>Caching policy</prettyName>
         <relationalStorage>0</relationalStorage>
         <separator> </separator>
-        <separators> ,|</separators>
+        <separators>|, </separators>
         <size>1</size>
         <unmodifiable>0</unmodifiable>
         <values>long|short|default|forbid</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </cache>
       <code>
+        <contenttype>PureText</contenttype>
         <disabled>0</disabled>
+        <editor>PureText</editor>
         <name>code</name>
         <number>2</number>
         <prettyName>Code</prettyName>
@@ -98,7 +100,7 @@
         <prettyName>Content Type</prettyName>
         <relationalStorage>0</relationalStorage>
         <separator> </separator>
-        <separators> ,|</separators>
+        <separators>|, </separators>
         <size>1</size>
         <unmodifiable>0</unmodifiable>
         <values>CSS|LESS</values>
@@ -133,7 +135,7 @@
         <prettyName>Use this extension</prettyName>
         <relationalStorage>0</relationalStorage>
         <separator> </separator>
-        <separators> ,|</separators>
+        <separators>|, </separators>
         <size>1</size>
         <unmodifiable>0</unmodifiable>
         <values>currentPage|onDemand|always</values>
@@ -191,6 +193,7 @@
       <validationScript/>
       <code>
         <disabled>0</disabled>
+        <editor>Text</editor>
         <name>code</name>
         <number>9</number>
         <prettyName>Macro code</prettyName>
@@ -200,7 +203,9 @@
         <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
       </code>
       <contentDescription>
+        <contenttype>PureText</contenttype>
         <disabled>0</disabled>
+        <editor>PureText</editor>
         <name>contentDescription</name>
         <number>8</number>
         <prettyName>Content description (Not applicable for "No content" type)</prettyName>
@@ -209,23 +214,6 @@
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
       </contentDescription>
-      <contentJavaType>
-        <cache>0</cache>
-        <disabled>0</disabled>
-        <displayType>input</displayType>
-        <multiSelect>0</multiSelect>
-        <name>contentJavaType</name>
-        <number>8</number>
-        <picker>1</picker>
-        <prettyName>Macro content type</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator>|</separator>
-        <separators>|</separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>Unknown|Wiki</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </contentJavaType>
       <contentType>
         <cache>0</cache>
         <disabled>0</disabled>
@@ -233,7 +221,7 @@
         <multiSelect>0</multiSelect>
         <name>contentType</name>
         <number>7</number>
-        <prettyName>Macro content availability</prettyName>
+        <prettyName>Macro content type</prettyName>
         <relationalStorage>0</relationalStorage>
         <separator>|</separator>
         <separators>|</separators>
@@ -252,7 +240,9 @@
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </defaultCategory>
       <description>
+        <contenttype>PureText</contenttype>
         <disabled>0</disabled>
+        <editor>PureText</editor>
         <name>description</name>
         <number>3</number>
         <prettyName>Macro description</prettyName>
@@ -465,15 +455,6 @@
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
-      <type>
-        <disabled>0</disabled>
-        <name>type</name>
-        <number>5</number>
-        <prettyName>Parameter type</prettyName>
-        <size>60</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </type>
     </class>
     <property>
       <defaultValue>5</defaultValue>
@@ -543,15 +524,6 @@
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
-      <type>
-        <disabled>0</disabled>
-        <name>type</name>
-        <number>5</number>
-        <prettyName>Parameter type</prettyName>
-        <size>60</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </type>
     </class>
     <property>
       <defaultValue/>
