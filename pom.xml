@@ -32,7 +32,7 @@
   <packaging>pom</packaging>
   <name>File Manager Application (Pro) Parent POM</name>
   <version>2.4-SNAPSHOT</version>
-  <description>Application to manage a hierarchy of folders and files. It embeds viewers for many known file types, such as office and PDF.</description>
+  <description>Create and manage a hierarchy of files and folders using drag and drop. View and play files directly from the wiki. Supports nested page and multiple wikis. The app can be purchased individually or part of the XWiki Pro package. Try it free.</description>
    <properties>
     <licensing.version>1.16.1</licensing.version>
   </properties>
