@@ -333,7 +333,7 @@
 #set ($statement = 'from doc.object(FileManagerCode.FileClass) as file ' +
   'where doc.space = :space order by doc.creationDate desc')
 #set ($fetchLimit = 100)
-#set ($viewLimit = $mathtool.toInteger($xcontext.macro.params.limit))
+#set ($viewLimit = $numbertool.toNumber($xcontext.macro.params.limit).intValue())
 #if (!$viewLimit || $viewLimit &lt; 1)
   #set ($viewLimit = 5)
 #end

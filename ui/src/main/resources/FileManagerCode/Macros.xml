@@ -83,12 +83,12 @@
   #end
   #set ($folderCount = $query.count())
   #set ($folders = [])
-  #set ($offset = $mathtool.max($mathtool.toInteger($request.offset), 0))
+  #set ($offset = $mathtool.max($numbertool.toNumber($request.offset).intValue(), 0))
   #if (!$offset)
     #set ($offset = 0)
   #end
   #set ($discard = $query.setOffset($offset))
-  #set ($limit = $mathtool.toInteger($request.limit))
+  #set ($limit = $numbertool.toNumber($request.limit).intValue())
   #if (!$limit)
     #set ($limit = 15)
   #end
@@ -172,7 +172,7 @@
   #else
     #set ($results = $regextool.find($filterValue, '^-(\d+)([dwmy])$'))
     #if ($results.size() == 3)
-      #set ($amount = $mathtool.toInteger($results.get(1).group))
+      #set ($amount = $numbertool.toNumber($results.get(1).group).intValue())
       #set ($unit = $results.get(2).group)
       #set ($now = $xwiki.jodatime.dateTime)
       #if ($unit == 'd')
@@ -302,11 +302,11 @@
   #end
   #set ($fileCount = $query.count())
   #set ($files = [])
-  #set ($offset = $mathtool.toInteger($request.offset))
+  #set ($offset = $numbertool.toNumber($request.offset).intValue())
   #if ($offset)
     #set ($discard = $query.setOffset($offset))
   #end
-  #set ($limit = $mathtool.toInteger($request.limit))
+  #set ($limit = $numbertool.toNumber($request.limit).intValue())
   #if ($limit)
     #set ($discard = $query.setLimit($limit))
   #end
