@@ -309,7 +309,12 @@
       #set ($discard = $folders.add($path))
     #end
   #end
-  #set ($discard = $collectionstool.reverse($folders))
+  ## CollectionsTool is deprecated since 12.1RC1.
+  #if ($collectiontool)
+    #set ($discard = $collectiontool.reverse($folders))
+  #else
+    #set ($discard = $collectionstool.reverse($folders))
+  #end
   #set ($folders = $stringtool.join($folders, ' / '))
 #end
 
