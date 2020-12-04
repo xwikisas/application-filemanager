@@ -1595,7 +1595,7 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
       scope: {
         'file': '='
       },
-      template: '&lt;img ng-src="{{icon}}" alt="{{type}}" title="{{type}}" class="icon" /&gt; '
+      template: '&lt;img ng-src="{{icon}}" alt="{{type}}" title="{{type}}" ng-class="(type === \'Image\') ? \'thumbnail-icon\' : \'icon\'"/&gt; '
         + '&lt;a href="{{url}}" ng-if="url"&gt;{{file.name}}&lt;/a&gt;'
         + '&lt;span ng-if="!url"&gt;{{file.name || file.id || "-"}}&lt;/span&gt;'
         + '&lt;div ng-if="file.showFolders"&gt;'
@@ -1609,12 +1609,13 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
         if(scope.type === 'Image') {
            var urlDispatcher = new XWiki.Document('URLDispatcher', 'FileManagerCode');
            var docRef = new XWiki.Document(scope.file.id);
-           scope.icon = urlDispatcher.getURL('get', $.param({
+           scope.icon=urlDispatcher.getURL('get', $.param({
              entityType: 'attachment',
              wiki: docRef.wiki,
              space: docRef.space,
              page: docRef.page,
-             file: scope.file.name
+             file: scope.file.name,
+             queryString: 'width=512'
            }));
         }
         scope.$watch('file.id', function(newValue, oldValue) {
@@ -2769,6 +2770,10 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
 #files img.icon,
 .jobs img.avatar {
   height: 16px;
+}
+#files img.thumbnail-icon {
+  height: 32px;
+  width: 32px;
 }
 #files thead.xwiki-livetable-display-header td.xwiki-livetable-display-header-filter input {
   /* Overwrite the default padding. */
