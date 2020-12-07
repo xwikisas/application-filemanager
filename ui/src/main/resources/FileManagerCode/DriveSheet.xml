@@ -1609,13 +1609,13 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
         if (scope.type === 'Image') {
            var urlDispatcher = new XWiki.Document('URLDispatcher', 'FileManagerCode');
            var docRef = new XWiki.Document(scope.file.id);
-           // queryString is used to limit the size of the downloaded file by resizing the image on the server side.
            scope.icon = urlDispatcher.getURL('get', $.param({
              entityType: 'attachment',
              wiki: docRef.wiki,
              space: docRef.space,
              page: docRef.page,
              file: scope.file.name,
+             // queryString is used to limit the size of the downloaded file by resizing the image on the server side.
              queryString: 'width=512'
            }));
         }
