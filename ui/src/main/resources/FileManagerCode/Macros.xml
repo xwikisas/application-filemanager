@@ -273,18 +273,6 @@
   #setVariable("$return" "$from $!where $orderBy")
 #end
 
-#macro (checkSimilarFileExists $return)
-  #set ($discard = $response.setContentType('application/json'))
-  #set ($parentDoc = $xwiki.getDocument($services.model.createDocumentReference('', ['FileManager'], $request.parent)))
-  #set ($parameters = {'space': $parentDoc.space, 'tag': $parentDoc.documentReference.name, 'fileName': $request.getParameter('.name')})
-  #set ($fromTags = 'BaseObject as tagObj, DBStringListProperty as tagsProp')
-  #set ($joinTags = "tagObj.className = 'XWiki.TagClass' and tagObj.name = doc.fullName and tagObj.id = tagsProp.id.id and tagsProp.id.name = 'tags'")
-  #getFilesStatement($fromTags "doc.space = :space and $joinTags and :tag in elements(tagsProp.list) and lower(:fileName) like lower(attach.filename)"
-    $parameters $statement)
-  #getFiles($statement $parameters $return)
-  $!jsontool.serialize($return)
-#end
-
 #macro (getChildFiles $parentDoc $return)
   #set ($parameters = {'space': $parentDoc.space, 'tag': $parentDoc.documentReference.name})
   #set ($fromTags = 'BaseObject as tagObj, DBStringListProperty as tagsProp')
@@ -305,6 +293,18 @@
   #set ($results = $query.setLimit(1).execute())
   #set ($return = $NULL)
   #setVariable("$return" $results.size().equals(1))
+#end
+
+#macro (checkSimilarFileExists $return)
+  #set ($discard = $response.setContentType('application/json'))
+  #set ($parentDoc = $xwiki.getDocument($services.model.createDocumentReference('', ['FileManager'], $request.parent)))
+  #set ($parameters = {'space': $parentDoc.space, 'tag': $parentDoc.documentReference.name, 'fileName': $request.getParameter('.name')})
+  #set ($fromTags = 'BaseObject as tagObj, DBStringListProperty as tagsProp')
+  #set ($joinTags = "tagObj.className = 'XWiki.TagClass' and tagObj.name = doc.fullName and tagObj.id = tagsProp.id.id and tagsProp.id.name = 'tags'")
+  #getFilesStatement($fromTags "doc.space = :space and $joinTags and :tag in elements(tagsProp.list) and lower(:fileName) like lower(attach.filename)"
+    $parameters $statement)
+  #getFiles($statement $parameters $return)
+  $!jsontool.serialize($return)
 #end
 
 #macro (getFiles $statement $parameters $return)
@@ -418,6 +418,7 @@
     #if ($request.uploadAction == 'newFile')
       #set ($fileReference = $services.drive.getUniqueReference($fileName))
     #else
+      ## For the replace action use the file specified by the user.
       #set ($fileName = $request.replacedFileName)
       #set ($fileReference = $services.model.createDocumentReference('', ['FileManager'], $request.replacedFileId))
     #end
