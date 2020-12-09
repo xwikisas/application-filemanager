@@ -555,8 +555,8 @@
   #end
 #end
 
-#macro (fileExistsWarning)
-  &lt;div class="modal fade" id="fileExists" tabindex="-1" role="dialog"&gt;
+#macro (similarFileWarning)
+  &lt;div class="modal fade" id="similarFile" tabindex="-1" role="dialog"&gt;
     &lt;div class="modal-dialog"&gt;
       &lt;div class="modal-content"&gt;
         &lt;div class="modal-header"&gt;
@@ -564,34 +564,34 @@
             &lt;span aria-hidden="true"&gt;&amp;times;&lt;/span&gt;
           &lt;/button&gt;
           &lt;h4 class="modal-title"&gt;
-            $escapetool.xml($services.localization.render('fileManager.similarFiles.title'))
+            $escapetool.xml($services.localization.render('fileManager.similarFile.title'))
           &lt;/h4&gt;
         &lt;/div&gt;
         &lt;div class="modal-body"&gt;
           &lt;form&gt;
             &lt;p&gt;
               &lt;b id="fileName"&gt;&lt;/b&gt;
-              $escapetool.xml($services.localization.render('fileManager.similarFiles.fileExists'))
+              $escapetool.xml($services.localization.render('fileManager.similarFile.fileExists'))
             &lt;/p&gt;
             &lt;div class="form-group radioList"&gt;
               &lt;div class="form-row"&gt;
                 &lt;div class="form-check"&gt;
                   &lt;input type="radio" id="newFile" name="uploadAction" value="newFile" checked&gt;
                   &lt;label for="newFile"&gt;
-                    $escapetool.xml($services.localization.render('fileManager.similarFiles.newFile'))
+                    $escapetool.xml($services.localization.render('fileManager.similarFile.newFile'))
                   &lt;/label&gt;
                 &lt;/div&gt;
                 &lt;div class="form-check"&gt;
                   &lt;input type="radio" id="replace" name="uploadAction" value="replace"&gt;
                   &lt;label for="replace"&gt;
-                    $escapetool.xml($services.localization.render('fileManager.similarFiles.replace'))
+                    $escapetool.xml($services.localization.render('fileManager.similarFile.replace'))
                   &lt;/label&gt;
                   &lt;select class="form-control" name="replacedFile" id="replacedFile"&gt;&lt;/select&gt;
                 &lt;/div&gt;
                 &lt;div class="form-check"&gt;
                   &lt;input type="radio" id="abort" name="uploadAction" value="abort"&gt;
                   &lt;label for="abort"&gt;
-                    $escapetool.xml($services.localization.render('fileManager.similarFiles.abort'))
+                    $escapetool.xml($services.localization.render('fileManager.similarFile.abort'))
                   &lt;/label&gt;
                 &lt;/div&gt;
               &lt;/div&gt;##form-row
@@ -601,7 +601,7 @@
                 &lt;div class="form-check"&gt;
                   &lt;input type="checkbox" id="repeat" name="repeatAction" value="doRepeat"&gt;
                   &lt;small&gt;&lt;label for="repeat"&gt;
-                    $escapetool.xml($services.localization.render('fileManager.similarFiles.repeat'))
+                    $escapetool.xml($services.localization.render('fileManager.similarFile.repeat'))
                   &lt;/label&gt;&lt;/small&gt;
                 &lt;/div&gt;
               &lt;/div&gt;##form-row
@@ -610,7 +610,7 @@
         &lt;/div&gt;
         &lt;div class="modal-footer"&gt;
           &lt;input type="button" class="btn btn-primary"  data-dismiss="modal"
-            value="$escapetool.xml($services.localization.render('fileManager.similarFiles.submit'))"&gt;
+            value="$escapetool.xml($services.localization.render('fileManager.similarFile.submit'))"&gt;
           &lt;input type="button" class="btn btn-default" data-dismiss="modal"
             value="$escapetool.xml($services.localization.render('cancel'))"&gt;
         &lt;/div&gt;

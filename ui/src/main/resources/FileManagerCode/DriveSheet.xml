@@ -464,7 +464,7 @@
 #if ($xcontext.action == 'get')
   #if ($request.template == 'files')
     #filesLiveTableTemplate
-    #fileExistsWarning()
+    #similarFileWarning()
   #elseif ($request.template == 'fileUpload')
     #fileUploadTemplate
   #elseif ($request.template == 'fileUploadStatus')
@@ -1903,14 +1903,14 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
     /**
      * Events on submit button. Schedule the upload when is the case.
      */
-    $(document).on('click', '#fileExists input.btn-primary', function() {
+    $(document).on('click', '#similarFile input.btn-primary', function() {
       modalData.index--;
       var thisModalData = modalData.modals.shift();
 
       // Get form answers.
-      var fileExistsForm = $(this).parent().prev('.modal-body').find('form').serializeArray();
+      var similarFileForm = $(this).parent().prev('.modal-body').find('form').serializeArray();
       var results = {};
-      $.each(fileExistsForm, function(i, field) {
+      $.each(similarFileForm, function(i, field) {
         results[field.name] = field.value;
       });
 
@@ -1928,7 +1928,7 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
     /**
      * Reset modalData when a modal is closed, since the uploading process is interrupted.
      */
-    $(document).on('click', '#fileExists input.btn-default, #fileExists .modal-header .close', function() {
+    $(document).on('click', '#similarFile input.btn-default, #similarFile .modal-header .close', function() {
       modalData.index = 0;
       modalData.repeatAction = null;
       modalData.modals = [];
@@ -1937,9 +1937,9 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
     /**
      * Display the next file modal, if there is any and no repeat action is selected.
      */
-    $(document).on('hidden.bs.modal', '#fileExists', function (e) {
+    $(document).on('hidden.bs.modal', '#similarFile', function (e) {
       if (modalData.index &gt; 0 &amp;&amp; modalData.repeatAction == null) {
-        $('#fileExists').modal({backdrop: 'static', keyboard: false});
+        $('#similarFile').modal({backdrop: 'static', keyboard: false});
       } else {
         while (modalData.index &gt; 0) {
           modalData.index--;
@@ -1956,7 +1956,7 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
     /**
      * Add similar files as an option for the user to choose the replaced file.
      */
-    $(document).on('show.bs.modal', '#fileExists', function (e) {
+    $(document).on('show.bs.modal', '#similarFile', function (e) {
       $('#fileName').text(modalData.modals[0].file.name);
       $('#replacedFile').empty();
       $.each(modalData.modals[0].files, function() {
@@ -2064,7 +2064,7 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
 
             // We need to show only the first modal added, since the others are shown once the previous one is closed.
             if (modalData.index == 1) {
-              $('#fileExists').modal({backdrop: 'static', keyboard: false});
+              $('#similarFile').modal({backdrop: 'static', keyboard: false});
             }
           } else {
             scheduleUpload(node, parent, drive.uploads, uploadActions.NEW);
