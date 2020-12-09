@@ -57,6 +57,8 @@
         #batchDelete
       #elseif ($request.action == 'download')
         #batchDownload
+      #elseif ($request.action == 'checkSimilarFile')
+        #checkSimilarFileExists
       #else
         $response.sendError(400, 'The specified action is not supported.')
       #end
@@ -462,6 +464,7 @@
 #if ($xcontext.action == 'get')
   #if ($request.template == 'files')
     #filesLiveTableTemplate
+    #fileExistsWarning()
   #elseif ($request.template == 'fileUpload')
     #fileUploadTemplate
   #elseif ($request.template == 'fileUploadStatus')
@@ -1872,14 +1875,104 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
 
   driveDirectives.directive('fileUpload', ['$upload', function($upload) {
     var formToken = $('meta[name=form_token]').attr('content');
+    const uploadActions = {
+      NEW: 'newFile',
+      REPLACE: 'replace',
+      ABORT: 'abort'
+    };
+    // Used for managing file modals that need to be successively displayed.
+    var modalData = {
+      'index': 0,
+      'repeatAction': null,
+      'modals': []
+    };
 
-    var scheduleUpload = function(file, folder, uploads) {
+    var checkIfSimilarFileExists = function(formToken, file, folder) {
+      var parameters = {
+        'outputSyntax': 'plain',
+        'action': 'checkSimilarFile',
+        '.name': file.name,
+        'parent': folder,
+        'form_token': formToken
+      };
+      return $.ajax({
+        url: new XWiki.Document('DriveSheet', 'FileManagerCode').getURL('get', $.param(parameters)),
+      })
+    };
+
+    /**
+     * Events on submit button. Schedule the upload when is the case.
+     */
+    $(document).on('click', '#fileExists input.btn-primary', function() {
+      modalData.index--;
+      var thisModalData = modalData.modals.shift();
+
+      // Get form answers.
+      var fileExistsForm = $(this).parent().prev('.modal-body').find('form').serializeArray();
+      var results = {};
+      $.each(fileExistsForm, function(i, field) {
+        results[field.name] = field.value;
+      });
+
+      modalData.repeatAction = results.repeatAction ? results.uploadAction : null;
+      var replacedFile = thisModalData['files'].filter(function(file) {
+        return file.id == results.replacedFile;
+      })[0];
+
+      // Schedule the uploads.
+      if (results.uploadAction != uploadActions.ABORT) {
+        scheduleUpload(thisModalData.file, thisModalData.folder, thisModalData.uploads, results.uploadAction, replacedFile);
+      }
+    });
+
+    /**
+     * Reset modalData when a modal is closed, since the uploading process is interrupted.
+     */
+    $(document).on('click', '#fileExists input.btn-default, #fileExists .modal-header .close', function() {
+      modalData.index = 0;
+      modalData.repeatAction = null;
+      modalData.modals = [];
+    });
+
+    /**
+     * Display the next file modal, if there is any and no repeat action is selected.
+     */
+    $(document).on('hidden.bs.modal', '#fileExists', function (e) {
+      if (modalData.index &gt; 0 &amp;&amp; modalData.repeatAction == null) {
+        $('#fileExists').modal({backdrop: 'static', keyboard: false});
+      } else {
+        while (modalData.index &gt; 0) {
+          modalData.index--;
+          var thisModalData = modalData.modals.shift();
+
+          // Schedule the uploads.
+          if (modalData.repeatAction != uploadActions.ABORT) {
+            scheduleUpload(thisModalData.file, thisModalData.folder, thisModalData.uploads, modalData.repeatAction, thisModalData.files[0])
+          }
+        }
+      }
+    });
+
+    /**
+     * Add similar files as an option for the user to choose the replaced file.
+     */
+    $(document).on('show.bs.modal', '#fileExists', function (e) {
+      $('#fileName').text(modalData.modals[0].file.name);
+      $('#replacedFile').empty();
+      $.each(modalData.modals[0].files, function() {
+        $('#replacedFile').append($('&lt;option&gt;&lt;/option').attr('value', this.id).text(this.name));
+      });
+    });
+
+    var scheduleUpload = function(file, folder, uploads, uploadAction, replacedFile) {
       var upload = {
         file: file,
         path: [folder],
         loaded: 0,
         total: file.size,
         status: 'Pending',
+        uploadAction: uploadAction,
+        replacedFile: replacedFile,
         abort: function() {
           this.status = 'Aborted';
           this.request.abort();
@@ -1901,8 +1994,13 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
       var parentFolder = upload.path[upload.path.length - 1];
       var parameters = {
         action: 'createFile',
+        uploadAction: upload.uploadAction,
         form_token: formToken
       };
+      if (upload.replacedFile) {
+        parameters.replacedFileId = upload.replacedFile.id;
+        parameters.replacedFileName = upload.replacedFile.name;
+      }
       if (!window.FormData || new FormData().__isFileAPIShim) {
         parameters.legacyBrowser = true;
         parameters.outputSyntax = 'plain';
@@ -1950,7 +2048,28 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
           });
         });
       } else {
-        scheduleUpload(node, parent, drive.uploads);
+        // If there is a file with the same name, but a different case, then show a modal with possible actions to apply.
+        checkIfSimilarFileExists(formToken, node, parent).success(function(data) {
+          if (data.totalCount &gt; 0) {
+            var files = data.list.map(function(file) {
+              return {'id': file.id, 'name': file.name};
+            });
+            modalData.modals.push({
+              'file': node,
+              'folder': parent,
+              'files': files,
+              'uploads': drive.uploads
+            });
+            modalData.index++;
+
+            // We need to show only the first modal added, since the others are shown once the previous one is closed.
+            if (modalData.index == 1) {
+              $('#fileExists').modal({backdrop: 'static', keyboard: false});
+            }
+          } else {
+            scheduleUpload(node, parent, drive.uploads, uploadActions.NEW);
+          }
+        });
       }
     };
 
@@ -3080,6 +3199,9 @@ ul.jobs li.job + li.job {
 }
 ul.jobs li.job &gt; dl {
   margin: 0 .5em;
+}
+.radioList {
+  padding-left: 3%;
 }</code>
     </property>
     <property>
