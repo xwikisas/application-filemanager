@@ -295,7 +295,7 @@
   #setVariable("$return" $results.size().equals(1))
 #end
 
-#macro (checkSimilarFileExists $return)
+#macro (checkSimilarFileExists)
   #set ($discard = $response.setContentType('application/json'))
   #set ($parentDoc = $xwiki.getDocument($services.model.createDocumentReference('', ['FileManager'], $request.parent)))
   #set ($parameters = {'space': $parentDoc.space, 'tag': $parentDoc.documentReference.name, 'fileName': $request.getParameter('.name')})
