@@ -295,16 +295,15 @@
   #setVariable("$return" $results.size().equals(1))
 #end
 
-#macro (checkSimilarFileExists)
-  #set ($discard = $response.setContentType('application/json'))
+#macro (getSimilarFiles $return)
   #set ($parentDoc = $xwiki.getDocument($services.model.createDocumentReference('', ['FileManager'], $request.parent)))
   #set ($parameters = {'space': $parentDoc.space, 'tag': $parentDoc.documentReference.name, 'fileName': $request.getParameter('.name')})
   #set ($fromTags = 'BaseObject as tagObj, DBStringListProperty as tagsProp')
   #set ($joinTags = "tagObj.className = 'XWiki.TagClass' and tagObj.name = doc.fullName and tagObj.id = tagsProp.id.id and tagsProp.id.name = 'tags'")
   #getFilesStatement($fromTags "doc.space = :space and $joinTags and :tag in elements(tagsProp.list) and lower(:fileName) like lower(attach.filename)"
     $parameters $statement)
-  #getFiles($statement $parameters $return)
-  $!jsontool.serialize($return)
+  #getFiles($statement $parameters $_return)
+  #setVariable("$return" $_return)
 #end
 
 #macro (getFiles $statement $parameters $return)

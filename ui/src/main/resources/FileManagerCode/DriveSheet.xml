@@ -57,8 +57,6 @@
         #batchDelete
       #elseif ($request.action == 'download')
         #batchDownload
-      #elseif ($request.action == 'checkSimilarFile')
-        #checkSimilarFileExists
       #else
         $response.sendError(400, 'The specified action is not supported.')
       #end
@@ -79,6 +77,8 @@
       #getOrphanFolders($data)
     #elseif ($request.data == 'orphanFiles')
       #getOrphanFiles
+    #elseif ($request.data == 'getSimilarFiles')
+      #getSimilarFiles($data)
     #elseif ($request.data == 'activeJobs')
       #getActiveJobs($data)
     #elseif ($request.data == 'jobStatus')
@@ -313,6 +313,7 @@
     columns="$escapetool.xml($jsontool.serialize($columns))"&gt;&lt;/livetable&gt;
   &lt;file-upload ng-show="drive.viewer == 'upload'" drive="drive" back="backToList()"&gt;&lt;/file-upload&gt;
   #downloads
+  #similarFileWarning()
 #end
 
 #macro (fileUploadTemplate)
@@ -464,7 +465,6 @@
 #if ($xcontext.action == 'get')
   #if ($request.template == 'files')
     #filesLiveTableTemplate
-    #similarFileWarning()
   #elseif ($request.template == 'fileUpload')
     #fileUploadTemplate
   #elseif ($request.template == 'fileUploadStatus')
@@ -1881,17 +1881,19 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
       ABORT: 'abort'
     };
 
-    var checkIfSimilarFileExists = function(formToken, file, folder) {
+    var getSimilarFiles = function(formToken, file, folder) {
       var parameters = {
         'outputSyntax': 'plain',
-        'action': 'checkSimilarFile',
-        '.name': file.name,
+        'data': 'getSimilarFiles',
         'parent': folder,
-        'form_token': formToken
+        // When the query statement is created, .name is used by default as the request parameter used in filtering
+        // attachments by name.
+        '.name': file.name
       };
       return $.ajax({
-        url: new XWiki.Document('DriveSheet', 'FileManagerCode').getURL('get', $.param(parameters)),
-      })
+        data: parameters,
+        url: new XWiki.Document('DriveSheet', 'FileManagerCode').getURL('get')
+      });
     };
 
     /**
@@ -1917,7 +1919,6 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
           return file.id == results.replacedFile;
         })[0];
 
-        // Schedule the uploads.
         $('#similarFile').data('deferred').resolve(results.uploadAction, replacedFile);
       } else {
         $('#similarFile').data('deferred').resolve(uploadActions.ABORT);
@@ -1927,7 +1928,7 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
       $.each($('#similarFile').data(), function (id) {
           $("#similarFile").removeAttr("data-" + id);
       });
-    })
+    });
 
     /**
      * Add similar files as an option for the user to choose the replaced file.
@@ -2043,7 +2044,7 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
 
     var getUploadAction = function(file, folder) {
       var deferred = $.Deferred();
-      checkIfSimilarFileExists(formToken, file, folder).success(function(data) {
+      getSimilarFiles(formToken, file, folder).success(function(data) {
         if (data.totalCount &gt; 0) {
           var similarFiles = data.list.map(function(file) {
             return {'id': file.id, 'name': file.name, 'size': bytesToSize(file.size)};
