@@ -1926,7 +1926,7 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
 
       // Clear all data attributes of the hidden modal.
       $.each($('#similarFile').data(), function (id) {
-          $("#similarFile").removeAttr("data-" + id);
+        $("#similarFile").removeAttr("data-" + id);
       });
     });
 
