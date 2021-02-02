@@ -417,7 +417,7 @@
     #if ($request.uploadAction == 'newFile')
       #set ($fileReference = $services.drive.getUniqueReference($fileName))
     #else
-      ## For the replace action use the file specified by the user.
+      ## For the replace action use the file specified by the user, whose name is different than the name from the form.
       #set ($fileName = $request.replacedFileName)
       #set ($fileReference = $services.model.createDocumentReference('', ['FileManager'], $request.replacedFileId))
     #end
@@ -556,42 +556,43 @@
 #end
 
 #macro (similarFileWarning)
-  &lt;div class="modal fade" id="similarFile" tabindex="-1" role="dialog"&gt;
+  &lt;div class="modal fade" id="similarFileModal" tabindex="-1" role="dialog"&gt;
     &lt;div class="modal-dialog"&gt;
       &lt;div class="modal-content"&gt;
         &lt;div class="modal-header"&gt;
-          &lt;button type="button" class="close" data-dismiss="modal" aria-label="Close"&gt;
+          &lt;button type="button" class="close" data-dismiss="modal"
+            aria-label="$escapetool.xml($services.localization.render('fileManager.similarFileModal.close'))"&gt;
             &lt;span aria-hidden="true"&gt;&amp;times;&lt;/span&gt;
           &lt;/button&gt;
           &lt;h4 class="modal-title"&gt;
-            $escapetool.xml($services.localization.render('fileManager.similarFile.title'))
+            $escapetool.xml($services.localization.render('fileManager.similarFileModal.title'))
           &lt;/h4&gt;
         &lt;/div&gt;
         &lt;div class="modal-body"&gt;
           &lt;form&gt;
             &lt;p&gt;
-              &lt;b id="fileName"&gt;&lt;/b&gt;
-              $escapetool.xml($services.localization.render('fileManager.similarFile.fileExists'))
+              &lt;b class="fileName"&gt;&lt;/b&gt;
+              $escapetool.xml($services.localization.render('fileManager.similarFileModal.fileExists'))
             &lt;/p&gt;
             &lt;div class="form-group radioList"&gt;
               &lt;div class="form-row"&gt;
                 &lt;div class="form-check"&gt;
                   &lt;input type="radio" id="newFile" name="uploadAction" value="newFile" checked&gt;
                   &lt;label for="newFile"&gt;
-                    $escapetool.xml($services.localization.render('fileManager.similarFile.newFile'))
+                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.newFile'))
                   &lt;/label&gt;
                 &lt;/div&gt;
                 &lt;div class="form-check"&gt;
                   &lt;input type="radio" id="replace" name="uploadAction" value="replace"&gt;
                   &lt;label for="replace"&gt;
-                    $escapetool.xml($services.localization.render('fileManager.similarFile.replace'))
+                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.replace'))
                   &lt;/label&gt;
                   &lt;select class="form-control" name="replacedFile" id="replacedFile"&gt;&lt;/select&gt;
                 &lt;/div&gt;
                 &lt;div class="form-check"&gt;
                   &lt;input type="radio" id="abort" name="uploadAction" value="abort"&gt;
                   &lt;label for="abort"&gt;
-                    $escapetool.xml($services.localization.render('fileManager.similarFile.abort'))
+                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.abort'))
                   &lt;/label&gt;
                 &lt;/div&gt;
               &lt;/div&gt;##form-row
@@ -601,7 +602,7 @@
                 &lt;div class="form-check"&gt;
                   &lt;input type="checkbox" id="repeat" name="repeatAction" value="doRepeat"&gt;
                   &lt;small&gt;&lt;label for="repeat"&gt;
-                    $escapetool.xml($services.localization.render('fileManager.similarFile.repeat'))
+                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.repeat'))
                   &lt;/label&gt;&lt;/small&gt;
                 &lt;/div&gt;
               &lt;/div&gt;##form-row
@@ -610,7 +611,7 @@
         &lt;/div&gt;
         &lt;div class="modal-footer"&gt;
           &lt;input type="button" class="btn btn-primary"  data-dismiss="modal"
-            value="$escapetool.xml($services.localization.render('fileManager.similarFile.submit'))"&gt;
+            value="$escapetool.xml($services.localization.render('fileManager.similarFileModal.submit'))"&gt;
           &lt;input type="button" class="btn btn-default" data-dismiss="modal"
             value="$escapetool.xml($services.localization.render('cancel'))"&gt;
         &lt;/div&gt;
