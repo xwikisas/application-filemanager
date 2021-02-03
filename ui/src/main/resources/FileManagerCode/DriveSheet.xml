@@ -1957,7 +1957,7 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
     var isSimilarUploadRunning = function(uploads, upload) {
       var similarUploadsRunning = uploads.running.filter(function(runningUpload) {
         return JSON.stringify(runningUpload.path) === JSON.stringify(upload.path) &amp;&amp;
-          runningUpload.replacedFile.name == upload.replacedFile.name;
+          runningUpload.replacedFile.name === upload.replacedFile.name;
       });
 
       return similarUploadsRunning.length &gt; 0;
