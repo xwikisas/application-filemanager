@@ -295,6 +295,17 @@
   #setVariable("$return" $results.size().equals(1))
 #end
 
+#macro (getSimilarFiles $return)
+  #set ($parentDoc = $xwiki.getDocument($services.model.createDocumentReference('', ['FileManager'], $request.parent)))
+  #set ($parameters = {'space': $parentDoc.space, 'tag': $parentDoc.documentReference.name, 'fileName': $request.getParameter('.name')})
+  #set ($fromTags = 'BaseObject as tagObj, DBStringListProperty as tagsProp')
+  #set ($joinTags = "tagObj.className = 'XWiki.TagClass' and tagObj.name = doc.fullName and tagObj.id = tagsProp.id.id and tagsProp.id.name = 'tags'")
+  #getFilesStatement($fromTags "doc.space = :space and $joinTags and :tag in elements(tagsProp.list) and lower(:fileName) like lower(attach.filename)"
+    $parameters $statement)
+  #getFiles($statement $parameters $_return)
+  #setVariable("$return" $_return)
+#end
+
 #macro (getFiles $statement $parameters $return)
   #set ($query = $services.query.hql($statement))
   #foreach ($entry in $parameters.entrySet())
@@ -403,14 +414,22 @@
 #macro (createFile)
   #set ($fileName = $xwiki.fileupload.getFileName('filepath'))
   #if ("$!fileName" != '')
-    #set ($fileReference = $services.drive.getUniqueReference($fileName))
+    #if ($request.uploadAction == 'newFile')
+      #set ($fileReference = $services.drive.getUniqueReference($fileName))
+    #else
+      ## For the replace action use the file specified by the user, whose name is different than the name from the form.
+      #set ($fileName = $request.replacedFileName)
+      #set ($fileReference = $services.model.createDocumentReference('', ['FileManager'], $request.replacedFileId))
+    #end
     #set ($fileDoc = $xwiki.getDocument($fileReference))
     #if ($fileDoc &amp;&amp; $fileDoc.hasAccessLevel('edit'))
-      ## Set the parent folder.
-      #set ($discard = $fileDoc.setParent($doc.fullName))
-      #set ($discard = $fileDoc.newObject('XWiki.TagClass').set('tags', [$doc.documentReference.name]))
-      ## Add the file object.
-      #set ($discard = $fileDoc.newObject('FileManagerCode.FileClass').set('description', "$!request.description"))
+      #if ($request.uploadAction == 'newFile')
+        ## Set the parent folder.
+        #set ($discard = $fileDoc.setParent($doc.fullName))
+        #set ($discard = $fileDoc.newObject('XWiki.TagClass').set('tags', [$doc.documentReference.name]))
+        ## Add the file object.
+        #set ($discard = $fileDoc.newObject('FileManagerCode.FileClass').set('description', "$!request.description"))
+      #end
       ## Add the attachment.
       ## Find the attachment among the fields of this form-submission.
       #set ($fileUploadFiles = $xwiki.fileupload.getFileItems())
@@ -534,6 +553,71 @@
     #set ($return = $NULL)
     #setVariable("$return" $jobStatusAsJSON)
   #end
+#end
+
+#macro (similarFileWarning)
+  &lt;div class="modal fade" id="similarFileModal" tabindex="-1" role="dialog"&gt;
+    &lt;div class="modal-dialog"&gt;
+      &lt;div class="modal-content"&gt;
+        &lt;div class="modal-header"&gt;
+          &lt;button type="button" class="close" data-dismiss="modal"
+            aria-label="$escapetool.xml($services.localization.render('fileManager.similarFileModal.close'))"&gt;
+            &lt;span aria-hidden="true"&gt;&amp;times;&lt;/span&gt;
+          &lt;/button&gt;
+          &lt;h4 class="modal-title"&gt;
+            $escapetool.xml($services.localization.render('fileManager.similarFileModal.title'))
+          &lt;/h4&gt;
+        &lt;/div&gt;
+        &lt;div class="modal-body"&gt;
+          &lt;form&gt;
+            &lt;p&gt;
+              &lt;b class="fileName"&gt;&lt;/b&gt;
+              $escapetool.xml($services.localization.render('fileManager.similarFileModal.fileExists'))
+            &lt;/p&gt;
+            &lt;div class="form-group radioList"&gt;
+              &lt;div class="form-row"&gt;
+                &lt;div class="form-check"&gt;
+                  &lt;input type="radio" id="newFile" name="uploadAction" value="newFile" checked&gt;
+                  &lt;label for="newFile"&gt;
+                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.newFile'))
+                  &lt;/label&gt;
+                &lt;/div&gt;
+                &lt;div class="form-check"&gt;
+                  &lt;input type="radio" id="replace" name="uploadAction" value="replace"&gt;
+                  &lt;label for="replace"&gt;
+                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.replace'))
+                  &lt;/label&gt;
+                  &lt;select class="form-control" name="replacedFile" id="replacedFile"&gt;&lt;/select&gt;
+                &lt;/div&gt;
+                &lt;div class="form-check"&gt;
+                  &lt;input type="radio" id="abort" name="uploadAction" value="abort"&gt;
+                  &lt;label for="abort"&gt;
+                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.abort'))
+                  &lt;/label&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;##form-row
+            &lt;/div&gt;##form-group
+            &lt;div class="form-group"&gt;
+              &lt;div class="form-row"&gt;
+                &lt;div class="form-check"&gt;
+                  &lt;input type="checkbox" id="repeat" name="repeatAction" value="doRepeat"&gt;
+                  &lt;small&gt;&lt;label for="repeat"&gt;
+                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.repeat'))
+                  &lt;/label&gt;&lt;/small&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;##form-row
+            &lt;/div&gt;###form-group
+          &lt;/form&gt;
+        &lt;/div&gt;
+        &lt;div class="modal-footer"&gt;
+          &lt;input type="button" class="btn btn-primary"  data-dismiss="modal"
+            value="$escapetool.xml($services.localization.render('fileManager.similarFileModal.submit'))"&gt;
+          &lt;input type="button" class="btn btn-default" data-dismiss="modal"
+            value="$escapetool.xml($services.localization.render('cancel'))"&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
 #end
 {{/velocity}}</content>
 </xwikidoc>

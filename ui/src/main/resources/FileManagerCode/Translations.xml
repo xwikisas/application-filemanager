@@ -133,7 +133,17 @@ rendering.macro.fileManager.recentFiles.parameter.drive.name=Drive
 rendering.macro.fileManager.recentFiles.parameter.drive.description=The drive from which to list the recent files, specified as a page reference. It defaults to the current drive, if available, otherwise to the initial drive ('FileManager').
 
 fileManager.drive.templateProvider.name=Drive
-fileManager.drive.templateProvider.description=Groups files and folders</content>
+fileManager.drive.templateProvider.description=Groups files and folders
+
+# Similar files modal
+fileManager.similarFileModal.abort=Abort the upload
+fileManager.similarFileModal.close=Close
+fileManager.similarFileModal.fileExists=exists already with a similar name. What action should be applied?
+fileManager.similarFileModal.newFile=Upload a new file
+fileManager.similarFileModal.repeat=Repeat for all future conflicts and choose the first match in case the replace action is selected
+fileManager.similarFileModal.replace=Replace the following file
+fileManager.similarFileModal.submit=Submit
+fileManager.similarFileModal.title=Similar file exists</content>
   <object>
     <name>FileManagerCode.Translations</name>
     <number>0</number>
