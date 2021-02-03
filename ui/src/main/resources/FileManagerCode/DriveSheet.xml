@@ -1891,7 +1891,7 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
       }
     };
 
-    var similarFiles = function(file, folder) {
+    var getSimilarFiles = function(file, folder) {
       var parameters = {
         'outputSyntax': 'plain',
         'data': 'similarFiles',
@@ -1951,29 +1951,16 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
       });
     });
 
-    var isSameUpload = function(upload1, upload2, checkReplacedFile) {
-      // Check if each path includes completely the other path.
-      var isSameParent = $(upload1.path).not(upload2.path).length == 0
-        &amp;&amp; $(upload2.path).not(upload1.path).length == 0;
-
-      if (checkReplacedFile) {
-        var isSameName = upload1.replacedFile.name == upload2.replacedFile.name;
-      } else {
-        var isSameName = upload1.file.name == upload2.file.name;
-      }
-
-      return isSameParent &amp;&amp; isSameName;
-    };
-
+    /*
+     * Check if there is already an upload running that targets the same file document.
+     */
     var isSimilarUploadRunning = function(uploads, upload) {
-      var similarUploadsRunning = uploads.running.filter(function(thisUpload) {
-        return isSameUpload(thisUpload, upload, /* checkReplacedFile */ true);
+      var similarUploadsRunning = uploads.running.filter(function(runningUpload) {
+        return JSON.stringify(runningUpload.path) == JSON.stringify(upload.path) &amp;&amp;
+          runningUpload.replacedFile.name == upload.replacedFile.name;
       });
 
-      if (similarUploadsRunning.length == 0) {
-        return false;
-      }
-      return true;
+      return similarUploadsRunning.length &gt; 0;
     };
 
     /*
@@ -1995,6 +1982,20 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
       return nextUpload;
     };
 
+    var pollNextUpload = function(uploads) {
+      var upload = getNextUpload(uploads);
+      if (upload == null) {
+        return upload;
+      }
+
+      // Remove selected upload from pending list.
+      uploads.pending = uploads.pending.filter(function(pendingUpload) {
+        return !(pendingUpload === upload);
+      });
+
+      return upload;
+    }
+
     var scheduleUpload = function(file, folder, uploads, uploadAction, replacedFile) {
       var upload = {
         file: file,
@@ -2015,14 +2016,10 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
     };
 
     var maybePerformUpload = function(uploads) {
-      var upload = getNextUpload(uploads);
+      var upload = pollNextUpload(uploads);
       if (upload == null) {
         return;
       }
-      // Remove selected upload from pending list.
-      uploads.pending = uploads.pending.filter(function(thisUpload) {
-        return upload != null &amp;&amp; !isSameUpload(thisUpload, upload, /* checkReplacedFile */ false);
-      });
       uploads.running.unshift(upload);
       upload.status = 'InProgress';
       upload.start = new Date().getTime();
@@ -2097,7 +2094,7 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
 
     var getUploadAction = function(file, folder) {
       var deferred = $.Deferred();
-      similarFiles(file, folder).success(function(data) {
+      getSimilarFiles(file, folder).success(function(data) {
         if (data.totalCount &gt; 0) {
           var bytesFilter = $filter('bytes');
           var similarFiles = data.list.map(function(file) {
@@ -2120,8 +2117,11 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
         // We choose the first matched file in case the replace action is selected for repeat.
         deferred.resolve(repeatAction, similarFiles[0]);
       } else {
-        $('#similarFileModal').data('deferred', deferred).data('fileName', file.name).data('similarFiles', similarFiles)
-          .modal({backdrop: 'static', keyboard: false});
+        $('#similarFileModal').data({
+          'deferred': deferred,
+          'fileName': file.name,
+          'similarFiles': similarFiles
+        }).modal({backdrop: 'static', keyboard: false});
       }
       return deferred.promise();
     };
