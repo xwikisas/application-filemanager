@@ -2944,6 +2944,7 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
  */
 #files img.avatar,
 #files img.icon,
+.upload img.icon,
 .jobs img.avatar {
   max-height: 32px;
   max-width: 32px;
