@@ -141,7 +141,7 @@ fileManager.similarFileModal.close=Close
 fileManager.similarFileModal.fileExists=exists already with a similar name. What action should be applied?
 fileManager.similarFileModal.newFile=Upload a new file
 fileManager.similarFileModal.repeat=Repeat for all future conflicts and choose the first match in case the replace action is selected
-fileManager.similarFileModal.replace=Replace the following file
+fileManager.similarFileModal.replace=Update an existing file (content only)
 fileManager.similarFileModal.submit=Submit
 fileManager.similarFileModal.title=Similar file exists</content>
   <object>
