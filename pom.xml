@@ -34,7 +34,7 @@
   <version>2.5.1-SNAPSHOT</version>
   <description>Create and manage a hierarchy of files and folders using drag and drop. View and play files directly from the wiki. Supports nested page and multiple wikis. The app can be purchased individually or part of the XWiki Pro package. Try it free.</description>
   <properties>
-    <licensing.version>1.19</licensing.version>
+    <licensing.version>1.20</licensing.version>
   </properties>
   <issueManagement>
     <system>GitHub</system>
