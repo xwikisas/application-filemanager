@@ -136,6 +136,11 @@
   #setVariable("$return" $results.size().equals(1))
 #end
 
+## $escapetool.velocity() doesn't work as expected (XCOMMONS-2367) so we can't use it.
+#macro (escapeVelocity $text)
+$!text.replace('$', '${escapetool.d}').replace('#', '${escapetool.h}')
+#end
+
 #macro (createFolder $name $parent)
   #if ("$!name" == '')
     #set ($name = 'Untitled Folder')
@@ -145,8 +150,14 @@
     #set ($parent = $doc.documentReference.name)
   #end
   #set ($parentReference = $services.model.createDocumentReference($parent, $doc.documentReference.lastSpaceReference))
+  ## Note that XWiki supports Velocity code inside page titles (e.g. in order to use translation keys) but this can be
+  ## very confusing for simple users that create folders with Velocity special characters in their names without being
+  ## aware of it. For this reason we escape the Velocity special characters. Note that we need the title because we're
+  ## not using nested pages to hold the folder hierarchy yet so folder name collision is quite common in which case the
+  ## used page name is not exactly the folder name given by the user (e.g. when the user creates the folder "Test" we
+  ## might have to create the page "Test13" with the title "Test").
   $response.sendRedirect($xwiki.getURL($folderReference, 'save', $escapetool.url({
-    'title': $name,
+    'title': "#escapeVelocity($name)",
     'parent': $services.model.serialize($parentReference, 'compactwiki'),
     'template': 'FileManagerCode.FolderTemplate',
     'comment': 'Folder created',
