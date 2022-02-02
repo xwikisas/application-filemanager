@@ -381,7 +381,7 @@
 #macro(getFileFolders $fileDoc)
   #getFilePaths($fileDoc $paths)
   #set ($folders = [])
-  #if ($paths.length > 0)
+  #if ($paths.length &gt; 0)
     #foreach ($path in $paths[0])
       #if ($path != 'WebHome')
         #set ($discard = $folders.add($path))
