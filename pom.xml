@@ -28,7 +28,7 @@
     <version>11.10</version>
   </parent>
   <groupId>com.xwiki.filemanager</groupId>
-  <artifactId>application-filemanager-pom</artifactId>
+  <artifactId>application-filemanager</artifactId>
   <packaging>pom</packaging>
   <name>File Manager Application (Pro) Parent POM</name>
   <version>2.5.6-SNAPSHOT</version>

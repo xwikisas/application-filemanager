@@ -24,7 +24,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.xwiki.filemanager</groupId>
-    <artifactId>application-filemanager-pom</artifactId>
+    <artifactId>application-filemanager</artifactId>
     <version>2.5.6-SNAPSHOT</version>
   </parent>
   <artifactId>application-filemanager-api</artifactId>
