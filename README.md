@@ -2,7 +2,7 @@
 
 XWiki application to manage a hierarchy of folders and files. It embeds viewers for many known file types, such as office and PDF.
 
-* Project Lead: [Marius Dumitru Florea](https://github.com/mflorea)
+* Project Lead: N/A
 * [Documentation](https://store.xwiki.com/xwiki/bin/view/Extension/FileManagerApplication)
 * [Development Practices](http://dev.xwiki.org)
 * Minimal XWiki version supported: XWiki 11.10
