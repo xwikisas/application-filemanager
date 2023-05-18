@@ -25,7 +25,7 @@
   <parent>
     <groupId>com.xwiki.parent</groupId>
     <artifactId>xwikisas-parent-platform</artifactId>
-    <version>11.10</version>
+    <version>13.10-3</version>
   </parent>
   <groupId>com.xwiki.filemanager</groupId>
   <artifactId>application-filemanager</artifactId>
@@ -34,7 +34,7 @@
   <version>2.5.6-SNAPSHOT</version>
   <description>Create and manage a hierarchy of files and folders using drag and drop. View and play files directly from the wiki. Supports nested page and multiple wikis. The app can be purchased individually or part of the XWiki Pro package. Try it free.</description>
   <properties>
-    <licensing.version>1.22</licensing.version>
+    <licensing.version>1.24.1</licensing.version>
   </properties>
   <issueManagement>
     <system>GitHub</system>

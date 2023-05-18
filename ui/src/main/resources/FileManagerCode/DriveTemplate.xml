@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="FileManagerCode.DriveTemplate" locale="">
+<xwikidoc version="1.4" reference="FileManagerCode.DriveTemplate" locale="">
   <web>FileManagerCode</web>
   <name>DriveTemplate</name>
   <language/>
@@ -64,8 +64,5 @@
         <classType>com.xpn.xwiki.objects.classes.ComputedFieldClass</classType>
       </name>
     </class>
-    <property>
-      <name/>
-    </property>
   </object>
 </xwikidoc>
