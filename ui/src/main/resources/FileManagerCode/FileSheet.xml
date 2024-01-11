@@ -39,6 +39,7 @@
   <content>{{include reference="FileManagerCode.Macros" /}}
 
 {{velocity output="false"}}
+#set ($showattachments = false)
 #macro (handleFileWebServiceRequest)
   #if ($request.action)
     #if ($services.csrf.isTokenValid($request.form_token))
