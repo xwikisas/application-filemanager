@@ -142,10 +142,11 @@ $!text.replace('$', '${escapetool.d}').replace('#', '${escapetool.h}')
 #end
 
 #macro (createFolder $name $parent)
+  ## Trimming whitespaces from the input name to address potential issues with the database collation which may lead to
+  ## unexpected behavior when dealing with trailing whitespaces.
+  #set ($name = $name.trim())
   #if ("$!name" == '')
     #set ($name = 'Untitled Folder')
-  #else
-    #set ($name = $name.trim())
   #end
   #set ($folderReference = $services.drive.getUniqueReference($name))
   #if ("$!parent" == '')
