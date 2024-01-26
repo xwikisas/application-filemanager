@@ -144,6 +144,8 @@ $!text.replace('$', '${escapetool.d}').replace('#', '${escapetool.h}')
 #macro (createFolder $name $parent)
   #if ("$!name" == '')
     #set ($name = 'Untitled Folder')
+  #else
+    #set ($name = $name.trim())
   #end
   #set ($folderReference = $services.drive.getUniqueReference($name))
   #if ("$!parent" == '')
