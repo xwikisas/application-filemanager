@@ -115,6 +115,7 @@ public class PackJob extends AbstractJob<PackRequest, PackJobStatus>
         AttachmentReference outputFileReference = getRequest().getOutputFileReference();
         TemporaryResourceReference temporaryResourceReference = new TemporaryResourceReference(MODULE_NAME,
             Collections.singletonList(outputFileReference.getName()), outputFileReference.getParent());
+        temporaryResourceReference.addParameter("jobId", request.getId().get(1));
         File outputFile = this.temporaryResourceStore.createTemporaryFile(temporaryResourceReference,
             new ByteArrayInputStream(new byte[] {}));
         String pathPrefix = "";

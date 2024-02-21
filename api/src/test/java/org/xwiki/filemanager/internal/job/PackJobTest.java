@@ -106,9 +106,10 @@ public class PackJobTest extends AbstractJobTest
         AttachmentReference packReference =
             new AttachmentReference("out.zip", new DocumentReference("wiki", Arrays.asList("Path", "To"), "Page"));
         request.setOutputFileReference(packReference);
-
+        request.setId("id1", "id2");
         TemporaryResourceReference packResourceReference = new TemporaryResourceReference("filemanager",
             Collections.singletonList("out.zip"), packReference.getParent());
+        packResourceReference.addParameter("jobId", request.getId().get(1));
         java.io.File packFile = new java.io.File(testFolder.getRoot(), "temp/filemanager/wiki/Path/To/Page/out.zip");
         packFile.getParentFile().mkdirs();
         packFile.createNewFile();
