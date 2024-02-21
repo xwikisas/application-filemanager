@@ -142,7 +142,7 @@
 #end
 
 #macro (getDownloadDocument $name $title $return)
-  #set ($downloadId = "Download-$!{xcontext.userReference.name}-${name}")
+  #set ($downloadId = "Download-$!{xcontext.userReference.name}-$name")
   #set ($downloadDocRef = $services.model.createDocumentReference($downloadId,
     $doc.documentReference.lastSpaceReference))
   #set ($downloadDoc = $xwiki.getDocument($downloadDocRef))
