@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -106,9 +107,10 @@ public class PackJobTest extends AbstractJobTest
         AttachmentReference packReference =
             new AttachmentReference("out.zip", new DocumentReference("wiki", Arrays.asList("Path", "To"), "Page"));
         request.setOutputFileReference(packReference);
-
+        request.setId("id1", "id2");
         TemporaryResourceReference packResourceReference = new TemporaryResourceReference("filemanager",
             Collections.singletonList("out.zip"), packReference.getParent());
+        packResourceReference.addParameter("jobId", StringUtils.join(request.getId(), "/"));
         java.io.File packFile = new java.io.File(testFolder.getRoot(), "temp/filemanager/wiki/Path/To/Page/out.zip");
         packFile.getParentFile().mkdirs();
         packFile.createNewFile();

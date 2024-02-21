@@ -34,6 +34,7 @@ import javax.inject.Named;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.filemanager.FileSystem;
 import org.xwiki.filemanager.Folder;
@@ -115,6 +116,7 @@ public class PackJob extends AbstractJob<PackRequest, PackJobStatus>
         AttachmentReference outputFileReference = getRequest().getOutputFileReference();
         TemporaryResourceReference temporaryResourceReference = new TemporaryResourceReference(MODULE_NAME,
             Collections.singletonList(outputFileReference.getName()), outputFileReference.getParent());
+        temporaryResourceReference.addParameter("jobId", StringUtils.join(request.getId(), "/"));
         File outputFile = this.temporaryResourceStore.createTemporaryFile(temporaryResourceReference,
             new ByteArrayInputStream(new byte[] {}));
         String pathPrefix = "";
