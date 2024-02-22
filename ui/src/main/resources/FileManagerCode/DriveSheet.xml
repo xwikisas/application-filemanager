@@ -771,11 +771,19 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
     return $resource(url, defaultParams, api);
   }]);
 
+  var urlDispatcher = new XWiki.Document('URLDispatcher', 'FileManagerCode');
   driveServices.factory('Folder', ['$resource', function($resource) {
     var data = ['files', 'folders'];
     var actions = ['createFolder', 'move', 'copy', 'delete'];
     var api = createAPI(data, actions);
-    return $resource(url, defaultParams, api);
+    // We use an URL dispatcher to bypass how an URL is processed by Angular.
+    var urlD = urlDispatcher.getURL('get', $.param({
+      entityType: 'folder',
+      wiki: XWiki.currentWiki,
+      space: 'FileManager',
+      page: '!page'
+    })).replace(/\!/g, ':');
+    return $resource(urlD, defaultParams, api);
   }]);
 
   driveServices.factory('File', ['$resource', function($resource) {
@@ -796,7 +804,6 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
     // is stored on the wiki descriptor (on the main wiki). Thus we would need to make an additional request to get the
     // entity URL. The workaround is to use a dedicated page (service) that redirects to the entity specified on the
     // request parameters.
-    var urlDispatcher = new XWiki.Document('URLDispatcher', 'FileManagerCode');
     var getDocumentURL = function(wiki, space, page) {
       return urlDispatcher.getURL('get', $.param({
         entityType: 'document',
