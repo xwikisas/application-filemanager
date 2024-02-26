@@ -780,7 +780,7 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
     var urlD = urlDispatcher.getURL('get', $.param({
       entityType: 'folder',
       wiki: XWiki.currentWiki,
-      space: 'FileManager',
+      space: XWiki.currentSpace,
       page: '!page'
     })).replace(/\!/g, ':');
     return $resource(urlD, defaultParams, api);
