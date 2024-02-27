@@ -59,8 +59,8 @@
 #elseif ($entityType == 'folder')
   #set ($params =
     "data=${request.data}&amp;limit=${request.limit}&amp;offset=${request.offset}&amp;outputSyntax=${request.outputSyntax}&amp;sort=${request.sort}")
-  #set($filename = $request.space + ".\" + $request.page)
-  $response.sendRedirect($xwiki.getURL($filename, 'get', $params))
+  #set($fullName = "${request.wiki}:${request.space}.\\${request.page}")
+  $response.sendRedirect($xwiki.getURL($fullName, 'get', $params))
 #end
 {{/velocity}}</content>
 </xwikidoc>
