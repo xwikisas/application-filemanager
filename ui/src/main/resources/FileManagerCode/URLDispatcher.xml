@@ -57,14 +57,10 @@
     $response.sendError(404)
   #end
 #elseif ($entityType == 'folder')
-  #set ($document = $xwiki.getDocument($documentReference))
-  #if ($document)
-    #set ($params =
-      "data=${request.data}&amp;limit=${request.limit}&amp;offset=${request.offset}&amp;outputSyntax=${request.outputSyntax}&amp;sort=${request.sort}")
-    $response.sendRedirect($document.getURL('get', $params))
-  #else
-    $response.sendError(404)
-  #end
+  #set ($params =
+    "data=${request.data}&amp;limit=${request.limit}&amp;offset=${request.offset}&amp;outputSyntax=${request.outputSyntax}&amp;sort=${request.sort}")
+  #set($filename = $request.space + ".\" + $request.page)
+  $response.sendRedirect($xwiki.getURL($filename, 'get', $params))
 #end
 {{/velocity}}</content>
 </xwikidoc>
