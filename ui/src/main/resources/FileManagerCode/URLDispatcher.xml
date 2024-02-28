@@ -45,7 +45,9 @@
 ## parameters.
 ##
 #set ($entityType = $request.entityType.toLowerCase())
-#set ($documentReference = $services.model.createDocumentReference($request.wiki, $request.space, $request.page))
+#set ($wikiReference = $services.model.createWikiReference($request.wiki))
+#set ($spaceReference = $services.model.resolveSpace($request.space, $wikiReference))
+#set ($documentReference = $services.model.createDocumentReference($request.page, $spaceReference))
 #if ($entityType == 'document')
   $response.sendRedirect($xwiki.getURL($documentReference))
 #elseif ($entityType == 'attachment')
@@ -53,6 +55,16 @@
   #if ($document)
     #set ($queryString = $request.getParameter('queryString'))
     $response.sendRedirect($document.getAttachmentURL($request.file, 'download', $queryString))
+  #else
+    $response.sendError(404)
+  #end
+#elseif ($entityType == 'folder')
+  #set ($document = $xwiki.getDocument($documentReference))
+  #if ($document)
+    #set ($parameters =
+      $escapetool.url({"data": $request.data, "limit": $request.limit, "offset": $request.offset,
+      "outputSyntax": $request.outputSyntax, "sort": $request.sort}))
+    $response.sendRedirect($document.getURL('get', $parameters))
   #else
     $response.sendError(404)
   #end
