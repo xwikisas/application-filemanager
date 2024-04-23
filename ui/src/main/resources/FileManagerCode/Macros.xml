@@ -136,11 +136,6 @@
   #setVariable("$return" $results.size().equals(1))
 #end
 
-## $escapetool.velocity() doesn't work as expected (XCOMMONS-2367) so we can't use it.
-#macro (escapeVelocity $text)
-$!text.replace('$', '${escapetool.d}').replace('#', '${escapetool.h}')
-#end
-
 #macro (createFolder $name $parent)
   ## Trimming whitespaces from the input name to address potential issues with the database collation which may lead to
   ## unexpected behavior when dealing with trailing whitespaces.
@@ -160,7 +155,7 @@ $!text.replace('$', '${escapetool.d}').replace('#', '${escapetool.h}')
   ## used page name is not exactly the folder name given by the user (e.g. when the user creates the folder "Test" we
   ## might have to create the page "Test13" with the title "Test").
   $response.sendRedirect($xwiki.getURL($folderReference, 'save', $escapetool.url({
-    'title': "#escapeVelocity($name)",
+    'title': $escapetool.velocity($name),
     'parent': $services.model.serialize($parentReference, 'compactwiki'),
     'template': 'FileManagerCode.FolderTemplate',
     'comment': 'Folder created',
