@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.4" reference="FileManager.FileManagerTemplate" locale="">
+<xwikidoc version="1.5" reference="FileManager.FileManagerTemplate" locale="">
   <web>FileManager</web>
   <name>FileManagerTemplate</name>
   <language/>
