@@ -29,18 +29,22 @@ import org.xwiki.cache.config.CacheConfiguration;
 import org.xwiki.filemanager.reference.UniqueDocumentReferenceGenerator;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.SpaceReference;
+import org.xwiki.model.validation.EntityNameValidation;
+import org.xwiki.model.validation.EntityNameValidationConfiguration;
+import org.xwiki.model.validation.EntityNameValidationManager;
 import org.xwiki.test.annotation.BeforeComponent;
 import org.xwiki.test.mockito.MockitoComponentMockingRule;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link DefaultUniqueDocumentReferenceGenerator}.
- * 
+ *
  * @version $Id$
  * @since 2.0RC1
  */
@@ -48,12 +52,27 @@ public class DefaultUniqueDocumentReferenceGeneratorTest
 {
     @Rule
     public MockitoComponentMockingRule<UniqueDocumentReferenceGenerator> mocker =
-        new MockitoComponentMockingRule<UniqueDocumentReferenceGenerator>(DefaultUniqueDocumentReferenceGenerator.class);
+        new MockitoComponentMockingRule<>(DefaultUniqueDocumentReferenceGenerator.class);
 
     private DocumentAccessBridge documentAccessBridge;
 
     @SuppressWarnings("unchecked")
     private Cache<Boolean> documentReferenceCache = mock(Cache.class);
+
+    EntityNameValidationManager entityNameValidationManager;
+
+    EntityNameValidationConfiguration entityNameValidationConfiguration;
+
+    EntityNameValidation entityNameValidation;
+
+    @BeforeComponent
+    public void initializeNameValidation() throws Exception
+    {
+        entityNameValidationManager = this.mocker.registerMockComponent(EntityNameValidationManager.class);
+        entityNameValidationConfiguration = this.mocker.registerMockComponent(EntityNameValidationConfiguration.class);
+        entityNameValidation = this.mocker.registerMockComponent(EntityNameValidation.class);
+        when(entityNameValidationManager.getEntityReferenceNameStrategy()).thenReturn(this.entityNameValidation);
+    }
 
     @BeforeComponent
     public void initializeCache() throws Exception
@@ -94,5 +113,28 @@ public class DefaultUniqueDocumentReferenceGeneratorTest
 
         assertEquals(spaceReference, secondReference.getLastSpaceReference());
         assertEquals("foo2", secondReference.getName());
+    }
+
+    @Test
+    public void generateWithNamingStrategy() throws Exception
+    {
+        String pageName = "Te st ed";
+        SpaceReference spaceReference =
+            new DocumentReference("gang", "Drive", pageName).getLastSpaceReference();
+        DocumentReference docReference;
+
+        when(entityNameValidation.transform(anyString())).thenAnswer(
+            i -> ((String) (i.getArguments()[0])).replace(' ', '-')
+        );
+
+        when(entityNameValidationConfiguration.useTransformation()).thenReturn(true);
+        docReference =
+            this.mocker.getComponentUnderTest().generate(spaceReference, new DocumentNameSequence(pageName));
+        assertEquals("Te-st-ed", docReference.getName());
+
+        when(entityNameValidationConfiguration.useTransformation()).thenReturn(false);
+        docReference =
+            this.mocker.getComponentUnderTest().generate(spaceReference, new DocumentNameSequence(pageName));
+        assertEquals(pageName, docReference.getName());
     }
 }

@@ -40,11 +40,13 @@ import org.xwiki.component.phase.InitializationException;
 import org.xwiki.filemanager.reference.UniqueDocumentReferenceGenerator;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.SpaceReference;
+import org.xwiki.model.validation.EntityNameValidationConfiguration;
+import org.xwiki.model.validation.EntityNameValidationManager;
 
 /**
  * Implements {@link UniqueDocumentReferenceGenerator} using a cache to reserve document references for a period of
  * time.
- * 
+ *
  * @version $Id$
  * @since 2.0RC1
  */
@@ -66,6 +68,15 @@ public class DefaultUniqueDocumentReferenceGenerator
     private CacheManager cacheManager;
 
     /**
+     * Used for creating the page name according to the wiki naming strategy.
+     */
+    @Inject
+    private EntityNameValidationManager entityNameValidationManager;
+
+    @Inject
+    private EntityNameValidationConfiguration entityNameValidationConfiguration;
+
+    /**
      * Used to cache (reserve) document references.
      */
     private Cache<Boolean> documentReferenceCache;
@@ -76,11 +87,31 @@ public class DefaultUniqueDocumentReferenceGenerator
     @Inject
     private ComponentManager componentManager;
 
+    /**
+     * Transform a name according to the current name strategy, if the configuration is set to use transformation.
+     * Otherwise, it will just return the given name.
+     * <p>
+     * Taken from {@link org.xwiki.model.validation.script.ModelValidationScriptService#transformName}
+     *
+     * @param name the name to transform
+     * @return the transformed name according to the current name strategy
+     */
+    private String transformName(String name)
+    {
+        if (this.entityNameValidationConfiguration != null && this.entityNameValidationConfiguration.useTransformation()
+            && this.entityNameValidationManager.getEntityReferenceNameStrategy() != null)
+        {
+            return this.entityNameValidationManager.getEntityReferenceNameStrategy().transform(name);
+        } else {
+            return name;
+        }
+    }
+
     @Override
     public synchronized DocumentReference generate(SpaceReference spaceReference, Iterator<String> documentNameSequence)
     {
         while (documentNameSequence.hasNext()) {
-            String name = documentNameSequence.next();
+            String name = transformName(documentNameSequence.next());
             DocumentReference reference = new DocumentReference(name, spaceReference);
             String key = reference.toString();
             if (this.documentReferenceCache.get(key) == null) {
