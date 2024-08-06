@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link DefaultUniqueDocumentReferenceGenerator}.
- * 
+ *
  * @version $Id$
  * @since 2.0RC1
  */
@@ -52,7 +52,7 @@ public class DefaultUniqueDocumentReferenceGeneratorTest
 {
     @Rule
     public MockitoComponentMockingRule<UniqueDocumentReferenceGenerator> mocker =
-        new MockitoComponentMockingRule<UniqueDocumentReferenceGenerator>(DefaultUniqueDocumentReferenceGenerator.class);
+        new MockitoComponentMockingRule<>(DefaultUniqueDocumentReferenceGenerator.class);
 
     private DocumentAccessBridge documentAccessBridge;
 
@@ -116,25 +116,25 @@ public class DefaultUniqueDocumentReferenceGeneratorTest
     }
 
     @Test
-    public void namingStrategy() throws Exception {
+    public void generateWithNamingStrategy() throws Exception
+    {
         String pageName = "Te st ed";
         SpaceReference spaceReference =
-                new DocumentReference("gang", "Drive", pageName).getLastSpaceReference();
+            new DocumentReference("gang", "Drive", pageName).getLastSpaceReference();
         DocumentReference docReference;
 
         when(entityNameValidation.transform(anyString())).thenAnswer(
-                i -> ((String) (i.getArguments()[0])).replace(' ', '-')
+            i -> ((String) (i.getArguments()[0])).replace(' ', '-')
         );
 
         when(entityNameValidationConfiguration.useTransformation()).thenReturn(true);
         docReference =
-                this.mocker.getComponentUnderTest().generate(spaceReference, new DocumentNameSequence(pageName));
+            this.mocker.getComponentUnderTest().generate(spaceReference, new DocumentNameSequence(pageName));
         assertEquals("Te-st-ed", docReference.getName());
-
 
         when(entityNameValidationConfiguration.useTransformation()).thenReturn(false);
         docReference =
-                this.mocker.getComponentUnderTest().generate(spaceReference, new DocumentNameSequence(pageName));
+            this.mocker.getComponentUnderTest().generate(spaceReference, new DocumentNameSequence(pageName));
         assertEquals(pageName, docReference.getName());
     }
 }

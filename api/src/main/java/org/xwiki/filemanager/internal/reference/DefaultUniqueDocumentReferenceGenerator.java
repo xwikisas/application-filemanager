@@ -46,7 +46,7 @@ import org.xwiki.model.validation.EntityNameValidationManager;
 /**
  * Implements {@link UniqueDocumentReferenceGenerator} using a cache to reserve document references for a period of
  * time.
- * 
+ *
  * @version $Id$
  * @since 2.0RC1
  */
@@ -86,20 +86,21 @@ public class DefaultUniqueDocumentReferenceGenerator
      */
     @Inject
     private ComponentManager componentManager;
-    
+
     /**
      * Transform a name according to the current name strategy, if the configuration is set to use transformation.
-     * Else it will just return the given name.
+     * Otherwise, it will just return the given name.
+     * <p>
+     * Taken from {@link org.xwiki.model.validation.script.ModelValidationScriptService#transformName}
      *
-     * Taken from org.xwiki.model.validation.script.ModelValidationScriptService
-     *
-     * @param name the name to transform.
-     * @return the transformed named.
+     * @param name the name to transform
+     * @return the transformed name according to the current name strategy
      */
     private String transformName(String name)
     {
         if (this.entityNameValidationConfiguration != null && this.entityNameValidationConfiguration.useTransformation()
-                && this.entityNameValidationManager.getEntityReferenceNameStrategy() != null) {
+            && this.entityNameValidationManager.getEntityReferenceNameStrategy() != null)
+        {
             return this.entityNameValidationManager.getEntityReferenceNameStrategy().transform(name);
         } else {
             return name;
