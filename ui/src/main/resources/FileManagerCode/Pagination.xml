@@ -54,6 +54,13 @@
         $services.localization.render('platform.livetable.paginationResultsMany',
           ['{{from}}', '{{to}}', '{{totalCount}}'])
       &lt;/span&gt;
+      &lt;span&gt;
+        $services.localization.render('platform.livetable.pagesizeLabel')
+      &lt;/span&gt;
+        &lt;select ng-change='onChangedLimitOption()' ng-model='limit'
+            class='pagesizeselect' style='height:1.5em; width:3.5em; padding:0;'
+            ng-options='f for f in filesLimitOptions track by f'&gt;
+        &lt;/select&gt;
     &lt;/span&gt;
 
     &lt;span ng-if="showResultsRange &amp;&amp; actualTotalCount === undefined" class="xwiki-livetable-loader"&gt;
@@ -198,7 +205,7 @@
       <code>define(['angular'], function(angular) {
   var pagination = angular.module('pagination', []);
 
-  pagination.directive('pagination', function() {
+  pagination.directive('pagination', ['$location', function($location) {
     return {
       restrict: 'E',
       scope: {
@@ -213,6 +220,11 @@
           scope.offset = pageNumber * scope.limit;
         };
 
+        scope.onChangedLimitOption = function() {
+          scope.limit=this.limit;
+          $location.search('filesLimit', scope.limit);
+        };
+
         scope.$watch('[actualTotalCount, offset, limit]', function(newValues, oldValues) {
           // Initialize the scope once and then update the values only when the total count is defined.
           // The total count is usually undefined while a new page is loaded and so we use the old value until we
@@ -222,6 +234,13 @@
           var totalCount = newValues[0] || 0;
           var offset = newValues[1] || 0;
           var limit = newValues[2] || 15;
+
+          // If the page has a custom number of files per page, include it in the options.
+          scope.filesLimitOptions = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+          if (!scope.filesLimitOptions.includes(limit)) {
+            scope.filesLimitOptions.push(limit);
+            scope.filesLimitOptions = scope.filesLimitOptions.sort(function(a, b) {return a - b;});
+          }
 
           scope.totalCount = totalCount;
           scope.from = offset + 1;
@@ -245,7 +264,7 @@
         }, true);
       }
     };
-  });
+  }]);
 
   pagination.directive('pageLink', function() {
     return {
