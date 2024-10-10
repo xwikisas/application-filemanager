@@ -272,7 +272,10 @@
       scope: true,
       templateUrl: new XWiki.Document('Pagination', 'FileManagerCode').getURL('get', 'template=pageLink'),
       link: function(scope, element, attrs) {
-        scope.number = parseInt(attrs.number);
+        attrs.$observe('number', function(val){
+          // Update the page-link number whenever the number attribute is updated.
+          scope.number = parseInt(val);
+        });
       }
     };
   });
