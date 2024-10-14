@@ -224,7 +224,7 @@
         };
 
         scope.onChangedLimitOption = function() {
-          scope.limit=this.limit;
+          scope.limit = this.limit;
           $location.search('filesLimit', scope.limit);
         };
 
