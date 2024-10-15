@@ -57,7 +57,7 @@
     &lt;/span&gt;
 
     &lt;span ng-if="showResultsRange &amp;&amp; totalCount &gt; 0" class='resultsNo xwiki-livetable-pagesize'&gt;
-      &lt;span&gt;$services.localization.render('platform.livetable.pagesizeLabel')&lt;/span&gt;
+      &lt;span&gt;$escapetool.xml($services.localization.render('platform.livetable.pagesizeLabel'))&lt;/span&gt;
       &lt;span class='xwiki-livetable-pagesize-content'&gt;
         &lt;select ng-change='onChangedLimitOption()' ng-model='limit'
           class='pagesizeselect'
