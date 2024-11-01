@@ -234,7 +234,7 @@
             scope.filesLimitOptions = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
           }
           // If the page has a custom number of files per page, include it in the options.
-          if (typeof(limit) == 'number' &amp;&amp; !scope.filesLimitOptions.includes(limit)) {
+          if (typeof(limit) === 'number' &amp;&amp; !scope.filesLimitOptions.includes(limit)) {
             scope.filesLimitOptions.push(limit);
             scope.filesLimitOptions = scope.filesLimitOptions.sort(function(a, b) {return a - b;});
           }
