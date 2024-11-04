@@ -207,7 +207,7 @@
 
       this.params = {
         offset: parseInt(urlParams[key(this.id, 'offset')]) || 0,
-        limit: 15,
+        limit: parseInt(urlParams[key(this.id, 'limit')]) || 15,
         sort: urlParams[key(this.id, 'sort')],
         order: urlParams[key(this.id, 'order')]
       };

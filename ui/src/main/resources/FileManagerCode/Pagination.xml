@@ -56,6 +56,16 @@
       &lt;/span&gt;
     &lt;/span&gt;
 
+    &lt;span ng-if="showResultsRange &amp;&amp; totalCount &gt; 0" class='resultsNo xwiki-livetable-pagesize'&gt;
+      &lt;span&gt;$escapetool.xml($services.localization.render('platform.livetable.pagesizeLabel'))&lt;/span&gt;
+      &lt;span class='xwiki-livetable-pagesize-content'&gt;
+        &lt;select ng-change='onChangedLimitOption()' ng-model='limit'
+          class='pagesizeselect'
+          ng-options='f for f in filesLimitOptions track by f'&gt;
+        &lt;/select&gt;
+      &lt;/span&gt;
+    &lt;/span&gt;
+
     &lt;span ng-if="showResultsRange &amp;&amp; actualTotalCount === undefined" class="xwiki-livetable-loader"&gt;
       &lt;img src="$xwiki.getSkinFile('icons/xwiki/ajax-loader-large.gif')" alt="$services.localization.render('platform.livetable.loading')"
         title="$services.localization.render('platform.livetable.loading')" /&gt;
@@ -198,7 +208,7 @@
       <code>define(['angular'], function(angular) {
   var pagination = angular.module('pagination', []);
 
-  pagination.directive('pagination', function() {
+  pagination.directive('pagination', ['$location', function($location) {
     return {
       restrict: 'E',
       scope: {
@@ -212,6 +222,23 @@
         scope.loadPage = function(pageNumber) {
           scope.offset = pageNumber * scope.limit;
         };
+
+        scope.onChangedLimitOption = function() {
+          scope.limit = this.limit;
+          $location.search('filesLimit', scope.limit);
+        };
+
+        scope.$watch('limit', function(newValue, oldValue) {
+          let limit = newValue;
+          if (!scope.filesLimitOptions) {
+            scope.filesLimitOptions = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+          }
+          // If the page has a custom number of files per page, include it in the options.
+          if (typeof(limit) === 'number' &amp;&amp; !scope.filesLimitOptions.includes(limit)) {
+            scope.filesLimitOptions.push(limit);
+            scope.filesLimitOptions = scope.filesLimitOptions.sort(function(a, b) {return a - b;});
+          }
+        });
 
         scope.$watch('[actualTotalCount, offset, limit]', function(newValues, oldValues) {
           // Initialize the scope once and then update the values only when the total count is defined.
@@ -245,7 +272,7 @@
         }, true);
       }
     };
-  });
+  }]);
 
   pagination.directive('pageLink', function() {
     return {
@@ -253,7 +280,10 @@
       scope: true,
       templateUrl: new XWiki.Document('Pagination', 'FileManagerCode').getURL('get', 'template=pageLink'),
       link: function(scope, element, attrs) {
-        scope.number = parseInt(attrs.number);
+        attrs.$observe('number', function(val){
+          // Update the page-link number whenever the number attribute is updated.
+          scope.number = parseInt(val);
+        });
       }
     };
   });
