@@ -62,7 +62,7 @@
               &lt;/th&gt;
             &lt;/tr&gt;
             &lt;tr class="xwiki-livetable-display-filters"&gt;
-              &lt;td ng-if="selection" class="xwiki-livetable-display-header-filter"&gt;&lt;/td&gt;
+              &lt;td ng-if="selection" class="xwiki-livetable-display-header-filter"&gt;&lt;input type="checkbox" ng-model="selectAll.selectAllState" ng-change="selectAll.select(selectAll.selectAllState)"/&gt;&lt;/td&gt;
               &lt;td ng-repeat="column in columns" class="xwiki-livetable-display-header-filter"&gt;
                 &lt;div ng-if="column.filterable" ng-include="liveTableFilterTemplate"&gt;&lt;/div&gt;
               &lt;/td&gt;
@@ -175,8 +175,22 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>define(['angular', 'liveTableFilters', 'pagination'], function(angular) {
+      <code>define('filemanager-livetable-translation-keys', {
+  prefix: 'fileManager.',
+  keys: [
+    'action.selectAll.inprogress',
+    'action.selectAll.done',
+  ]
+});
+
+define(['angular', 'xwiki-l10n!filemanager-livetable-translation-keys', 'liveTableFilters', 'pagination'], function(angular, l10n) {
   var liveTable = angular.module('liveTable', ['liveTableFilters', 'pagination']);
+
+  var escapeHTML = function(text) {
+    let textHTMLEscape = new Element('span');
+    textHTMLEscape.textContent = text;
+    return textHTMLEscape.innerHTML;
+  };
 
   liveTable.directive('livetable',  ['$location', '$timeout', function($location, $timeout) {
     var key = function(id, name) {
@@ -250,6 +264,7 @@
         // This can be made configurable.
         scope.liveTableFilterTemplate = new XWiki.Document('LiveTableFilter', 'FileManagerCode').getURL('get');
         scope.liveTableCellTemplate = new XWiki.Document('LiveTableCell', 'FileManagerCode').getURL('get');
+        scope.selectAll = {selectAllState: false}
 
         // Update the live table whenever the source changes.
         scope.$watch('source', function(newValue, oldValue) {
@@ -261,6 +276,8 @@
             // workaround: we keep an internal map with the selected row ids and we update the selection whenever it
             // changes.
             scope.selectedRowIds = {};
+            scope.selectAll.selectAllState = false;
+            scope.selectAll.cachedAllRows = undefined;
           }
           if (newValue === oldValue) {
             // Initialize the live table parameters and filters only after the source is initialized.
@@ -319,6 +336,36 @@
             delete scope.selection[row.id];
           }
         };
+
+        scope.selectAll.select = function(state) {
+          if (state === false) {
+            Object.keys(scope.selectedRowIds).forEach(k =&gt; delete scope.selectedRowIds[k]);
+            Object.keys(scope.selection).forEach(k =&gt; delete scope.selection[k]);
+          } else {
+              if (scope.selectAll.cachedAllRows === undefined) {
+                let notification = new XWiki.widgets.Notification(escapeHTML(l10n.get('action.selectAll.inprogress')), "inprogress");
+                let previousScopeLocation = scope.$parent.drive.location.id;
+                scope.source.get({}, {}, function(rows) {
+                  scope.selectAll.cachedAllRows = rows.list;
+                  // If the selection was reset, don't update the selected rows on promise fulfilled.
+                  if (scope.$parent.drive.location.id == previousScopeLocation) {
+                    scope.selection = rows.list.reduce((acc, row) =&gt; {
+                      acc[row.id] = row;
+                      return acc;
+                    }, scope.selection);
+                    scope.selectedRowIds = rows.list.reduce((acc, row) =&gt; {
+                      acc[row.id] = true;
+                      return acc;
+                    }, scope.selectedRowIds);
+                  }
+                  notification.replace(new XWiki.widgets.Notification(escapeHTML(l10n.get('action.selectAll.done')), "done"));
+                });
+              } else {
+                scope.selectAll.cachedAllRows.forEach(k =&gt; scope.selectedRowIds[k.id] = true);
+                scope.selectAll.cachedAllRows.forEach(k =&gt; scope.selection[k.id] = k);
+              }
+          }
+        }
       }
     };
   }]);
