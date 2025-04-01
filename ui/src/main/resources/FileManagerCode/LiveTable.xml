@@ -183,7 +183,8 @@
   ]
 });
 
-define(['angular', 'xwiki-l10n!filemanager-livetable-translation-keys', 'liveTableFilters', 'pagination'], function(angular, l10n) {
+define(['angular', 'xwiki-l10n!filemanager-livetable-translation-keys', 'liveTableFilters', 'pagination'],
+    function(angular, l10n) {
   var liveTable = angular.module('liveTable', ['liveTableFilters', 'pagination']);
 
   var escapeHTML = function(text) {
@@ -191,6 +192,10 @@ define(['angular', 'xwiki-l10n!filemanager-livetable-translation-keys', 'liveTab
     textHTMLEscape.textContent = text;
     return textHTMLEscape.innerHTML;
   };
+
+  var makeNotification = function(translationKey, notificationType) {
+    return new XWiki.widgets.Notification(escapeHTML(l10n.get(translationKey)), notificationType);
+  }
 
   liveTable.directive('livetable',  ['$location', '$timeout', function($location, $timeout) {
     var key = function(id, name) {
@@ -343,12 +348,13 @@ define(['angular', 'xwiki-l10n!filemanager-livetable-translation-keys', 'liveTab
             Object.keys(scope.selection).forEach(k =&gt; delete scope.selection[k]);
           } else {
               if (scope.selectAll.cachedAllRows === undefined) {
-                let notification = new XWiki.widgets.Notification(escapeHTML(l10n.get('action.selectAll.inprogress')), "inprogress");
+                let notification = makeNotification('action.selectAll.inprogress', 'inprogress');
                 let previousScopeLocation = scope.$parent.drive.location.id;
                 scope.source.get({}, {}, function(rows) {
                   scope.selectAll.cachedAllRows = rows.list;
                   // If the selection was reset, don't update the selected rows on promise fulfilled.
-                  if (scope.$parent.drive.location.id == previousScopeLocation) {
+                  if (scope.selectAll.selectAllState === true
+                      &amp;&amp; scope.$parent.drive.location.id === previousScopeLocation) {
                     scope.selection = rows.list.reduce((acc, row) =&gt; {
                       acc[row.id] = row;
                       return acc;
@@ -358,7 +364,7 @@ define(['angular', 'xwiki-l10n!filemanager-livetable-translation-keys', 'liveTab
                       return acc;
                     }, scope.selectedRowIds);
                   }
-                  notification.replace(new XWiki.widgets.Notification(escapeHTML(l10n.get('action.selectAll.done')), "done"));
+                  notification.replace(makeNotification('action.selectAll.done', 'done'));
                 });
               } else {
                 scope.selectAll.cachedAllRows.forEach(k =&gt; scope.selectedRowIds[k.id] = true);
