@@ -622,6 +622,7 @@ define('filemanager-drivesheet-translation-keys', {
     'action.cut.notification.done',
     'action.delete.notification.inprogress',
     'action.delete.notification.done',
+    'action.notification.error',
   ]
 });
 
@@ -2738,6 +2739,14 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
         } else {
           notification = doneNotification;
         }
+      }).fail(function(job) {
+        let errorNotification = makeNotification(l10n['action.notification.error'], 'error');
+        if (notification !== null) {
+          notification.replace(errorNotification);
+        } else {
+          notification = errorNotification;
+        }
+        console.log(job);
       });
     };
 
@@ -2807,8 +2816,7 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
             return l10n.get('action.cut.notification.inprogress', destination, paths.length, progress);
           },
           (job) =&gt; {
-            let progress = Math.floor(job.progress.offset * 100);
-            return l10n.get('action.cut.notification.done', destination, paths.length, progress);
+            return l10n.get('action.cut.notification.done', destination, paths.length);
           }
         );
       },
@@ -2823,8 +2831,7 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
             return l10n.get('action.copy.notification.inprogress', destination, paths.length, progress);
           },
           (job) =&gt; {
-            let progress = Math.floor(job.progress.offset * 100);
-            return l10n.get('action.copy.notification.done', destination, paths.length, progress);
+            return l10n.get('action.copy.notification.done', destination, paths.length);
           }
         );
       },
@@ -2837,7 +2844,6 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
             return l10n.get('action.delete.notification.inprogress', paths.length, progress);
           },
           (job) =&gt; {
-            let progress = Math.floor(job.progress.offset * 100);
             return l10n.get('action.delete.notification.done', paths.length);
           }
         );

@@ -80,6 +80,7 @@ fileManager.action.backToFileList=Back to the file list
 fileManager.action.backToFileManager=Back to the File Manager
 fileManager.action.clear=Clear
 fileManager.action.clearUploadStatus=Clear the upload status
+fileManager.action.notification.error=Error
 
 fileManager.action.selectAll.inprogress=Selecting all files...
 fileManager.action.selectAll.done=All files selected
