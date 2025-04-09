@@ -611,7 +611,22 @@
   }
 });
 
-require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-bootstrap', 'fileUpload', 'tree', 'liveTable'], function($, angular, JobRunner) {</code>
+define('filemanager-drivesheet-translation-keys', {
+  prefix: 'fileManager.',
+  keys: [
+    'action.rename',
+    'tree.pagination.more',
+    'action.copy.notification.inprogress',
+    'action.copy.notification.done',
+    'action.cut.notification.inprogress',
+    'action.cut.notification.done',
+    'action.delete.notification.inprogress',
+    'action.delete.notification.done',
+    'action.notification.error',
+  ]
+});
+
+require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-translation-keys', 'angular-resource', 'angular-ui-bootstrap', 'fileUpload', 'tree', 'liveTable'], function($, angular, JobRunner, l10n) {</code>
     </property>
     <property>
       <name>Require Start &amp; Configuration</name>
@@ -1804,8 +1819,14 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
         };
 
         scope.paste = function() {
+          let previousScopeLocation = scope.drive.location.id;
           scope.drive[scope.clipboard.action](scope.clipboard.paths, scope.drive.location.id)
-            .done(refreshLiveTable);
+            .done(() =&gt; {
+              // If the user already switched folders by the time the paste job is complete, don't refresh.
+              if (scope.drive.location.id == previousScopeLocation) {
+                refreshLiveTable();
+              }
+          });
           if (scope.clipboard.action == 'move') {
             delete scope.clipboard;
           }
@@ -2691,6 +2712,44 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
       }
     };
 
+    var escapeHTML = function(text) {
+      let textHTMLEscape = new Element('span');
+      textHTMLEscape.textContent = text;
+      return textHTMLEscape.innerHTML;
+    };
+
+    var makeNotification = function(translationKey, notificationType) {
+      return new XWiki.widgets.Notification(escapeHTML(l10n.get(translationKey)), notificationType);
+    }
+
+    var attachXWikiNotificationToJob = function(job, getProgressNotificationText, getDoneNotificationText) {
+      let notification = null;
+      return job.progress(function(job) {
+        let progressNotification = makeNotification(getProgressNotificationText(job), 'inprogress');
+        if (notification === null) {
+          notification = progressNotification;
+        } else {
+          notification.replace(progressNotification);
+          notification = progressNotification;
+        }
+      }).done(function() {
+        let doneNotification = makeNotification(getDoneNotificationText(job), 'done');
+        if (notification !== null) {
+          notification.replace(doneNotification);
+        } else {
+          notification = doneNotification;
+        }
+      }).fail(function(job) {
+        let errorNotification = makeNotification(l10n['action.notification.error'], 'error');
+        if (notification !== null) {
+          notification.replace(errorNotification);
+        } else {
+          notification = errorNotification;
+        }
+        console.log(job);
+      });
+    };
+
     var runJob = function(type, data) {
       $scope.drive.readOnly = true;
       // We have to schedule a scope update immediately after the state of the promise changes.
@@ -2748,21 +2807,46 @@ require(['jquery', 'angular', 'JobRunner', 'angular-resource', 'angular-ui-boots
       },
 
       move: function(paths, destination) {
-        return runJob('move', {
-          path: paths,
-          destination: destination
-        });
+        return attachXWikiNotificationToJob(runJob('move', {
+            path: paths,
+            destination: destination
+          }),
+          (job) =&gt; {
+            let progress = Math.floor(job.progress.offset * 100);
+            return l10n.get('action.cut.notification.inprogress', destination, paths.length, progress);
+          },
+          (job) =&gt; {
+            return l10n.get('action.cut.notification.done', destination, paths.length);
+          }
+        );
       },
 
       copy: function(paths, destination) {
-        return runJob('copy', {
-          path: paths,
-          destination: destination
-        });
+        return attachXWikiNotificationToJob(runJob('copy', {
+            path: paths,
+            destination: destination
+          }),
+          (job) =&gt; {
+            let progress = Math.floor(job.progress.offset * 100);
+            return l10n.get('action.copy.notification.inprogress', destination, paths.length, progress);
+          },
+          (job) =&gt; {
+            return l10n.get('action.copy.notification.done', destination, paths.length);
+          }
+        );
       },
 
       'delete': function(paths) {
-        return runJob('delete', {path: paths});
+        return attachXWikiNotificationToJob(
+          runJob('delete', {path: paths}),
+          (job) =&gt; {
+            let progress = Math.floor(job.progress.offset * 100);
+            return l10n.get('action.delete.notification.inprogress', paths.length, progress);
+          },
+          (job) =&gt; {
+            return l10n.get('action.delete.notification.done', paths.length);
+          }
+        );
       },
 
       download: function(paths, outputFileName) {
