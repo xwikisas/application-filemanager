@@ -19,6 +19,8 @@
  */
 package org.xwiki.filemanager.internal;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -206,9 +208,7 @@ public class DefaultFileSystem implements FileSystem
     {
         XWikiContext context = xcontextProvider.get();
         try {
-            // The (entity) reference of the target document is updated in the rename process and so we clone the
-            // document before renaming in order to avoid modifying the cached document.
-            context.getWiki().getDocument(oldReference, context).clone().rename(newReference, context);
+            context.getWiki().renameDocument(oldReference, newReference, true, List.of(), List.of(), context);
         } catch (XWikiException e) {
             logger.error("Failed to rename document [{}] to [{}]", oldReference, newReference, e);
         }

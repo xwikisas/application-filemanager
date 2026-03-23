@@ -43,7 +43,7 @@
   #if ($request.action)
     #if ($services.csrf.isTokenValid($request.form_token))
       #if ($request.action == 'createFolder')
-        #createFolder($request.name $doc.name)
+        #createFolder($request.name $doc.getDocumentReference().name)
       #elseif ($request.action == 'createFile')
         #createFile
       #elseif ($request.action == 'move')

@@ -404,14 +404,14 @@
 #macro(getFileFolders $fileDoc)
   #getFilePaths($fileDoc $paths)
   #set ($folders = [])
-  #if ($paths.length &gt; 0)
+  #if ($paths.size() &gt; 0)
     #foreach ($path in $paths[0])
       #if ($path != 'WebHome')
         #set ($discard = $folders.add($path))
       #end
     #end
   #end
-  #set ($discard = $collectiontool.reverse($folders))
+  #set ($discard = $collectiontool.reverseModifiable($folders))
   #set ($folders = $stringtool.join($folders, ' / '))
 #end
 

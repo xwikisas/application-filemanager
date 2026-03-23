@@ -19,6 +19,8 @@
  */
 package org.xwiki.filemanager.internal;
 
+import java.util.List;
+
 import javax.inject.Provider;
 
 import org.junit.Before;
@@ -136,15 +138,9 @@ public class DefaultFileSystemTest
         DocumentReference oldReference = new DocumentReference("wiki", "Space", "OldPage");
         DocumentReference newReference = new DocumentReference("wiki", "Space", "NewPage");
 
-        XWikiDocument oldDocument = mock(XWikiDocument.class, "old");
-        when(xcontext.getWiki().getDocument(oldReference, xcontext)).thenReturn(oldDocument);
-
-        XWikiDocument clonedDocument = mock(XWikiDocument.class, "cloned");
-        when(oldDocument.clone()).thenReturn(clonedDocument);
-
         mocker.getComponentUnderTest().rename(oldReference, newReference);
 
-        verify(clonedDocument).rename(newReference, xcontext);
+        verify(xcontext.getWiki()).renameDocument(oldReference, newReference, true, List.of(), List.of(), xcontext);
     }
 
     @Test

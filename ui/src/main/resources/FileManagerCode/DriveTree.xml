@@ -330,7 +330,7 @@
       ## The top-most ancestor is orphan.
       #set ($discard = $path.add('/orphanFolders'))
     #end
-    #set ($discard = $collectionstool.reverse($path))
+    #set ($discard = $collectiontool.reverseModifiable($path))
   #end
   #set ($return = $NULL)
   #setVariable("$return" $path)

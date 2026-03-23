@@ -151,7 +151,7 @@
 #end
 
 #macro (openFile)
-  #set ($openAs = $collectionstool.orderedMap)
+  #set ($openAs = $collectiontool.orderedMap)
   ## The order is important: from specific to generic viewers/players.
   #set ($openAs.PDF = ['application/pdf'])
   #set ($openAs.Office = ['application/msword', 'application/vnd.ms-', 'application/vnd.oasis.opendocument.',
