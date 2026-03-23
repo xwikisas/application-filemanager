@@ -51,7 +51,6 @@ fileManager.action.open=Open
 fileManager.action.openInNewTab=Open in New Tab
 fileManager.action.refresh=Refresh
 fileManager.action.download=Download
-
 fileManager.action.download.toggleOptions=Options
 fileManager.action.download.buildingPackage=Building package...
 fileManager.action.downloadFilesHint=Download selected files
