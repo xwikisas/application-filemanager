@@ -255,12 +255,12 @@
       &lt;/button&gt;
     &lt;/div&gt;&lt;div class="btn-group" dropdown&gt;
       &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.downloadFilesHint')"
-          ng-disabled="drive.readOnly || selectedFiles.length == 0" ng-click="download(selectedFiles)"&gt;
+          ng-disabled="drive.readOnly || selectedFiles.length == 0" ng-click="download(selectedFiles)" label="$escapetool.xml($services.localization.render('fileManager.action.download'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_put.png')" class="icon"
           alt="" /&gt;
         $services.localization.render('fileManager.action.download')
       &lt;/button&gt;
-      &lt;button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle&gt;
+      &lt;button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle label="$escapetool.xml($services.localization.render('fileManager.action.download.toggleOptions'))"&gt;
         &lt;span class="caret"&gt;&lt;/span&gt;
       &lt;/button&gt;
       &lt;ul class="dropdown-menu" role="menu"&gt;
@@ -272,20 +272,20 @@
       &lt;/ul&gt;
     &lt;/div&gt;&lt;div class="btn-group"&gt;
       &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.cutFilesHint')"
-          ng-disabled="drive.readOnly || !canCut(selectedFiles)" ng-click="cut(selectedFiles)"&gt;
+          ng-disabled="drive.readOnly || !canCut(selectedFiles)" ng-click="cut(selectedFiles)" label="$escapetool.xml($services.localization.render('fileManager.action.cut'))" &gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/cut.png')" class="icon"
           alt="" /&gt;
         $services.localization.render('fileManager.action.cut')
       &lt;/button&gt;
       &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.copyFilesHint')"
-          ng-disabled="drive.readOnly || !canCopy(selectedFiles)" ng-click="copy(selectedFiles)"&gt;
+          ng-disabled="drive.readOnly || !canCopy(selectedFiles)" ng-click="copy(selectedFiles)" label="$escapetool.xml($services.localization.render('fileManager.action.copy'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_copy.png')" class="icon"
           alt="" /&gt;
         $services.localization.render('fileManager.action.copy')
       &lt;/button&gt;
       &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.pasteHint')"
           ng-if="drive.location.type == 'drive' || drive.location.type == 'folder'"
-          ng-disabled="!clipboard" ng-click="paste()"&gt;
+          ng-disabled="!clipboard" ng-click="paste()" label="$escapetool.xml($services.localization.render('fileManager.action.paste'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_paste.png')" class="icon"
           alt="" /&gt;
         $services.localization.render('fileManager.action.paste')
@@ -293,13 +293,13 @@
     &lt;/div&gt;&lt;div class="btn-group"&gt;
       &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.renameFileHint')"
           ng-disabled="drive.readOnly || selectedFiles.length != 1 || !selectedFiles[0].canRename"
-          ng-click="rename(selectedFiles[0])"&gt;
+          ng-click="rename(selectedFiles[0])" label="$escapetool.xml($services.localization.render('fileManager.action.rename'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/textfield_rename.png')" class="icon"
           alt="" /&gt;
         $services.localization.render('fileManager.action.rename')
       &lt;/button&gt;
       &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.deleteFilesHint')"
-          ng-disabled="drive.readOnly || !canDelete(selectedFiles)" ng-click="delete(selectedFiles)"&gt;
+          ng-disabled="drive.readOnly || !canDelete(selectedFiles)" ng-click="delete(selectedFiles)" label="$escapetool.xml($services.localization.render('fileManager.action.delete'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/cross.png')" class="icon"
           alt="" /&gt;
         $services.localization.render('fileManager.action.delete')
