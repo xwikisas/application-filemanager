@@ -205,7 +205,7 @@
         <separators>|, </separators>
         <size>5</size>
         <unmodifiable>0</unmodifiable>
-        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
+        <values>action=Action|doc.reference=Document|doc.revision|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.session|request.url=Request URL|request.wiki=Request wiki|sheet|user=User|wiki=Wiki</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </async_context>
       <async_enabled>
@@ -371,13 +371,13 @@
       </visibility>
     </class>
     <property>
-      <async_cached/>
+      <async_cached>0</async_cached>
     </property>
     <property>
       <async_context/>
     </property>
     <property>
-      <async_enabled/>
+      <async_enabled>0</async_enabled>
     </property>
     <property>
       <code>{{velocity}}
@@ -400,10 +400,10 @@ $xwiki.ssx.use('XWiki.TagCloud')##
 #if ($tagCount.size() &gt; 0)
   ##
   ## Store the minimum and maximum number of occurrences.
-  #set ($sortedTagCounts = $sorttool.sort($tagCount.values()))
+  #set ($sortedTagCounts = $collectiontool.sort($tagCount.values()))
   #set ($maxIndex = $sortedTagCounts.size() - 1)
-  #set ($minCount = $listtool.get($sortedTagCounts, 0))
-  #set ($maxCount = $listtool.get($sortedTagCounts, $maxIndex))
+  #set ($minCount = $sortedTagCounts.get(0))
+  #set ($maxCount = $sortedTagCounts.get($maxIndex))
   ##
   ## Calculate the total number of tags in the wiki.
   #set ($totalTagNumber = 0)
@@ -417,12 +417,12 @@ $xwiki.ssx.use('XWiki.TagCloud')##
   #set ($secondHalfIntervalSize = $mathtool.div($mathtool.sub($maxCount, $countAverage), $levelsHalf))
   ##
   ## Use a sorted map
-  #set ($popularityMap = $collectionstool.getSortedMap())
+  #set ($popularityMap = $collectiontool.getSortedMap())
   #set ($previousPopularityMax = $minCount)
   #set ($intervalSize = $firstHalfIntervalSize)
   #set ($halfPassed = false)
   #foreach ($popularityLevel in $popularityLevels)
-    #if ($velocityCount &gt; $levelsHalf &amp;&amp; !$halfPassed)
+    #if ($foreach.count &gt; $levelsHalf &amp;&amp; !$halfPassed)
       #set ($intervalSize = $secondHalfIntervalSize)
       #set ($halfPassed = true)
     #end
@@ -480,9 +480,6 @@ $xwiki.ssx.use('XWiki.TagCloud')##
     </property>
     <property>
       <defaultCategories/>
-    </property>
-    <property>
-      <defaultCategory>Content</defaultCategory>
     </property>
     <property>
       <description>Displays the cloud of file tags in this wiki or in the specified space, if any.</description>
