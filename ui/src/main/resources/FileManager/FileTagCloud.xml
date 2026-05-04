@@ -400,10 +400,10 @@ $xwiki.ssx.use('XWiki.TagCloud')##
 #if ($tagCount.size() &gt; 0)
   ##
   ## Store the minimum and maximum number of occurrences.
-  #set ($sortedTagCounts = $sorttool.sort($tagCount.values()))
+  #set ($sortedTagCounts = $collectiontool.sort($tagCount.values()))
   #set ($maxIndex = $sortedTagCounts.size() - 1)
-  #set ($minCount = $listtool.get($sortedTagCounts, 0))
-  #set ($maxCount = $listtool.get($sortedTagCounts, $maxIndex))
+  #set ($minCount = $sortedTagCounts.get(0))
+  #set ($maxCount = $sortedTagCounts.get($maxIndex))
   ##
   ## Calculate the total number of tags in the wiki.
   #set ($totalTagNumber = 0)
@@ -417,7 +417,7 @@ $xwiki.ssx.use('XWiki.TagCloud')##
   #set ($secondHalfIntervalSize = $mathtool.div($mathtool.sub($maxCount, $countAverage), $levelsHalf))
   ##
   ## Use a sorted map
-  #set ($popularityMap = $collectionstool.getSortedMap())
+  #set ($popularityMap = $collectiontool.getSortedMap())
   #set ($previousPopularityMax = $minCount)
   #set ($intervalSize = $firstHalfIntervalSize)
   #set ($halfPassed = false)

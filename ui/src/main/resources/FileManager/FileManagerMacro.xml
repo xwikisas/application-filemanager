@@ -268,11 +268,11 @@
 #if($attach)
  &lt;div&gt;
    &lt;span class="mime"&gt;#mimetypeimg($attach.getMimeType().toLowerCase() $attach.getFilename().toLowerCase())&lt;/span&gt;
-   &lt;span class="name"&gt;&lt;a href="$pagedoc.getURL("view")" title="$msg.get('core.viewers.attachments.download')"&gt;$escapetool.xml($attach.filename)&lt;/a&gt;&lt;/span&gt;   
+   &lt;span class="name"&gt;&lt;a href="$pagedoc.getURL("view")" title="$services.localization.render('core.viewers.attachments.download')"&gt;$escapetool.xml($attach.filename)&lt;/a&gt;&lt;/span&gt;   
  &lt;/div&gt;
  &lt;div&gt; 
-   &lt;span class="publisher"&gt;$msg.get('core.viewers.attachments.author', [$!{xwiki.getUserName($attach.author)}])&lt;/span&gt;
-    &lt;span class="date"&gt;$msg.get('core.viewers.attachments.date', [$!{xwiki.formatDate($attach.date)}])&lt;/span&gt;
+   &lt;span class="publisher"&gt;$services.localization.render('core.viewers.attachments.author', [$!{xwiki.getUserName($attach.author)}])&lt;/span&gt;
+    &lt;span class="date"&gt;$services.localization.render('core.viewers.attachments.date', [$!{xwiki.formatDate($attach.date)}])&lt;/span&gt;
     &lt;span class="size"&gt;(#dynamicsize($attach.longSize))&lt;/span&gt;
  &lt;/div&gt;
 #end
