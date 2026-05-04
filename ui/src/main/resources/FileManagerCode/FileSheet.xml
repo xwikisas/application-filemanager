@@ -130,7 +130,7 @@
       &lt;a href="$xwiki.getURL($driveReference)#?driveNode=$escapetool.url($driveNode)" class="btn btn-default"
           title="Back to the File Manager"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/arrow_left.png')" alt="" class="icon" /&gt;
-        $services.localization.render('fileManager.action.backToFileManager')
+        $escapetool.xml($services.localization.render('fileManager.action.backToFileManager'))
       &lt;/a&gt;
     &lt;/div&gt;
   #end
@@ -143,7 +143,7 @@
       &lt;a href="$doc.getAttachmentURL($attachments.get(0).filename, 'download', 'force-download=1')"
           class="btn btn-default" title="Download this file"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_put.png')" alt="" class="icon" /&gt;
-        $services.localization.render('fileManager.action.download')
+        $escapetool.xml($services.localization.render('fileManager.action.download'))
       &lt;/a&gt;
     &lt;/div&gt;
   #end

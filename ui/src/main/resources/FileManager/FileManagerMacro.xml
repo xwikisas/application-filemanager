@@ -247,32 +247,32 @@
       </visibility>
     </class>
     <property>
-      <async_cached/>
+      <async_cached>0</async_cached>
     </property>
     <property>
       <async_context/>
     </property>
     <property>
-      <async_enabled/>
+      <async_enabled>0</async_enabled>
     </property>
     <property>
       <code>{{velocity filter=html}}
 {{html clean=false}}&lt;div style="border: 1px solid grey; padding: 15px; width: 400px; margin: 5px;"&gt;
-#set($pagename = $xcontext.macro.params.page)
-#set($preview = $xcontext.macro.params.preview)
-#set($pagedoc = $xwiki.getDocument($pagename))
-#set($attachs = $pagedoc.getAttachmentList())
-#if($attachs.size()&gt;0)
+#set ($pagename = $xcontext.macro.params.page)
+#set ($preview = $xcontext.macro.params.preview)
+#set ($pagedoc = $xwiki.getDocument($pagename))
+#set ($attachs = $pagedoc.getAttachmentList())
+#if ($attachs.size() &gt; 0)
  #set($attach = $attachs.get(0))
 #end
-#if($attach)
+#if ($attach)
  &lt;div&gt;
    &lt;span class="mime"&gt;#mimetypeimg($attach.getMimeType().toLowerCase() $attach.getFilename().toLowerCase())&lt;/span&gt;
-   &lt;span class="name"&gt;&lt;a href="$pagedoc.getURL("view")" title="$msg.get('core.viewers.attachments.download')"&gt;$escapetool.xml($attach.filename)&lt;/a&gt;&lt;/span&gt;   
+   &lt;span class="name"&gt;&lt;a href="$escapetool.xml($pagedoc.getURL("view"))" title="$escapetool.xml($services.localization.render('core.viewers.attachments.download'))"&gt;$escapetool.xml($attach.filename)&lt;/a&gt;&lt;/span&gt;
  &lt;/div&gt;
- &lt;div&gt; 
-   &lt;span class="publisher"&gt;$msg.get('core.viewers.attachments.author', [$!{xwiki.getUserName($attach.author)}])&lt;/span&gt;
-    &lt;span class="date"&gt;$msg.get('core.viewers.attachments.date', [$!{xwiki.formatDate($attach.date)}])&lt;/span&gt;
+ &lt;div&gt;
+   &lt;span class="publisher"&gt;$escapetool.xml($services.localization.render('core.viewers.attachments.author', [$!xwiki.getUserName($attach.author)]))&lt;/span&gt;
+    &lt;span class="date"&gt;$escapetool.xml($services.localization.render('core.viewers.attachments.date', [$!xwiki.formatDate($attach.date)]))&lt;/span&gt;
     &lt;span class="size"&gt;(#dynamicsize($attach.longSize))&lt;/span&gt;
  &lt;/div&gt;
 #end

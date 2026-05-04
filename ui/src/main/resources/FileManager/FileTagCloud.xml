@@ -448,16 +448,21 @@ $xwiki.ssx.use('XWiki.TagCloud')##
       #end
     #end
     &lt;li class="$liClass"&gt;
-      &lt;a class="tag" href="$xwiki.getURL('FileManager.WebHome', 'view', "do=viewTag&amp;amp;tag=$escapetool.url($tagEntry.Key)")" title="$services.localization.render('xe.tag.tooltip', ["$tagEntry.Value"])"&gt;$escapetool.xml($tagEntry.Key)&lt;/a&gt;
+      &lt;a class="tag"
+        href="$escapetool.xml(
+          $xwiki.getURL('FileManager.WebHome', 'view', "do=viewTag&amp;amp;tag=$escapetool.url($tagEntry.Key)"))"
+        title="$escapetool.xml($services.localization.render('xe.tag.tooltip', ["$tagEntry.Value"]))"&gt;
+          $escapetool.xml($tagEntry.Key)
+      &lt;/a&gt;
     &lt;/li&gt;
   #end
   &lt;/ol&gt;
 #else
   &lt;p class="noitems"&gt;
   #if("$!tagCloudSpace" == "")
-    $services.localization.render('xe.tag.notags')
+    $escapetool.xml($services.localization.render('xe.tag.notags'))
   #else
-    $services.localization.render('xe.tag.notagsforspace', ["$tagCloudSpace"])
+    $escapetool.xml($services.localization.render('xe.tag.notagsforspace', ["$tagCloudSpace"]))
   #end
   &lt;/p&gt;
 #end
