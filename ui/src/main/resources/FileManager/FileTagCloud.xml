@@ -449,14 +449,9 @@ $xwiki.ssx.use('XWiki.TagCloud')##
     #end
     &lt;li class="$liClass"&gt;
       &lt;a class="tag"
-<<<<<<< upgrade-parent-15.10
         href="$escapetool.xml(
-          $xwiki.getURL('FileManager.WebHome', 'view', "do=viewTag&amp;amp;tag=$escapetool.url($tagEntry.Key)"))"
-        title="$escapetool.xml($services.localization.render('xe.tag.tooltip', ["$tagEntry.Value"]))"&gt;
-=======
-        href="$xwiki.getURL('FileManager.WebHome', 'view', "do=viewTag&amp;tag=$escapetool.url($tagEntry.Key)")"
+          $xwiki.getURL('FileManager.WebHome', 'view', "do=viewTag&amp;tag=$escapetool.url($tagEntry.Key)"))"
         title="$escapetool.xml($services.localization.render('xe.tag.tooltip', [$tagEntry.Value]))"&gt;
->>>>>>> master
           $escapetool.xml($tagEntry.Key)
       &lt;/a&gt;
     &lt;/li&gt;

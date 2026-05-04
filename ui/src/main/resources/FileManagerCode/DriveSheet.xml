@@ -255,14 +255,10 @@
         $escapetool.xml($services.localization.render('fileManager.action.newFile').replace('{{', '{​{'))
       &lt;/button&gt;
     &lt;/div&gt;&lt;div class="btn-group" dropdown&gt;
-<<<<<<< upgrade-parent-15.10
       &lt;button type="button" class="btn btn-default"
           title="$escapetool.xml($services.localization.render('fileManager.action.downloadFilesHint').replace('{{', '{​{'))"
-          ng-disabled="drive.readOnly || selectedFiles.length == 0" ng-click="download(selectedFiles)"&gt;
-=======
-      &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.downloadFilesHint')"
-          ng-disabled="drive.readOnly || selectedFiles.length == 0" ng-click="download(selectedFiles)" label="$escapetool.xml($services.localization.render('fileManager.action.download'))"&gt;
->>>>>>> master
+          ng-disabled="drive.readOnly || selectedFiles.length == 0" ng-click="download(selectedFiles)"
+          label="$escapetool.xml($services.localization.render('fileManager.action.download'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_put.png')" class="icon"
           alt="" /&gt;
         $escapetool.xml($services.localization.render('fileManager.action.download').replace('{{', '{​{'))
@@ -278,26 +274,18 @@
         &lt;/li&gt;
       &lt;/ul&gt;
     &lt;/div&gt;&lt;div class="btn-group"&gt;
-<<<<<<< upgrade-parent-15.10
       &lt;button type="button" class="btn btn-default"
           title="$escapetool.xml($services.localization.render('fileManager.action.cutFilesHint').replace('{{', '{​{'))"
-          ng-disabled="drive.readOnly || !canCut(selectedFiles)" ng-click="cut(selectedFiles)"&gt;
-=======
-      &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.cutFilesHint')"
-          ng-disabled="drive.readOnly || !canCut(selectedFiles)" ng-click="cut(selectedFiles)" label="$escapetool.xml($services.localization.render('fileManager.action.cut'))" &gt;
->>>>>>> master
+          ng-disabled="drive.readOnly || !canCut(selectedFiles)" ng-click="cut(selectedFiles)"
+          label="$escapetool.xml($services.localization.render('fileManager.action.cut'))" &gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/cut.png')" class="icon"
           alt="" /&gt;
         $escapetool.xml($services.localization.render('fileManager.action.cut').replace('{{', '{​{'))
       &lt;/button&gt;
-<<<<<<< upgrade-parent-15.10
       &lt;button type="button" class="btn btn-default"
           title="$escapetool.xml($services.localization.render('fileManager.action.copyFilesHint').replace('{{', '{​{'))"
-          ng-disabled="drive.readOnly || !canCopy(selectedFiles)" ng-click="copy(selectedFiles)"&gt;
-=======
-      &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.copyFilesHint')"
-          ng-disabled="drive.readOnly || !canCopy(selectedFiles)" ng-click="copy(selectedFiles)" label="$escapetool.xml($services.localization.render('fileManager.action.copy'))"&gt;
->>>>>>> master
+          ng-disabled="drive.readOnly || !canCopy(selectedFiles)" ng-click="copy(selectedFiles)"
+          label="$escapetool.xml($services.localization.render('fileManager.action.copy'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_copy.png')" class="icon"
           alt="" /&gt;
         $escapetool.xml($services.localization.render('fileManager.action.copy').replace('{{', '{​{'))
@@ -319,14 +307,10 @@
           alt="" /&gt;
         $escapetool.xml($services.localization.render('fileManager.action.rename').replace('{{', '{​{'))
       &lt;/button&gt;
-<<<<<<< upgrade-parent-15.10
       &lt;button type="button" class="btn btn-default"
           title="$escapetool.xml($services.localization.render('fileManager.action.deleteFilesHint').replace('{{', '{​{'))"
-          ng-disabled="drive.readOnly || !canDelete(selectedFiles)" ng-click="delete(selectedFiles)"&gt;
-=======
-      &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.deleteFilesHint')"
-          ng-disabled="drive.readOnly || !canDelete(selectedFiles)" ng-click="delete(selectedFiles)" label="$escapetool.xml($services.localization.render('fileManager.action.delete'))"&gt;
->>>>>>> master
+          ng-disabled="drive.readOnly || !canDelete(selectedFiles)" ng-click="delete(selectedFiles)"
+          label="$escapetool.xml($services.localization.render('fileManager.action.delete'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/cross.png')" class="icon"
           alt="" /&gt;
         $escapetool.xml($services.localization.render('fileManager.action.delete').replace('{{', '{​{'))
