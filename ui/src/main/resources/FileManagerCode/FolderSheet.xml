@@ -79,17 +79,17 @@
 #end
 
 #macro (moveFolder)
-  #set ($jobId = $services.drive.move([$doc.name], "$!request.parent/$!request.name"))
+  #set ($jobId = $services.drive.move([$doc.getDocumentReference().name], "$!request.parent/$!request.name"))
   #handleJobStartFailure($jobId)
 #end
 
 #macro (copyFolder)
-  #set ($jobId = $services.drive.copy([$doc.name], "$!request.parent/$!request.name"))
+  #set ($jobId = $services.drive.copy([$doc.getDocumentReference().name], "$!request.parent/$!request.name"))
   #handleJobStartFailure($jobId)
 #end
 
 #macro (deleteFolder)
-  #set ($jobId = $services.drive.delete([$doc.name]))
+  #set ($jobId = $services.drive.delete([$doc.getDocumentReference().name]))
   #handleJobStartFailure($jobId)
 #end
 
