@@ -77,7 +77,7 @@
         <separators>|, </separators>
         <size>5</size>
         <unmodifiable>0</unmodifiable>
-        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
+        <values>action=Action|doc.reference=Document|doc.revision|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.session|request.url=Request URL|request.wiki=Request wiki|sheet|user=User|wiki=Wiki</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </async_context>
       <async_enabled>
@@ -162,20 +162,20 @@
       </type>
     </class>
     <property>
-      <async_cached/>
+      <async_cached>0</async_cached>
     </property>
     <property>
       <async_context/>
     </property>
     <property>
-      <async_enabled/>
+      <async_enabled>0</async_enabled>
     </property>
     <property>
       <category>Information</category>
     </property>
     <property>
       <content>{{velocity}}
-#panelheader($services.localization.render('fileManager.panel.RecentFiles.header'))
+#panelheader($escapetool.xml($services.localization.render('fileManager.panel.RecentFiles.header')))
 {{fileManager.recentFiles/}}
 #panelfooter()
 {{/velocity}}</content>

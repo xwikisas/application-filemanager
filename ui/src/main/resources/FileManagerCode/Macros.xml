@@ -562,43 +562,44 @@
 #end
 
 #macro (similarFileWarning)
+  ## Replace '{{' and insert a zero-width space, so the text is not parsed by angular.
   &lt;div class="modal fade" id="similarFileModal" tabindex="-1" role="dialog"&gt;
     &lt;div class="modal-dialog"&gt;
       &lt;div class="modal-content"&gt;
         &lt;div class="modal-header"&gt;
           &lt;button type="button" class="close" data-dismiss="modal"
-            aria-label="$escapetool.xml($services.localization.render('fileManager.similarFileModal.close'))"&gt;
+            aria-label="$escapetool.xml($services.localization.render('fileManager.similarFileModal.close').replace('{{', '{​{'))"&gt;
             &lt;span aria-hidden="true"&gt;&amp;times;&lt;/span&gt;
           &lt;/button&gt;
           &lt;h4 class="modal-title"&gt;
-            $escapetool.xml($services.localization.render('fileManager.similarFileModal.title'))
+            $escapetool.xml($services.localization.render('fileManager.similarFileModal.title').replace('{{', '{​{'))
           &lt;/h4&gt;
         &lt;/div&gt;
         &lt;div class="modal-body"&gt;
           &lt;form&gt;
             &lt;p&gt;
               &lt;b class="fileName"&gt;&lt;/b&gt;
-              $escapetool.xml($services.localization.render('fileManager.similarFileModal.fileExists'))
+              $escapetool.xml($services.localization.render('fileManager.similarFileModal.fileExists').replace('{{', '{​{'))
             &lt;/p&gt;
             &lt;div class="form-group radioList"&gt;
               &lt;div class="form-row"&gt;
                 &lt;div class="form-check"&gt;
                   &lt;input type="radio" id="newFile" name="uploadAction" value="newFile" checked&gt;
                   &lt;label for="newFile"&gt;
-                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.newFile'))
+                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.newFile').replace('{{', '{​{'))
                   &lt;/label&gt;
                 &lt;/div&gt;
                 &lt;div class="form-check"&gt;
                   &lt;input type="radio" id="replace" name="uploadAction" value="replace"&gt;
                   &lt;label for="replace"&gt;
-                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.replace'))
+                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.replace').replace('{{', '{​{'))
                   &lt;/label&gt;
                   &lt;select class="form-control" name="replacedFile" id="replacedFile"&gt;&lt;/select&gt;
                 &lt;/div&gt;
                 &lt;div class="form-check"&gt;
                   &lt;input type="radio" id="abort" name="uploadAction" value="abort"&gt;
                   &lt;label for="abort"&gt;
-                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.abort'))
+                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.abort').replace('{{', '{​{'))
                   &lt;/label&gt;
                 &lt;/div&gt;
               &lt;/div&gt;##form-row
@@ -608,7 +609,7 @@
                 &lt;div class="form-check"&gt;
                   &lt;input type="checkbox" id="repeat" name="repeatAction" value="doRepeat"&gt;
                   &lt;small&gt;&lt;label for="repeat"&gt;
-                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.repeat'))
+                    $escapetool.xml($services.localization.render('fileManager.similarFileModal.repeat').replace('{{', '{​{'))
                   &lt;/label&gt;&lt;/small&gt;
                 &lt;/div&gt;
               &lt;/div&gt;##form-row
@@ -617,9 +618,9 @@
         &lt;/div&gt;
         &lt;div class="modal-footer"&gt;
           &lt;input type="button" class="btn btn-primary"  data-dismiss="modal"
-            value="$escapetool.xml($services.localization.render('fileManager.similarFileModal.submit'))"&gt;
+            value="$escapetool.xml($services.localization.render('fileManager.similarFileModal.submit').replace('{{', '{​{'))"&gt;
           &lt;input type="button" class="btn btn-default" data-dismiss="modal"
-            value="$escapetool.xml($services.localization.render('cancel'))"&gt;
+            value="$escapetool.xml($services.localization.render('cancel').replace('{{', '{​{'))"&gt;
         &lt;/div&gt;
       &lt;/div&gt;
     &lt;/div&gt;

@@ -213,31 +213,32 @@
 #end
 
 #macro (filesLiveTableTemplate)
+  ## Replace '{{' and insert a zero-width space, so the text is not parsed by angular.
   #set ($columns = [
     {
       'id': 'name',
-      'title': $services.localization.render('fileManager.liveTable.name'),
+      'title': $services.localization.render('fileManager.liveTable.name').replace('{{', '{​{'),
       'type': 'file',
       'sortable': true,
       'filterable': true
     }, {
       'id': 'size',
-      'title': $services.localization.render('fileManager.liveTable.size'),
+      'title': $services.localization.render('fileManager.liveTable.size').replace('{{', '{​{'),
       'type': 'bytes',
       'sortable': true
     }, {
       'id': 'mediaType',
-      'title': $services.localization.render('fileManager.liveTable.type'),
+      'title': $services.localization.render('fileManager.liveTable.type').replace('{{', '{​{'),
       'type': 'mediaType'
     }, {
       'id': 'date',
-      'title': $services.localization.render('fileManager.liveTable.date'),
+      'title': $services.localization.render('fileManager.liveTable.date').replace('{{', '{​{'),
       'type': 'date',
       'sortable': true,
       'filterable': true
     }, {
       'id': 'author',
-      'title': $services.localization.render('fileManager.liveTable.author'),
+      'title': $services.localization.render('fileManager.liveTable.author').replace('{{', '{​{'),
       'type': 'user',
       'sortable': true,
       'filterable': true
@@ -248,61 +249,74 @@
     &lt;div class="btn-group" ng-show="drive.location.type == 'drive' || drive.location.type == 'folder'"&gt;
       &lt;button class="btn btn-default" ng-disabled="drive.readOnly || !drive.location.node.data.canCreate"
           ng-click="drive.viewer = 'upload'" type="button"
-          title="$services.localization.render('fileManager.action.newFileHint')"&gt;
+          title="$escapetool.xml($services.localization.render('fileManager.action.newFileHint').replace('{{', '{​{'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_add.png')" class="icon"
           alt="" /&gt;
-        $services.localization.render('fileManager.action.newFile')
+        $escapetool.xml($services.localization.render('fileManager.action.newFile').replace('{{', '{​{'))
       &lt;/button&gt;
     &lt;/div&gt;&lt;div class="btn-group" dropdown&gt;
-      &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.downloadFilesHint')"
-          ng-disabled="drive.readOnly || selectedFiles.length == 0" ng-click="download(selectedFiles)" label="$escapetool.xml($services.localization.render('fileManager.action.download'))"&gt;
+      &lt;button type="button" class="btn btn-default"
+          title="$escapetool.xml($services.localization.render('fileManager.action.downloadFilesHint').replace('{{', '{​{'))"
+          ng-disabled="drive.readOnly || selectedFiles.length == 0" ng-click="download(selectedFiles)"
+          label="$escapetool.xml($services.localization.render('fileManager.action.download').replace('{{', '{​{'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_put.png')" class="icon"
           alt="" /&gt;
-        $services.localization.render('fileManager.action.download')
+        $escapetool.xml($services.localization.render('fileManager.action.download').replace('{{', '{​{'))
       &lt;/button&gt;
-      &lt;button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle label="$escapetool.xml($services.localization.render('fileManager.action.download.toggleOptions'))"&gt;
+      &lt;button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle
+          label="$escapetool.xml($services.localization.render(
+            'fileManager.action.download.toggleOptions').replace('{{', '{​{'))"&gt;
         &lt;span class="caret"&gt;&lt;/span&gt;
       &lt;/button&gt;
       &lt;ul class="dropdown-menu" role="menu"&gt;
         &lt;li&gt;
           &lt;a href="#" ng-click="drive.viewer = 'downloads'; $event.preventDefault()"&gt;
-            $services.localization.render('fileManager.action.recentDownloads')
+            $escapetool.xml($services.localization.render('fileManager.action.recentDownloads').replace('{{', '{​{'))
           &lt;/a&gt;
         &lt;/li&gt;
       &lt;/ul&gt;
     &lt;/div&gt;&lt;div class="btn-group"&gt;
-      &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.cutFilesHint')"
-          ng-disabled="drive.readOnly || !canCut(selectedFiles)" ng-click="cut(selectedFiles)" label="$escapetool.xml($services.localization.render('fileManager.action.cut'))" &gt;
+      &lt;button type="button" class="btn btn-default"
+          title="$escapetool.xml($services.localization.render('fileManager.action.cutFilesHint').replace('{{', '{​{'))"
+          ng-disabled="drive.readOnly || !canCut(selectedFiles)" ng-click="cut(selectedFiles)"
+          label="$escapetool.xml($services.localization.render('fileManager.action.cut').replace('{{', '{​{'))" &gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/cut.png')" class="icon"
           alt="" /&gt;
-        $services.localization.render('fileManager.action.cut')
+        $escapetool.xml($services.localization.render('fileManager.action.cut').replace('{{', '{​{'))
       &lt;/button&gt;
-      &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.copyFilesHint')"
-          ng-disabled="drive.readOnly || !canCopy(selectedFiles)" ng-click="copy(selectedFiles)" label="$escapetool.xml($services.localization.render('fileManager.action.copy'))"&gt;
+      &lt;button type="button" class="btn btn-default"
+          title="$escapetool.xml($services.localization.render('fileManager.action.copyFilesHint').replace('{{', '{​{'))"
+          ng-disabled="drive.readOnly || !canCopy(selectedFiles)" ng-click="copy(selectedFiles)"
+          label="$escapetool.xml($services.localization.render('fileManager.action.copy').replace('{{', '{​{'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_copy.png')" class="icon"
           alt="" /&gt;
-        $services.localization.render('fileManager.action.copy')
+        $escapetool.xml($services.localization.render('fileManager.action.copy').replace('{{', '{​{'))
       &lt;/button&gt;
-      &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.pasteHint')"
+      &lt;button type="button" class="btn btn-default"
+          title="$escapetool.xml($services.localization.render('fileManager.action.pasteHint').replace('{{', '{​{'))"
           ng-if="drive.location.type == 'drive' || drive.location.type == 'folder'"
-          ng-disabled="!clipboard" ng-click="paste()" label="$escapetool.xml($services.localization.render('fileManager.action.paste'))"&gt;
+          ng-disabled="!clipboard" ng-click="paste()"
+          label="$escapetool.xml($services.localization.render('fileManager.action.paste').replace('{{', '{​{'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_paste.png')" class="icon"
           alt="" /&gt;
-        $services.localization.render('fileManager.action.paste')
+        $escapetool.xml($services.localization.render('fileManager.action.paste').replace('{{', '{​{'))
       &lt;/button&gt;
     &lt;/div&gt;&lt;div class="btn-group"&gt;
-      &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.renameFileHint')"
+      &lt;button type="button" class="btn btn-default"
+          title="$escapetool.xml($services.localization.render('fileManager.action.renameFileHint').replace('{{', '{​{'))"
           ng-disabled="drive.readOnly || selectedFiles.length != 1 || !selectedFiles[0].canRename"
-          ng-click="rename(selectedFiles[0])" label="$escapetool.xml($services.localization.render('fileManager.action.rename'))"&gt;
+          ng-click="rename(selectedFiles[0])" label="$escapetool.xml($services.localization.render('fileManager.action.rename').replace('{{', '{​{'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/textfield_rename.png')" class="icon"
           alt="" /&gt;
-        $services.localization.render('fileManager.action.rename')
+        $escapetool.xml($services.localization.render('fileManager.action.rename').replace('{{', '{​{'))
       &lt;/button&gt;
-      &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.deleteFilesHint')"
-          ng-disabled="drive.readOnly || !canDelete(selectedFiles)" ng-click="delete(selectedFiles)" label="$escapetool.xml($services.localization.render('fileManager.action.delete'))"&gt;
+      &lt;button type="button" class="btn btn-default"
+          title="$escapetool.xml($services.localization.render('fileManager.action.deleteFilesHint').replace('{{', '{​{'))"
+          ng-disabled="drive.readOnly || !canDelete(selectedFiles)" ng-click="delete(selectedFiles)"
+          label="$escapetool.xml($services.localization.render('fileManager.action.delete').replace('{{', '{​{'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/cross.png')" class="icon"
           alt="" /&gt;
-        $services.localization.render('fileManager.action.delete')
+        $escapetool.xml($services.localization.render('fileManager.action.delete').replace('{{', '{​{'))
       &lt;/button&gt;
     &lt;/div&gt;
   &lt;/div&gt;
@@ -316,32 +330,41 @@
 #macro (fileUploadTemplate)
   &lt;div class="btn-toolbar" role="toolbar"&gt;
     &lt;div class="btn-group"&gt;
-      &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.backToFileList')"
+      &lt;button type="button" class="btn btn-default"
+          title="$escapetool.xml($services.localization.render('fileManager.action.backToFileList').replace('{{', '{​{'))"
           ng-if="back" ng-click="back()"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/arrow_left.png')" class="icon"
           alt="" /&gt;
-        $services.localization.render('fileManager.action.back')
+        $escapetool.xml($services.localization.render('fileManager.action.back').replace('{{', '{​{'))
       &lt;/button&gt;
     &lt;/div&gt;
     &lt;div class="btn-group"&gt;
-      &lt;button type="button" class="btn btn-default" title="$services.localization.render('fileManager.action.clearUploadStatus')"
-         ng-if="drive.uploads.finished.length &gt; 0" ng-click="clearUploads()"&gt;
-        $services.localization.render('fileManager.action.clear')
+      &lt;button type="button" class="btn btn-default"
+          title="$escapetool.xml($services.localization.render('fileManager.action.clearUploadStatus').replace('{{', '{​{'))"
+          ng-if="drive.uploads.finished.length &gt; 0" ng-click="clearUploads()"&gt;
+        $escapetool.xml($services.localization.render('fileManager.action.clear').replace('{{', '{​{'))
       &lt;/button&gt;
     &lt;/div&gt;
   &lt;/div&gt;
-  &lt;h3&gt;$services.localization.render('fileManager.action.upload.destinationFolder', ['{{drive.location.node.text}}'])&lt;/h3&gt;
+  &lt;h3&gt;
+    $escapetool.xml($services.localization.render(
+      'fileManager.action.upload.destinationFolder', ['__replace__']).replace('{{', '{​{')).replace(
+        '__replace__', '{{drive.location.node.text}}')
+  &lt;/h3&gt;
   &lt;input type="file" on-file-select="uploadFiles($files)" multiple
     folder-selection-enabled="folderSelectionEnabled" /&gt;
   &lt;label ng-show="folderSelectionSupported"&gt;
     &lt;input type="checkbox" ng-model="folderSelectionEnabled" /&gt;
-    $services.localization.render('fileManager.action.upload.enableFolderSelection')
+    $escapetool.xml($services.localization.render('fileManager.action.upload.enableFolderSelection').replace('{{', '{​{'))
   &lt;/label&gt;
   &lt;div ng-if="dropSupported" on-file-drop="uploadFiles($files)" drag-over-class="active"
-    class="file-drop-zone"&gt;$services.localization.render('fileManager.action.upload.dropZoneHint')&lt;/div&gt;
+      class="file-drop-zone"&gt;
+    $escapetool.xml($services.localization.render('fileManager.action.upload.dropZoneHint').replace('{{', '{​{'))
+  &lt;/div&gt;
   &lt;ul class="uploads"&gt;
     &lt;li class="upload loading uploads-pending" ng-show="drive.uploads.pending.length &gt; 0"&gt;
-      $services.localization.render('fileManager.action.upload.pendingUploadsCount', ['{{drive.uploads.pending.length}}'])
+      $escapetool.xml($services.localization.render('fileManager.action.upload.pendingUploadsCount',
+        ['__replace__']).replace('{{', '{​{')).replace('__replace__', '{{drive.uploads.pending.length}}')
     &lt;/li&gt;
     &lt;li class="upload" ng-repeat="upload in drive.uploads.running" file-upload-status="upload"&gt;&lt;/li&gt;
     &lt;li class="upload" ng-repeat="upload in drive.uploads.finished" file-upload-status="upload"&gt;&lt;/li&gt;
@@ -352,24 +375,32 @@
   &lt;div class="upload-file"&gt;
     &lt;span file="upload.file" icon="{{upload.status == 'Aborted' ? 'exclamation' : ''}}"&gt;&lt;/span&gt;
     &lt;span class="upload-file-path"&gt;
-      &lt;span ng-if="upload.status == 'Done'"&gt;({{ upload.file.size | bytes }}) {{ upload.file.date | timeAgo }}&lt;/span&gt;
-      $services.localization.render('fileManager.action.upload.destinationPath', ['{{upload.path.join(" / ")}}'])
+      &lt;span ng-if="upload.status == 'Done'"&gt;
+        ({{ upload.file.size | bytes }}) {{ upload.file.date | timeAgo }}
+      &lt;/span&gt;
+      $escapetool.xml($services.localization.render('fileManager.action.upload.destinationPath',
+        ['__replace__']).replace('{{', '{​{')).replace('__replace__', '{{upload.path.join(" / ")}}')
     &lt;/span&gt;
   &lt;/div&gt;
   &lt;div class="progress-container {{upload.status}}" ng-if="upload.status != 'Done'"&gt;
     &lt;xprogress value="{{upload.loaded}}" max="{{upload.total}}"&gt;&lt;/xprogress&gt;
     &lt;input type="image" src="$xwiki.getSkinFile('icons/silk/cancel.png')" ng-if="upload.status == 'InProgress'"
-      class="cancel icon" title="$services.localization.render('fileManager.action.upload.cancelHint')" ng-click="upload.abort()" /&gt;
+      class="cancel icon"
+      title="$escapetool.xml($services.localization.render('fileManager.action.upload.cancelHint').replace('{{', '{​{'))"
+      ng-click="upload.abort()" /&gt;
     &lt;div class="progress-info"&gt;
       &lt;span ng-if="upload.status == 'InProgress' &amp;&amp; upload.estimatedRemainingTime"&gt;
-        $services.localization.render('fileManager.action.upload.estimatedRemainingTime', ['{{ upload.estimatedRemainingTime | duration }}'])
+        $escapetool.xml($services.localization.render('fileManager.action.upload.estimatedRemainingTime',
+          ['__replace__']).replace('{{', '{​{')).replace('__replace__', '{{ upload.estimatedRemainingTime | duration }}')
         &amp;#8212;
       &lt;/span&gt;
       &lt;span ng-if="upload.status == 'Aborted'"&gt;
         {{ upload.end | timeAgo }}
         &amp;#8212;
       &lt;/span&gt;
-      $services.localization.render('fileManager.action.upload.bytesSent', ['{{ upload.loaded | bytes }}', '{{ upload.total | bytes }}'])
+      $escapetool.xml($services.localization.render('fileManager.action.upload.bytesSent',
+        ['__replace1__', '__replace2__']).replace('{{', '{​{')).replace(
+          '__replace1__', '{{ upload.loaded | bytes }}').replace('__replace2__', '{{ upload.total | bytes }}')
     &lt;/div&gt;
   &lt;/div&gt;
 #end
@@ -379,16 +410,17 @@
     &lt;div class="btn-toolbar" role="toolbar"&gt;
       &lt;div class="btn-group"&gt;
         &lt;button type="button" class="btn btn-default" ng-click="drive.viewer = 'files'"
-            title="$services.localization.render('fileManager.action.backToFileList')"&gt;
+            title="$escapetool.xml($services.localization.render('fileManager.action.backToFileList').replace('{{', '{​{'))"&gt;
           &lt;img src="$xwiki.getSkinFile('icons/silk/arrow_left.png')" class="icon"
             alt="" /&gt;
-          $services.localization.render('fileManager.action.back')
+          $escapetool.xml($services.localization.render('fileManager.action.back').replace('{{', '{​{'))
         &lt;/button&gt;
       &lt;/div&gt;
     &lt;/div&gt;
-    &lt;h3&gt;$services.localization.render('fileManager.action.recentDownloads')&lt;/h3&gt;
+    &lt;h3&gt;$escapetool.xml($services.localization.render('fileManager.action.recentDownloads').replace('{{', '{​{'))&lt;/h3&gt;
     &lt;ul class="downloads"&gt;
-      &lt;li class="download" ng-repeat="download in downloadsInProgress = (drive.jobs | filter:isDownloadReady(false))"&gt;
+      &lt;li class="download"
+          ng-repeat="download in downloadsInProgress = (drive.jobs | filter:isDownloadReady(false))"&gt;
         &lt;div&gt;
           &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_zip.png')" alt="zip" class="icon" /&gt;
           {{download.request.outputFile.name}}
@@ -399,7 +431,7 @@
         &lt;div class="progress-container"&gt;
           &lt;xprogress value="{{download.progress.offset}}" max="1"&gt;&lt;/xprogress&gt;
           &lt;div class="progress-info"&gt;
-            $services.localization.render('fileManager.action.download.buildingPackage')
+            $escapetool.xml($services.localization.render('fileManager.action.download.buildingPackage').replace('{{', '{​{'))
           &lt;/div&gt;
         &lt;/div&gt;
       &lt;/li&gt;
@@ -411,7 +443,7 @@
         &lt;/span&gt;
       &lt;/li&gt;
       &lt;li class="download" ng-show="downloadsInProgress.length == 0 &amp;&amp; downloadsReady.length == 0"&gt;
-        $services.localization.render('fileManager.action.noRecentDownloads')
+        $escapetool.xml($services.localization.render('fileManager.action.noRecentDownloads').replace('{{', '{​{'))
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/div&gt;
@@ -419,7 +451,9 @@
 
 #macro (maybeDisplayJobs)
   &lt;ul ng-cloak ng-if="drive.location.type == 'jobs'" class="jobs"&gt;
-    &lt;li ng-if="drive.jobs.length == 0"&gt;No recent tasks&lt;/li&gt;
+    &lt;li ng-if="drive.jobs.length == 0"&gt;
+      $escapetool.xml($services.localization.render('fileManager.action.noRecentTasks').replace('{{', '{​{'))
+    &lt;/li&gt;
     &lt;li class="job" ng-repeat="job in drive.jobs | filter:{state: '!FINISHED'}:true"&gt;
       #displayJob
     &lt;/li&gt;
@@ -616,6 +650,7 @@ define('filemanager-drivesheet-translation-keys', {
   prefix: 'fileManager.',
   keys: [
     'action.rename',
+    'action.deleteError',
     'tree.pagination.more',
     'action.copy.notification.inprogress',
     'action.copy.notification.done',
@@ -624,10 +659,32 @@ define('filemanager-drivesheet-translation-keys', {
     'action.delete.notification.inprogress',
     'action.delete.notification.done',
     'action.notification.error',
+    'action.deleteFilesConfirmation',
+    'fileType.text',
+    'fileType.image',
+    'fileType.audio',
+    'fileType.video',
+    'fileType.document',
+    'fileType.presentation',
+    'fileType.spreadsheet',
+    'fileType.font',
+    // TODO: These could maybe use some time ago API? I know there was some velocity API for this.
+    'timeAgo.seconds',
+    'timeAgo.minute',
+    'timeAgo.minutes',
+    'timeAgo.hour',
+    'timeAgo.hours',
+    'timeAgo.day',
+    'timeAgo.days',
+    'timeAgo.month',
+    'timeAgo.months',
+    'timeAgo.year',
+    'timeAgo.years',
   ]
 });
 
-require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-translation-keys', 'angular-resource', 'angular-ui-bootstrap', 'fileUpload', 'tree', 'liveTable'], function($, angular, JobRunner, l10n) {</code>
+require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-translation-keys', 'angular-resource',
+  'angular-ui-bootstrap', 'fileUpload', 'tree', 'liveTable'], function($, angular, JobRunner, l10n) {</code>
     </property>
     <property>
       <name>Require Start &amp; Configuration</name>
@@ -939,7 +996,12 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
       get: {
         cache: true,
         transformResponse: function(response, headersGetter) {
-          return fromRest(angular.fromJson(response));
+          const result = angular.fromJson(response);
+          if (result.code == 404) {
+            // User not found. Inexistent user or superadmin, so skip it.
+          } else {
+            return fromRest(result);
+          }
         }
       },
       query: {
@@ -1278,25 +1340,22 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
 
   driveFilters.filter('mediaType', function() {
     var categories = {
-      "$services.localization.render('fileManager.fileType.text')":
-        ['text/', 'application/xml', 'application/javascript', 'application/ecmascript',
+      'fileType.text': ['text/', 'application/xml', 'application/javascript', 'application/ecmascript',
         'application/json', 'application/x-sh', '+xml'],
-      "$services.localization.render('fileManager.fileType.image')": ['image/'],
-      "$services.localization.render('fileManager.fileType.audio')": ['audio/'],
-      "$services.localization.render('fileManager.fileType.video')": ['video/'],
-      "$services.localization.render('fileManager.fileType.document')":
+      'fileType.image': ['image/'],
+      'fileType.audio': ['audio/'],
+      'fileType.video': ['video/'],
+      'fileType.document':
         ['application/pdf', 'application/postscript', 'application/msword', 'application/vnd.ms-word.',
         'application/vnd.oasis.opendocument.text', 'application/vnd.openxmlformats-officedocument.word'],
-      "$services.localization.render('fileManager.fileType.presentation')":
+      'fileType.presentation':
         ['application/vnd.ms-powerpoint', 'application/vnd.oasis.opendocument.presentation',
         'application/vnd.openxmlformats-officedocument.presentation'],
-      "$services.localization.render('fileManager.fileType.spreadsheet')":
-        ['application/vnd.ms-excel', 'application/vnd.oasis.opendocument.spreadsheet',
+      'fileType.spreadsheet': ['application/vnd.ms-excel', 'application/vnd.oasis.opendocument.spreadsheet',
         'application/vnd.openxmlformats-officedocument.spreadsheet'],
-      "$services.localization.render('fileManager.fileType.archive')":
-        ['application/zip', 'application/x-gzip', 'application/x-bzip', 'application/x-tar',
+      'fileType.archive': ['application/zip', 'application/x-gzip', 'application/x-bzip', 'application/x-tar',
         'application/x-gtar', 'application/vnd.xara', '-archive', '-compressed', '-package', '+zip'],
-      "$services.localization.render('fileManager.fileType.font')": ['application/font-', 'application/x-font-']
+      'fileType.font': ['application/font-', 'application/x-font-']
     };
 
     var getCategory = function(mediaType) {
@@ -1318,7 +1377,7 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
       }
       var category = getCategory(mediaType);
       if (category) {
-        return category;
+        return l10n[category];
       } else {
         mediaType = mediaType.substring(mediaType.indexOf('/') + 1);
         if (mediaType.substr(0, 7) == 'x-font-') {
@@ -1349,50 +1408,50 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
       {
         range: '0 to 45 seconds',
         limit: 45,
-        text: "$services.localization.render('fileManager.timeAgo.seconds')"
+        text: l10n['timeAgo.seconds']
       }, {
         range: '45 to 90 seconds',
         limit: 90,
-        text: "$services.localization.render('fileManager.timeAgo.minute')"
+        text: l10n['timeAgo.minute']
       }, {
         range: '90 seconds to 45 minutes',
         limit: 2700,
-        text: "$services.localization.render('fileManager.timeAgo.minutes', ['__x__'])",
+        text:  l10n.get('timeAgo.minutes', '__x__'),
         unit: 60
       }, {
         range: '45 to 90 minutes',
         limit: 5400,
-        text: "$services.localization.render('fileManager.timeAgo.hour')"
+        text: l10n['timeAgo.hour']
       }, {
         range: '90 minutes to 22 hours',
         limit: 22 * 3600,
-        text: "$services.localization.render('fileManager.timeAgo.hours', ['__x__'])",
+        text:  l10n.get('timeAgo.hours', '__x__'),
         unit: 3600
       }, {
         range: '22 to 36 hours',
         limit: 36 * 3600,
-        text: "$services.localization.render('fileManager.timeAgo.day')"
+        text: l10n['timeAgo.day']
       }, {
         range: '36 hours to 25 days',
         limit: 25 * 86400,
-        text: "$services.localization.render('fileManager.timeAgo.days', ['__x__'])",
+        text:  l10n.get('timeAgo.days', '__x__'),
         unit: 86400
       }, {
         range: '25 to 45 days',
         value: 45 * 86400,
-        text: "$services.localization.render('fileManager.timeAgo.month')"
+        text: l10n['timeAgo.month']
       }, {
         range: '45 to 345 days',
         limit: 345 * 86400,
-        text: "$services.localization.render('fileManager.timeAgo.months', ['__x__'])",
+        text:  l10n.get('timeAgo.months', '__x__'),
         unit: 31 * 86400
       }, {
         range: '345 to 547 days (1.5 years)',
         limit: 547 * 86400,
-        text: "$services.localization.render('fileManager.timeAgo.year')"
+        text: l10n['timeAgo.year']
       }, {
         range: '548 days+',
-        text: "$services.localization.render('fileManager.timeAgo.years', ['__x__'])",
+        text: l10n.get('timeAgo.years', '__x__'),
         unit: 365 * 86400
       }
     ];
@@ -1681,8 +1740,9 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
     return {
       restrict: 'A',
       scope: {},
-      template: '&lt;img ng-src="{{user.avatarURL}}" alt="Avatar" class="avatar" /&gt; &lt;a href="{{user.url}}" title="{{user.alias}}" '
-        + 'ng-if="user.name"&gt;{{user.name}}&lt;/a&gt;&lt;span ng-if="!user.name"&gt;-&lt;/span&gt;',
+      template: '&lt;img ng-src="{{user.avatarURL}}" alt="Avatar" class="avatar" /&gt; '
+        + '&lt;a href="{{user.url}}" title="{{user.alias}}" ng-if="user.name"&gt;{{user.name}}&lt;/a&gt;'
+        + '&lt;span ng-if="!user.name"&gt;-&lt;/span&gt;',
       link: function(scope, element, attrs) {
         scope.user = User.fromId(attrs.user);
         if (scope.user.name) {
@@ -1753,7 +1813,8 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
       scope: {
         drive: '='
       },
-      templateUrl: new XWiki.Document('DriveSheet', 'FileManagerCode').getURL('get', 'template=files&amp;outputSyntax=plain'),
+      templateUrl: new XWiki.Document('DriveSheet', 'FileManagerCode').getURL('get',
+        'template=files&amp;outputSyntax=plain'),
       link: function(scope, element, attrs) {
         scope.id = attrs.id || 'files';
         scope.selection = {};
@@ -1891,7 +1952,7 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
             .val(file.name)
             .css('width', '100%')
             .one('blur', onRename)
-            .keyup(onKeyUp);
+            .on('keyup', onKeyUp);
 
           var cell = selectedRows.find('td').eq(1);
           // Make sure the column width doesn't change when we insert the rename text input.
@@ -1901,20 +1962,19 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
             .end().append(inputElement);
 
           // Focus and select the current file name.
-          inputElement.select();
+          inputElement.trigger('select');
         };
 
         scope.canDelete = function(files) {
           return canPerformBatchOperation(files, 'Delete');
         };
         scope['delete'] = function(files) {
-          if (window.confirm("$services.localization.render('fileManager.action.deleteFilesConfirmation')")) {
+          if (window.confirm(l10n['action.deleteFilesConfirmation'])) {
             // Clear the selection.
             scope.selection = {};
             scope.drive['delete'](getPaths(files)).done(function(result) {
               if (result.error) {
-                  var message = $jsontool.serialize(
-                    $services.localization.render('fileManager.action.deleteError', ['__error__']));
+                  var message = l10n.get('action.deleteError', '__error__');
                   new XWiki.widgets.Notification(message.replace('__error__', result.error), 'error');
               }
               refreshLiveTable(result);
@@ -2157,7 +2217,7 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
 
     var getUploadAction = function(file, folder) {
       var deferred = $.Deferred();
-      getSimilarFiles(file, folder).success(function(data) {
+      getSimilarFiles(file, folder).done(function(data) {
         if (data.totalCount &gt; 0) {
           var bytesFilter = $filter('bytes');
           var similarFiles = data.list.map(function(file) {
@@ -2223,7 +2283,8 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
       scope: {
         'upload': '=fileUploadStatus'
       },
-      templateUrl: new XWiki.Document('DriveSheet', 'FileManagerCode').getURL('get', 'template=fileUploadStatus&amp;outputSyntax=plain'),
+      templateUrl: new XWiki.Document('DriveSheet', 'FileManagerCode').getURL('get',
+        'template=fileUploadStatus&amp;outputSyntax=plain'),
       link: function(scope, element, attrs) {
         scope.$watch('upload.loaded', function(newValue, oldValue) {
           if (scope.upload.loaded &gt; 0 &amp;&amp; scope.upload.loaded &lt; scope.upload.total) {
@@ -2246,7 +2307,7 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
         scope.$watch('folderSelectionEnabled', function(newValue, oldValue) {
           element.prop('webkitdirectory', scope.folderSelectionEnabled);
         });
-        element.bind('change', function(event) {
+        element.on('change', function(event) {
           scope.onFileSelect({$files: FileTree.fromFileList(event.target.files)});
         });
       }
@@ -2261,16 +2322,16 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
       },
       link: function(scope, element, attrs) {
         var dragOverClass = attrs.dragOverClass || 'dragOver';
-        element.bind('dragenter', function(event) {
+        element.on('dragenter', function(event) {
           element.addClass(dragOverClass);
         });
-        element.bind('dragover', function(event) {
+        element.on('dragover', function(event) {
           event.preventDefault();
         });
-        element.bind('dragleave', function(event) {
+        element.on('dragleave', function(event) {
           element.removeClass(dragOverClass);
         });
-        element.bind('drop', function(event) {
+        element.on('drop', function(event) {
           event.preventDefault();
           element.removeClass(dragOverClass);
           var dataTransfer = event.dataTransfer || event.originalEvent.dataTransfer;
@@ -2747,7 +2808,6 @@ require(['jquery', 'angular', 'JobRunner', 'xwiki-l10n!filemanager-drivesheet-tr
         } else {
           notification = errorNotification;
         }
-        console.log(job);
       });
     };
 
@@ -3366,6 +3426,7 @@ li.upload .upload-file {
   height: 100px;
   line-height: 100px;
   text-align: center;
+  overflow: hidden;
 }
 .file-drop-zone.active {
   background-color: $theme.highlightColor;

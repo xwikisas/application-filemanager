@@ -56,6 +56,7 @@ fileManager.action.download.buildingPackage=Building package...
 fileManager.action.downloadFilesHint=Download selected files
 fileManager.action.recentDownloads=Recent Downloads
 fileManager.action.noRecentDownloads=No recent downloads
+fileManager.action.noRecentTasks=No recent tasks
 fileManager.action.cut=Cut
 fileManager.action.cutFilesHint=Cut selected files
 fileManager.action.cut.notification.inprogress=Moving {1} files to {0}... ({2}%)

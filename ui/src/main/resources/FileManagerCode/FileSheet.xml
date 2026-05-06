@@ -78,17 +78,18 @@
 #end
 
 #macro (moveFile)
-  #set ($jobId = $services.drive.move(["$!request.fromParent/$doc.name"], "$!request.toParent/$!request.name"))
+  #set ($jobId = $services.drive.move(["$!request.fromParent/$doc.documentReference.name"],
+    "$!request.toParent/$!request.name"))
   #handleJobStartFailure($jobId)
 #end
 
 #macro (copyFile)
-  #set ($jobId = $services.drive.copy(["/$doc.name"], "$!request.parent/$!request.name"))
+  #set ($jobId = $services.drive.copy(["/$doc.documentReference.name"], "$!request.parent/$!request.name"))
   #handleJobStartFailure($jobId)
 #end
 
 #macro (deleteFile)
-  #set ($jobId = $services.drive.delete(["$!request.fromParent/$doc.name"]))
+  #set ($jobId = $services.drive.delete(["$!request.fromParent/$doc.documentReference.name"]))
   #handleJobStartFailure($jobId)
 #end
 
@@ -129,7 +130,7 @@
       &lt;a href="$xwiki.getURL($driveReference)#?driveNode=$escapetool.url($driveNode)" class="btn btn-default"
           title="Back to the File Manager"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/arrow_left.png')" alt="" class="icon" /&gt;
-        $services.localization.render('fileManager.action.backToFileManager')
+        $escapetool.xml($services.localization.render('fileManager.action.backToFileManager'))
       &lt;/a&gt;
     &lt;/div&gt;
   #end
@@ -142,7 +143,7 @@
       &lt;a href="$doc.getAttachmentURL($attachments.get(0).filename, 'download', 'force-download=1')"
           class="btn btn-default" title="Download this file"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_put.png')" alt="" class="icon" /&gt;
-        $services.localization.render('fileManager.action.download')
+        $escapetool.xml($services.localization.render('fileManager.action.download'))
       &lt;/a&gt;
     &lt;/div&gt;
   #end
@@ -187,7 +188,7 @@
 #end
 
 #macro (openPDFFile $attachment)
-  {{pdfviewer file="$attachment.filename" /}}
+  {{pdfviewer file="$services.rendering.escape($attachment.filename, 'xwiki/2.1')" /}}
 #end
 
 #macro (openOfficeFile $attachment)
@@ -195,7 +196,7 @@
     #if ($services.officeviewer.isMimeTypeSupported($attachment.mimeType.toLowerCase()))
       #set ($attachmentReference = $services.model.createAttachmentReference($doc.documentReference, $attachment.filename))
       #set ($fileNameAsReference = $services.model.serialize($attachmentReference, 'compact', $doc.documentReference))
-      {{office attachment="$fileNameAsReference" filterStyles="false" /}}
+      {{office attachment="$services.rendering.escape($fileNameAsReference, 'xwiki/2.1')" filterStyles="false" /}}
     #else
       {{info}}Unsupported office file type: $attachment.mimeType .{{/info}}
     #end
@@ -210,7 +211,7 @@
     #if (!$language)
       #set ($language = 'none')
     #end
-    {{code language="$language"}}
+    {{code language="$services.rendering.escape($language, 'xwiki/2.1')"}}
     $attachment.contentAsString
     {{/code}}
   #else

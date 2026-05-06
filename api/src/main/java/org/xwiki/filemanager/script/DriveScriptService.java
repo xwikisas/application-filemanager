@@ -252,7 +252,7 @@ public class DriveScriptService implements ScriptService
      * (because a file can have multiple parent folders). This is useful for instance if you want to delete a file from
      * all its parent folders.
      * 
-     * @param pathElements the path elements
+     * @param serializedPath the path elements
      * @return the {@link Path} object
      */
     private Path asPath(String serializedPath)

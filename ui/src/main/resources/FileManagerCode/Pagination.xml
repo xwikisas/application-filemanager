@@ -41,18 +41,18 @@
   &lt;div ng-class="{paginationFilter: isSeparate}"&gt;
     &lt;span ng-if="showResultsRange" class="resultsNo xwiki-livetable-limits"&gt;
       &lt;span ng-if="totalCount == 0" class="currentResultsNo"&gt;
-        $services.localization.render('platform.livetable.paginationResultsNone')
+        $escapetool.xml($services.localization.render('platform.livetable.paginationResultsNone'))
       &lt;/span&gt;
       &lt;span ng-if="totalCount == 1" class="currentResultsNo"&gt;
-        $services.localization.render('platform.livetable.paginationResultsOne')
+        $escapetool.xml($services.localization.render('platform.livetable.paginationResultsOne'))
       &lt;/span&gt;
       &lt;span ng-if="totalCount &gt; 1 &amp;&amp; from == totalCount"&gt;
-        $services.localization.render('platform.livetable.paginationResultsSingle',
-          ['{{from}}', '{{totalCount}}'])
+        $escapetool.xml($services.localization.render('platform.livetable.paginationResultsSingle',
+          ['{{from}}', '{{totalCount}}']))
       &lt;/span&gt;
       &lt;span ng-if="totalCount &gt; 1 &amp;&amp; from != totalCount"&gt;
-        $services.localization.render('platform.livetable.paginationResultsMany',
-          ['{{from}}', '{{to}}', '{{totalCount}}'])
+        $escapetool.xml($services.localization.render('platform.livetable.paginationResultsMany',
+          ['{{from}}', '{{to}}', '{{totalCount}}']))
       &lt;/span&gt;
     &lt;/span&gt;
 
@@ -67,26 +67,30 @@
     &lt;/span&gt;
 
     &lt;span ng-if="showResultsRange &amp;&amp; actualTotalCount === undefined" class="xwiki-livetable-loader"&gt;
-      &lt;img src="$xwiki.getSkinFile('icons/xwiki/ajax-loader-large.gif')" alt="$services.localization.render('platform.livetable.loading')"
-        title="$services.localization.render('platform.livetable.loading')" /&gt;
+      &lt;img src="$xwiki.getSkinFile('icons/xwiki/ajax-loader-large.gif')"
+        alt="$escapetool.xml($services.localization.render('platform.livetable.loading'))"
+        title="$escapetool.xml($services.localization.render('platform.livetable.loading'))" /&gt;
     &lt;/span&gt;
 
     &lt;span ng-if="totalCount &gt; 0" class="controlPagination"&gt;
       &lt;span ng-if="pageNumber == 0" class="noPrevPagination"&gt; &lt;/span&gt;
       &lt;a ng-if="pageNumber &gt; 0" href="#previousPage" ng-click="loadPage(pageNumber - 1); $event.preventDefault()"
-          title="$services.localization.render('platform.livetable.paginationPagePrevTitle')" class="prevPagination"&gt;
-        $services.localization.render('platform.livetable.paginationPagePrevious')
+          title="$escapetool.xml($services.localization.render('platform.livetable.paginationPagePrevTitle'))"
+          class="prevPagination"&gt;
+        $escapetool.xml($services.localization.render('platform.livetable.paginationPagePrevious'))
       &lt;/a&gt;
 
       &lt;span ng-if="pageNumber &gt;= pageCount - 1" class="noNextPagination"&gt; &lt;/span&gt;
-      &lt;a ng-if="pageNumber &lt; pageCount - 1" href="#nextPage" ng-click="loadPage(pageNumber + 1); $event.preventDefault()"
-          title="$services.localization.render('platform.livetable.paginationPageNextTitle')" class="nextPagination"&gt;
-        $services.localization.render('platform.livetable.paginationPageNext')
+      &lt;a ng-if="pageNumber &lt; pageCount - 1"
+          href="#nextPage" ng-click="loadPage(pageNumber + 1); $event.preventDefault()"
+          title="$escapetool.xml($services.localization.render('platform.livetable.paginationPageNextTitle'))"
+          class="nextPagination"&gt;
+        $escapetool.xml($services.localization.render('platform.livetable.paginationPageNext'))
       &lt;/a&gt;
     &lt;/span&gt;
 
     &lt;span ng-if="totalCount &gt; 0" class="pagination"&gt;
-      $services.localization.render('platform.livetable.paginationPage')
+      $escapetool.xml($services.localization.render('platform.livetable.paginationPage'))
       ## Always show first page number.
       &lt;page-link number="0" ng-if="contextFirstPage != 0"&gt;&lt;/page-link&gt;
       &lt;span ng-if="contextFirstPage &gt; 1"&gt; ... &lt;/span&gt;
@@ -100,8 +104,8 @@
 
 #macro (pageLinkTemplate)
   &lt;a href="#page" ng-if="number != pageNumber" ng-click="loadPage(number); $event.preventDefault()"
-    title="$services.localization.render('platform.livetable.paginationPageTitle',
-    ['{{number + 1}}'])"&gt;{{number + 1}}&lt;/a&gt;
+    title="$escapetool.xml($services.localization.render('platform.livetable.paginationPageTitle',
+    ['{{number + 1}}']))"&gt;{{number + 1}}&lt;/a&gt;
   &lt;span ng-if="number == pageNumber" class="currentPage"&gt;
     {{number + 1}}
   &lt;/span&gt;

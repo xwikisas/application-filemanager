@@ -205,7 +205,7 @@
         <separators>|, </separators>
         <size>5</size>
         <unmodifiable>0</unmodifiable>
-        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
+        <values>action=Action|doc.reference=Document|doc.revision|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.session|request.url=Request URL|request.wiki=Request wiki|sheet|user=User|wiki=Wiki</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </async_context>
       <async_enabled>
@@ -371,13 +371,13 @@
       </visibility>
     </class>
     <property>
-      <async_cached/>
+      <async_cached>0</async_cached>
     </property>
     <property>
       <async_context/>
     </property>
     <property>
-      <async_enabled/>
+      <async_enabled>0</async_enabled>
     </property>
     <property>
       <code>{{velocity}}
@@ -422,7 +422,7 @@ $xwiki.ssx.use('XWiki.TagCloud')##
   #set ($intervalSize = $firstHalfIntervalSize)
   #set ($halfPassed = false)
   #foreach ($popularityLevel in $popularityLevels)
-    #if ($velocityCount &gt; $levelsHalf &amp;&amp; !$halfPassed)
+    #if ($foreach.count &gt; $levelsHalf &amp;&amp; !$halfPassed)
       #set ($intervalSize = $secondHalfIntervalSize)
       #set ($halfPassed = true)
     #end
@@ -449,7 +449,8 @@ $xwiki.ssx.use('XWiki.TagCloud')##
     #end
     &lt;li class="$liClass"&gt;
       &lt;a class="tag"
-        href="$xwiki.getURL('FileManager.WebHome', 'view', "do=viewTag&amp;tag=$escapetool.url($tagEntry.Key)")"
+        href="$escapetool.xml(
+          $xwiki.getURL('FileManager.WebHome', 'view', "do=viewTag&amp;tag=$escapetool.url($tagEntry.Key)"))"
         title="$escapetool.xml($services.localization.render('xe.tag.tooltip', [$tagEntry.Value]))"&gt;
           $escapetool.xml($tagEntry.Key)
       &lt;/a&gt;
@@ -459,9 +460,9 @@ $xwiki.ssx.use('XWiki.TagCloud')##
 #else
   &lt;p class="noitems"&gt;
   #if("$!tagCloudSpace" == "")
-    $services.localization.render('xe.tag.notags')
+    $escapetool.xml($services.localization.render('xe.tag.notags'))
   #else
-    $services.localization.render('xe.tag.notagsforspace', ["$tagCloudSpace"])
+    $escapetool.xml($services.localization.render('xe.tag.notagsforspace', ["$tagCloudSpace"]))
   #end
   &lt;/p&gt;
 #end
@@ -480,9 +481,6 @@ $xwiki.ssx.use('XWiki.TagCloud')##
     </property>
     <property>
       <defaultCategories/>
-    </property>
-    <property>
-      <defaultCategory>Content</defaultCategory>
     </property>
     <property>
       <description>Displays the cloud of file tags in this wiki or in the specified space, if any.</description>
