@@ -345,8 +345,8 @@
   &lt;/div&gt;
   &lt;h3&gt;
     $escapetool.xml($services.localization.render(
-      'fileManager.action.upload.destinationFolder', ['__replace__']).replace('{{', '{​{').replace(
-        '__replace__', '{{drive.location.node.text}}'))
+      'fileManager.action.upload.destinationFolder', ['__replace__']).replace('{{', '{​{')).replace(
+        '__replace__', '{{drive.location.node.text}}')
   &lt;/h3&gt;
   &lt;input type="file" on-file-select="uploadFiles($files)" multiple
     folder-selection-enabled="folderSelectionEnabled" /&gt;
@@ -361,7 +361,7 @@
   &lt;ul class="uploads"&gt;
     &lt;li class="upload loading uploads-pending" ng-show="drive.uploads.pending.length &gt; 0"&gt;
       $escapetool.xml($services.localization.render('fileManager.action.upload.pendingUploadsCount',
-        ['__replace__']).replace('{{', '{​{').replace('__replace__', '{{drive.uploads.pending.length}}'))
+        ['__replace__']).replace('{{', '{​{')).replace('__replace__', '{{drive.uploads.pending.length}}')
     &lt;/li&gt;
     &lt;li class="upload" ng-repeat="upload in drive.uploads.running" file-upload-status="upload"&gt;&lt;/li&gt;
     &lt;li class="upload" ng-repeat="upload in drive.uploads.finished" file-upload-status="upload"&gt;&lt;/li&gt;
@@ -376,7 +376,7 @@
         ({{ upload.file.size | bytes }}) {{ upload.file.date | timeAgo }}
       &lt;/span&gt;
       $escapetool.xml($services.localization.render('fileManager.action.upload.destinationPath',
-        ['__replace__']).replace('{{', '{​{').replace('__replace__', '{{upload.path.join(" / ")}}'))
+        ['__replace__']).replace('{{', '{​{')).replace('__replace__', '{{upload.path.join(" / ")}}')
     &lt;/span&gt;
   &lt;/div&gt;
   &lt;div class="progress-container {{upload.status}}" ng-if="upload.status != 'Done'"&gt;
@@ -388,7 +388,7 @@
     &lt;div class="progress-info"&gt;
       &lt;span ng-if="upload.status == 'InProgress' &amp;&amp; upload.estimatedRemainingTime"&gt;
         $escapetool.xml($services.localization.render('fileManager.action.upload.estimatedRemainingTime',
-          ['__replace__']).replace('{{', '{​{').replace('__replace__', '{{ upload.estimatedRemainingTime | duration }}'))
+          ['__replace__']).replace('{{', '{​{')).replace('__replace__', '{{ upload.estimatedRemainingTime | duration }}')
         &amp;#8212;
       &lt;/span&gt;
       &lt;span ng-if="upload.status == 'Aborted'"&gt;
@@ -396,8 +396,8 @@
         &amp;#8212;
       &lt;/span&gt;
       $escapetool.xml($services.localization.render('fileManager.action.upload.bytesSent',
-        ['__replace1__', '__replace2__']).replace('{{', '{​{').replace(
-          '__replace1__', '{{ upload.loaded | bytes }}').replace('__replace2__', '{{ upload.total | bytes }}'))
+        ['__replace1__', '__replace2__']).replace('{{', '{​{')).replace(
+          '__replace1__', '{{ upload.loaded | bytes }}').replace('__replace2__', '{{ upload.total | bytes }}')
     &lt;/div&gt;
   &lt;/div&gt;
 #end
