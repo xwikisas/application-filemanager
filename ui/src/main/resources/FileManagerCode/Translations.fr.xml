@@ -54,6 +54,7 @@ fileManager.action.download.buildingPackage=Création du paquet...
 fileManager.action.downloadFilesHint=Télécharger les fichiers sélectionnés
 fileManager.action.recentDownloads=Téléchargements récents
 fileManager.action.noRecentDownloads=Pas de téléchargements récents
+fileManager.action.noRecentTasks=Pas de tâches récentes
 fileManager.action.cut=Couper
 fileManager.action.cutFilesHint=Couper les fichiers sélectionnés
 fileManager.action.cut.notification.inprogress=Déplacement de {1} fichiers vers {0}... ({2}%)
