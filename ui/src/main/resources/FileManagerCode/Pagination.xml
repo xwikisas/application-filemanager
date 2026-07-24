@@ -47,12 +47,12 @@
         $escapetool.xml($services.localization.render('platform.livetable.paginationResultsOne'))
       &lt;/span&gt;
       &lt;span ng-if="totalCount &gt; 1 &amp;&amp; from == totalCount"&gt;
-        $escapetool.xml($services.localization.render('platform.livetable.paginationResultsSingle',
-          ['{{from}}', '{{totalCount}}']))
+        $services.localization.render('platform.livetable.paginationResultsSingle',
+          ['{{from}}', '{{totalCount}}'])
       &lt;/span&gt;
       &lt;span ng-if="totalCount &gt; 1 &amp;&amp; from != totalCount"&gt;
-        $escapetool.xml($services.localization.render('platform.livetable.paginationResultsMany',
-          ['{{from}}', '{{to}}', '{{totalCount}}']))
+        $services.localization.render('platform.livetable.paginationResultsMany',
+          ['{{from}}', '{{to}}', '{{totalCount}}'])
       &lt;/span&gt;
     &lt;/span&gt;
 
