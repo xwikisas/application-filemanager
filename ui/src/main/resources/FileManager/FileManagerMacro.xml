@@ -267,7 +267,7 @@
 #end
 #if ($attach)
  &lt;div&gt;
-   &lt;span class="mime"&gt;#mimetypeimg($attach.getMimeType().toLowerCase() $attach.getFilename().toLowerCase())&lt;/span&gt;
+   &lt;span class="mime"&gt;#mimetypeimg($escapetool.xml($attach.getMimeType().toLowerCase()) $escapetool.xml($attach.getFilename().toLowerCase()))&lt;/span&gt;
    &lt;span class="name"&gt;&lt;a href="$escapetool.xml($pagedoc.getURL("view"))" title="$escapetool.xml($services.localization.render('core.viewers.attachments.download'))"&gt;$escapetool.xml($attach.filename)&lt;/a&gt;&lt;/span&gt;
  &lt;/div&gt;
  &lt;div&gt;
