@@ -452,7 +452,7 @@
     #set ($fileUrl = $fileDoc.getURL('view'))
     #set ($creatorUrl = $xwiki.getDocument($file.creator).getURL('view'))
     * {{html clean='false'}}
-      #mimetypeimg($file.mediaType.toLowerCase() $file.name.toLowerCase())
+      #mimetypeimg($escapetool.xml($file.mediaType.toLowerCase()) $escapetool.xml($file.name.toLowerCase()))
       &lt;a href="$fileUrl" title="$escapetool.xml($folders)"&gt;$escapetool.xml($file.name)&lt;/a&gt;
       &lt;span&gt;$escapetool.xml($services.localization.render('fileManager.recentFiles.creator'))&lt;/span&gt;
       &lt;a href="$creatorUrl"&gt;$xwiki.getUserName($file.creator, false)&lt;/a&gt;

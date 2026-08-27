@@ -211,9 +211,9 @@
     #if (!$language)
       #set ($language = 'none')
     #end
-    {{code language="$services.rendering.escape($language, 'xwiki/2.1')"}}
-    $attachment.contentAsString
-    {{/code}}
+    #set ($attachmentReference = $services.model.createAttachmentReference($doc.documentReference, $attachment.filename))
+    #set ($sourceReference = $services.model.serialize($attachmentReference, 'compact', $doc.documentReference))
+    {{code language="$services.rendering.escape($language, 'xwiki/2.1')" source="attachment:$services.rendering.escape($sourceReference, 'xwiki/2.1')" /}}
   #else
     {{info}}Text file too large to display.{{/info}}
   #end

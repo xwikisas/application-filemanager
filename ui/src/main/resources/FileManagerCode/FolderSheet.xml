@@ -107,13 +107,16 @@
   #foreach ($childFolder in $folders.list)
     #set ($reference = $services.model.createDocumentReference($childFolder.id,
       $doc.documentReference.lastSpaceReference))
-    * [[image:icon:folder||class="icon"]] [[$childFolder.name&gt;&gt;$reference]]
+    #set ($escapedFolderName = $services.rendering.escape($services.rendering.escape($childFolder.name,
+      'xwiki/2.1'), 'xwiki/2.1'))
+    * [[image:icon:folder||class="icon"]] [[$escapedFolderName&gt;&gt;$reference]]
   #end
   ## List the child files.
   #getChildFiles($doc $files)
   #foreach ($file in $files.list)
     #set ($reference = $services.model.createDocumentReference($file.id, $doc.documentReference.lastSpaceReference))
-    * {{html}}#mimetypeimg($file.mediaType.toLowerCase() $file.name.toLowerCase()){{/html}} [[$file.name&gt;&gt;$reference]]
+    #set ($escapedFileName = $services.rendering.escape($services.rendering.escape($file.name, 'xwiki/2.1'), 'xwiki/2.1'))
+    * {{html}}#mimetypeimg($escapetool.xml($file.mediaType.toLowerCase()) $escapetool.xml($file.name.toLowerCase())){{/html}} [[$escapedFileName&gt;&gt;$reference]]
   #end
   )))
 #end

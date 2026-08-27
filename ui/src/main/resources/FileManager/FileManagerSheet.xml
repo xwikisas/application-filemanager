@@ -40,8 +40,12 @@
 #set($url = "$xwiki.getURL($doc.getDocument(), 'view', 'change=true')#Attachments")
 #set($change = $request.change)
 #if($request.description)
-  $doc.set('description', $request.description)
-  $doc.save()
+  #if($services.csrf.isTokenValid($request.form_token))
+    $doc.set('description', $request.description)
+    $doc.save()
+  #else
+    $response.sendRedirect($services.csrf.getResubmissionURL())
+  #end
 #end
 
 {{html wiki="true"}}
@@ -60,7 +64,7 @@ $xwiki.ssx.use('FileManager.SkinExtension')
   #set($filename = "")
   #set($pdf='')
   #foreach($attach in $doc.getAttachmentList())
-    &lt;p&gt;&lt;a href="$doc.getAttachmentURL($attach.filename)"&gt;${attach.filename}&lt;/a&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;a href="$escapetool.xml($doc.getAttachmentURL($attach.filename))"&gt;$escapetool.xml($attach.filename)&lt;/a&gt;&lt;/p&gt;
     #if($attach.filename.endsWith(".ppt")||$attach.filename.endsWith(".odp")||$attach.filename.endsWith(".ods")||$attach.filename.endsWith(".pptx")||$attach.filename.endsWith(".xls") ||$attach.filename.endsWith(".xlsx")||$attach.filename.endsWith(".odt")||$attach.filename.endsWith(".doc")||$attach.filename.endsWith(".docx"))
       #set($filename = $attach.filename)
     #end
@@ -81,9 +85,10 @@ $xwiki.ssx.use('FileManager.SkinExtension')
   #end
 #elseif($change)
   &lt;form action='$doc.getURL('view')' method='post'&gt;
+    &lt;input type='hidden' name='form_token' value="$escapetool.xml($!services.csrf.token)" /&gt;
     &lt;div&gt;
        &lt;label for='description'&gt;**$msg.get('contrib.FM.description')** : &lt;/label&gt; &lt;br&gt;
-       &lt;textarea name='description' rows='4' cols='60'&gt;$!doc.getValue('description')&lt;/textarea&gt;
+       &lt;textarea name='description' rows='4' cols='60'&gt;$escapetool.xml($!doc.getValue('description'))&lt;/textarea&gt;
     &lt;/div&gt;
     &lt;br&gt;
     &lt;div id='bottom'&gt;
@@ -92,8 +97,12 @@ $xwiki.ssx.use('FileManager.SkinExtension')
     &lt;/div&gt;
   &lt;/form&gt;
 #else
-   $doc.save()
-   $response.sendRedirect($url)
+  #if($services.csrf.isTokenValid($request.form_token))
+    $doc.save()
+    $response.sendRedirect($url)
+  #else
+    $response.sendRedirect($services.csrf.getResubmissionURL())
+  #end
 #end
 {{/html}}
 {{/velocity}}</content>
