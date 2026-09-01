@@ -59,7 +59,7 @@ $xwiki.ssx.use('FileManager.SkinExtension')
     ; &lt;label  for="FileManager.FileManagerClass_0_description"&gt;Description&lt;/label&gt;
     : $doc.display('description')
   #else
-    //$msg.get('contrib.FM.noDescription')//
+    //$escapetool.xml($services.localization.render('contrib.FM.noDescription'))//
   #end
   #set($filename = "")
   #set($pdf='')
@@ -81,19 +81,19 @@ $xwiki.ssx.use('FileManager.SkinExtension')
     {{pdfviewer file="$pdf" /}}
 
   #elseif($doc.getAttachmentList().size() == 0)
-    &lt;p&gt;//$msg.get('contrib.FM.noAttachment')//&lt;/p&gt;
+    &lt;p&gt;//$escapetool.xml($services.localization.render('contrib.FM.noAttachment'))//&lt;/p&gt;
   #end
 #elseif($change)
   &lt;form action='$doc.getURL('view')' method='post'&gt;
     &lt;input type='hidden' name='form_token' value="$escapetool.xml($!services.csrf.token)" /&gt;
     &lt;div&gt;
-       &lt;label for='description'&gt;**$msg.get('contrib.FM.description')** : &lt;/label&gt; &lt;br&gt;
+       &lt;label for='description'&gt;**$escapetool.xml($services.localization.render('contrib.FM.description'))** : &lt;/label&gt; &lt;br&gt;
        &lt;textarea name='description' rows='4' cols='60'&gt;$escapetool.xml($!doc.getValue('description'))&lt;/textarea&gt;
     &lt;/div&gt;
     &lt;br&gt;
     &lt;div id='bottom'&gt;
-       &lt;p&gt;&lt;label&gt;$msg.get('contrib.FM.change.explanations')&lt;/label&gt;&lt;/p&gt;
-       &lt;input type='submit' class='button' value="$msg.get('contrib.FM.editDescription')"&gt;
+       &lt;p&gt;&lt;label&gt;$escapetool.xml($services.localization.render('contrib.FM.change.explanations'))&lt;/label&gt;&lt;/p&gt;
+       &lt;input type='submit' class='button' value="$escapetool.xml($services.localization.render('contrib.FM.editDescription'))"&gt;
     &lt;/div&gt;
   &lt;/form&gt;
 #else
