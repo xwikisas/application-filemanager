@@ -81,17 +81,17 @@ $xwiki.ssx.use('FileManager.SkinExtension')
 
   #if($filename!="")
 
-{{office attachment="${filename}" filterStyles="false"/}}
+{{office attachment="$services.rendering.escape($filename, 'xwiki/2.1')" filterStyles="false"/}}
 
   #elseif($pdf!='')
 
-{{pdfviewer file="$pdf" /}}
+{{pdfviewer file="$services.rendering.escape($pdf, 'xwiki/2.1')" /}}
 
   #end
 #elseif($change)
 
   {{html}}
-  &lt;form action='$doc.getURL("view")' method='post'&gt;
+  &lt;form action='$escapetool.xml($doc.getURL("view"))' method='post'&gt;
     &lt;input type='hidden' name='form_token' value="$escapetool.xml($!services.csrf.token)" /&gt;
     &lt;div&gt;
        &lt;label for='description'&gt;&lt;strong&gt;$escapetool.xml($services.localization.render('contrib.FM.description'))&lt;/strong&gt; : &lt;/label&gt; &lt;br&gt;
