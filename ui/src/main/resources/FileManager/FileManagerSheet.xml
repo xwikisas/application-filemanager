@@ -106,7 +106,7 @@ $xwiki.ssx.use('FileManager.SkinExtension')
   {{/html}}
 
 #else
-  #if($doc.isNew &amp;&amp; $services.csrf.isTokenValid($request.form_token))
+  #if($doc.isNew() &amp;&amp; $services.csrf.isTokenValid($request.form_token))
     $doc.save()
   #end
   $response.sendRedirect($url)
