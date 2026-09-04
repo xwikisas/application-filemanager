@@ -43,6 +43,7 @@
   #if($services.csrf.isTokenValid($request.form_token))
     $doc.set('description', $request.description)
     $doc.save()
+    $response.sendRedirect($doc.getURL('view'))
   #else
     $response.sendRedirect($services.csrf.getResubmissionURL())
   #end
@@ -105,12 +106,10 @@ $xwiki.ssx.use('FileManager.SkinExtension')
   {{/html}}
 
 #else
-  #if($services.csrf.isTokenValid($request.form_token))
+  #if($doc.isNew &amp;&amp; $services.csrf.isTokenValid($request.form_token))
     $doc.save()
-    $response.sendRedirect($url)
-  #else
-    $response.sendRedirect($services.csrf.getResubmissionURL())
   #end
+  $response.sendRedirect($url)
 #end
 {{/velocity}}</content>
 </xwikidoc>
