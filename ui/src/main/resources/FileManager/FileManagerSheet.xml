@@ -43,26 +43,28 @@
   #if($services.csrf.isTokenValid($request.form_token))
     $doc.set('description', $request.description)
     $doc.save()
+    $response.sendRedirect($doc.getURL('view'))
   #else
     $response.sendRedirect($services.csrf.getResubmissionURL())
   #end
 #end
-
-{{html wiki="true"}}
 $xwiki.ssx.use('AppWithinMinutes.ClassSheetGenerator')
 $xwiki.ssx.use('FileManager.SkinExtension')
-
 #set($discard = $doc.use('FileManager.FileManagerClass'))
 ## We don't have access to the form element to set the CSS class for the vertical form layout standard.
-#if($context.action=="view" &amp;&amp; !$change)  ##For viewing the document
+#if($context.action=="view" &amp;&amp; !$change)##For viewing the document
   #if($!doc.display('description')!='')
-    ; &lt;label  for="FileManager.FileManagerClass_0_description"&gt;Description&lt;/label&gt;
-    : $doc.display('description')
+    **Description:** $doc.display('description')
   #else
-    //$msg.get('contrib.FM.noDescription')//
+    {{html}}
+    &lt;p&gt;&lt;em&gt;$escapetool.xml($services.localization.render('contrib.FM.noDescription'))&lt;/em&gt;&lt;/p&gt;
+    {{/html}}
   #end
+
   #set($filename = "")
   #set($pdf='')
+
+  {{html}}
   #foreach($attach in $doc.getAttachmentList())
     &lt;p&gt;&lt;a href="$escapetool.xml($doc.getAttachmentURL($attach.filename))"&gt;$escapetool.xml($attach.filename)&lt;/a&gt;&lt;/p&gt;
     #if($attach.filename.endsWith(".ppt")||$attach.filename.endsWith(".odp")||$attach.filename.endsWith(".ods")||$attach.filename.endsWith(".pptx")||$attach.filename.endsWith(".xls") ||$attach.filename.endsWith(".xlsx")||$attach.filename.endsWith(".odt")||$attach.filename.endsWith(".doc")||$attach.filename.endsWith(".docx"))
@@ -71,39 +73,43 @@ $xwiki.ssx.use('FileManager.SkinExtension')
     #if($attach.filename.endsWith('.pdf'))
       #set($pdf = $attach.filename)
     #end
-  #end 
+  #end
+  #if($doc.getAttachmentList().size() == 0)
+    &lt;p&gt;&lt;em&gt;$escapetool.xml($services.localization.render('contrib.FM.noAttachment'))&lt;/em&gt;&lt;/p&gt;
+  #end
+  {{/html}}
+
   #if($filename!="")
 
-    {{office attachment="${filename}" filterStyles="false"/}}
+{{office attachment="$services.rendering.escape($filename, 'xwiki/2.1')" filterStyles="false"/}}
 
   #elseif($pdf!='')
 
-    {{pdfviewer file="$pdf" /}}
+{{pdfviewer file="$services.rendering.escape($pdf, 'xwiki/2.1')" /}}
 
-  #elseif($doc.getAttachmentList().size() == 0)
-    &lt;p&gt;//$msg.get('contrib.FM.noAttachment')//&lt;/p&gt;
   #end
 #elseif($change)
-  &lt;form action='$doc.getURL('view')' method='post'&gt;
+
+  {{html}}
+  &lt;form action='$escapetool.xml($doc.getURL("view"))' method='post'&gt;
     &lt;input type='hidden' name='form_token' value="$escapetool.xml($!services.csrf.token)" /&gt;
     &lt;div&gt;
-       &lt;label for='description'&gt;**$msg.get('contrib.FM.description')** : &lt;/label&gt; &lt;br&gt;
+       &lt;label for='description'&gt;&lt;strong&gt;$escapetool.xml($services.localization.render('contrib.FM.description'))&lt;/strong&gt; : &lt;/label&gt; &lt;br&gt;
        &lt;textarea name='description' rows='4' cols='60'&gt;$escapetool.xml($!doc.getValue('description'))&lt;/textarea&gt;
     &lt;/div&gt;
     &lt;br&gt;
     &lt;div id='bottom'&gt;
-       &lt;p&gt;&lt;label&gt;$msg.get('contrib.FM.change.explanations')&lt;/label&gt;&lt;/p&gt;
-       &lt;input type='submit' class='button' value="$msg.get('contrib.FM.editDescription')"&gt;
+       &lt;p&gt;&lt;label&gt;$escapetool.xml($services.localization.render('contrib.FM.change.explanations'))&lt;/label&gt;&lt;/p&gt;
+       &lt;input type='submit' class='button' value="$escapetool.xml($services.localization.render('contrib.FM.editDescription'))"&gt;
     &lt;/div&gt;
   &lt;/form&gt;
+  {{/html}}
+
 #else
-  #if($services.csrf.isTokenValid($request.form_token))
+  #if($doc.isNew() &amp;&amp; $services.csrf.isTokenValid($request.form_token))
     $doc.save()
-    $response.sendRedirect($url)
-  #else
-    $response.sendRedirect($services.csrf.getResubmissionURL())
   #end
+  $response.sendRedirect($url)
 #end
-{{/html}}
 {{/velocity}}</content>
 </xwikidoc>

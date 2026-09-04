@@ -217,28 +217,28 @@
   #set ($columns = [
     {
       'id': 'name',
-      'title': $services.localization.render('fileManager.liveTable.name').replace('{{', '{​{'),
+      'title': $services.localization.render('fileManager.liveTable.name').replace('{', '{​'),
       'type': 'file',
       'sortable': true,
       'filterable': true
     }, {
       'id': 'size',
-      'title': $services.localization.render('fileManager.liveTable.size').replace('{{', '{​{'),
+      'title': $services.localization.render('fileManager.liveTable.size').replace('{', '{​'),
       'type': 'bytes',
       'sortable': true
     }, {
       'id': 'mediaType',
-      'title': $services.localization.render('fileManager.liveTable.type').replace('{{', '{​{'),
+      'title': $services.localization.render('fileManager.liveTable.type').replace('{', '{​'),
       'type': 'mediaType'
     }, {
       'id': 'date',
-      'title': $services.localization.render('fileManager.liveTable.date').replace('{{', '{​{'),
+      'title': $services.localization.render('fileManager.liveTable.date').replace('{', '{​'),
       'type': 'date',
       'sortable': true,
       'filterable': true
     }, {
       'id': 'author',
-      'title': $services.localization.render('fileManager.liveTable.author').replace('{{', '{​{'),
+      'title': $services.localization.render('fileManager.liveTable.author').replace('{', '{​'),
       'type': 'user',
       'sortable': true,
       'filterable': true
@@ -249,74 +249,74 @@
     &lt;div class="btn-group" ng-show="drive.location.type == 'drive' || drive.location.type == 'folder'"&gt;
       &lt;button class="btn btn-default" ng-disabled="drive.readOnly || !drive.location.node.data.canCreate"
           ng-click="drive.viewer = 'upload'" type="button"
-          title="$escapetool.xml($services.localization.render('fileManager.action.newFileHint').replace('{{', '{​{'))"&gt;
+          title="$escapetool.xml($services.localization.render('fileManager.action.newFileHint').replace('{', '{​'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_add.png')" class="icon"
           alt="" /&gt;
-        $escapetool.xml($services.localization.render('fileManager.action.newFile').replace('{{', '{​{'))
+        $escapetool.xml($services.localization.render('fileManager.action.newFile').replace('{', '{​'))
       &lt;/button&gt;
     &lt;/div&gt;&lt;div class="btn-group" dropdown&gt;
       &lt;button type="button" class="btn btn-default"
-          title="$escapetool.xml($services.localization.render('fileManager.action.downloadFilesHint').replace('{{', '{​{'))"
+          title="$escapetool.xml($services.localization.render('fileManager.action.downloadFilesHint').replace('{', '{​'))"
           ng-disabled="drive.readOnly || selectedFiles.length == 0" ng-click="download(selectedFiles)"
-          label="$escapetool.xml($services.localization.render('fileManager.action.download').replace('{{', '{​{'))"&gt;
+          label="$escapetool.xml($services.localization.render('fileManager.action.download').replace('{', '{​'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_put.png')" class="icon"
           alt="" /&gt;
-        $escapetool.xml($services.localization.render('fileManager.action.download').replace('{{', '{​{'))
+        $escapetool.xml($services.localization.render('fileManager.action.download').replace('{', '{​'))
       &lt;/button&gt;
       &lt;button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle
           label="$escapetool.xml($services.localization.render(
-            'fileManager.action.download.toggleOptions').replace('{{', '{​{'))"&gt;
+            'fileManager.action.download.toggleOptions').replace('{', '{​'))"&gt;
         &lt;span class="caret"&gt;&lt;/span&gt;
       &lt;/button&gt;
       &lt;ul class="dropdown-menu" role="menu"&gt;
         &lt;li&gt;
           &lt;a href="#" ng-click="drive.viewer = 'downloads'; $event.preventDefault()"&gt;
-            $escapetool.xml($services.localization.render('fileManager.action.recentDownloads').replace('{{', '{​{'))
+            $escapetool.xml($services.localization.render('fileManager.action.recentDownloads').replace('{', '{​'))
           &lt;/a&gt;
         &lt;/li&gt;
       &lt;/ul&gt;
     &lt;/div&gt;&lt;div class="btn-group"&gt;
       &lt;button type="button" class="btn btn-default"
-          title="$escapetool.xml($services.localization.render('fileManager.action.cutFilesHint').replace('{{', '{​{'))"
+          title="$escapetool.xml($services.localization.render('fileManager.action.cutFilesHint').replace('{', '{​'))"
           ng-disabled="drive.readOnly || !canCut(selectedFiles)" ng-click="cut(selectedFiles)"
-          label="$escapetool.xml($services.localization.render('fileManager.action.cut').replace('{{', '{​{'))" &gt;
+          label="$escapetool.xml($services.localization.render('fileManager.action.cut').replace('{', '{​'))" &gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/cut.png')" class="icon"
           alt="" /&gt;
-        $escapetool.xml($services.localization.render('fileManager.action.cut').replace('{{', '{​{'))
+        $escapetool.xml($services.localization.render('fileManager.action.cut').replace('{', '{​'))
       &lt;/button&gt;
       &lt;button type="button" class="btn btn-default"
-          title="$escapetool.xml($services.localization.render('fileManager.action.copyFilesHint').replace('{{', '{​{'))"
+          title="$escapetool.xml($services.localization.render('fileManager.action.copyFilesHint').replace('{', '{​'))"
           ng-disabled="drive.readOnly || !canCopy(selectedFiles)" ng-click="copy(selectedFiles)"
-          label="$escapetool.xml($services.localization.render('fileManager.action.copy').replace('{{', '{​{'))"&gt;
+          label="$escapetool.xml($services.localization.render('fileManager.action.copy').replace('{', '{​'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_copy.png')" class="icon"
           alt="" /&gt;
-        $escapetool.xml($services.localization.render('fileManager.action.copy').replace('{{', '{​{'))
+        $escapetool.xml($services.localization.render('fileManager.action.copy').replace('{', '{​'))
       &lt;/button&gt;
       &lt;button type="button" class="btn btn-default"
-          title="$escapetool.xml($services.localization.render('fileManager.action.pasteHint').replace('{{', '{​{'))"
+          title="$escapetool.xml($services.localization.render('fileManager.action.pasteHint').replace('{', '{​'))"
           ng-if="drive.location.type == 'drive' || drive.location.type == 'folder'"
           ng-disabled="!clipboard" ng-click="paste()"
-          label="$escapetool.xml($services.localization.render('fileManager.action.paste').replace('{{', '{​{'))"&gt;
+          label="$escapetool.xml($services.localization.render('fileManager.action.paste').replace('{', '{​'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/page_white_paste.png')" class="icon"
           alt="" /&gt;
-        $escapetool.xml($services.localization.render('fileManager.action.paste').replace('{{', '{​{'))
+        $escapetool.xml($services.localization.render('fileManager.action.paste').replace('{', '{​'))
       &lt;/button&gt;
     &lt;/div&gt;&lt;div class="btn-group"&gt;
       &lt;button type="button" class="btn btn-default"
-          title="$escapetool.xml($services.localization.render('fileManager.action.renameFileHint').replace('{{', '{​{'))"
+          title="$escapetool.xml($services.localization.render('fileManager.action.renameFileHint').replace('{', '{​'))"
           ng-disabled="drive.readOnly || selectedFiles.length != 1 || !selectedFiles[0].canRename"
-          ng-click="rename(selectedFiles[0])" label="$escapetool.xml($services.localization.render('fileManager.action.rename').replace('{{', '{​{'))"&gt;
+          ng-click="rename(selectedFiles[0])" label="$escapetool.xml($services.localization.render('fileManager.action.rename').replace('{', '{​'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/textfield_rename.png')" class="icon"
           alt="" /&gt;
-        $escapetool.xml($services.localization.render('fileManager.action.rename').replace('{{', '{​{'))
+        $escapetool.xml($services.localization.render('fileManager.action.rename').replace('{', '{​'))
       &lt;/button&gt;
       &lt;button type="button" class="btn btn-default"
-          title="$escapetool.xml($services.localization.render('fileManager.action.deleteFilesHint').replace('{{', '{​{'))"
+          title="$escapetool.xml($services.localization.render('fileManager.action.deleteFilesHint').replace('{', '{​'))"
           ng-disabled="drive.readOnly || !canDelete(selectedFiles)" ng-click="delete(selectedFiles)"
-          label="$escapetool.xml($services.localization.render('fileManager.action.delete').replace('{{', '{​{'))"&gt;
+          label="$escapetool.xml($services.localization.render('fileManager.action.delete').replace('{', '{​'))"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/cross.png')" class="icon"
           alt="" /&gt;
-        $escapetool.xml($services.localization.render('fileManager.action.delete').replace('{{', '{​{'))
+        $escapetool.xml($services.localization.render('fileManager.action.delete').replace('{', '{​'))
       &lt;/button&gt;
     &lt;/div&gt;
   &lt;/div&gt;
@@ -331,40 +331,40 @@
   &lt;div class="btn-toolbar" role="toolbar"&gt;
     &lt;div class="btn-group"&gt;
       &lt;button type="button" class="btn btn-default"
-          title="$escapetool.xml($services.localization.render('fileManager.action.backToFileList').replace('{{', '{​{'))"
+          title="$escapetool.xml($services.localization.render('fileManager.action.backToFileList').replace('{', '{​'))"
           ng-if="back" ng-click="back()"&gt;
         &lt;img src="$xwiki.getSkinFile('icons/silk/arrow_left.png')" class="icon"
           alt="" /&gt;
-        $escapetool.xml($services.localization.render('fileManager.action.back').replace('{{', '{​{'))
+        $escapetool.xml($services.localization.render('fileManager.action.back').replace('{', '{​'))
       &lt;/button&gt;
     &lt;/div&gt;
     &lt;div class="btn-group"&gt;
       &lt;button type="button" class="btn btn-default"
-          title="$escapetool.xml($services.localization.render('fileManager.action.clearUploadStatus').replace('{{', '{​{'))"
+          title="$escapetool.xml($services.localization.render('fileManager.action.clearUploadStatus').replace('{', '{​'))"
           ng-if="drive.uploads.finished.length &gt; 0" ng-click="clearUploads()"&gt;
-        $escapetool.xml($services.localization.render('fileManager.action.clear').replace('{{', '{​{'))
+        $escapetool.xml($services.localization.render('fileManager.action.clear').replace('{', '{​'))
       &lt;/button&gt;
     &lt;/div&gt;
   &lt;/div&gt;
   &lt;h3&gt;
     $escapetool.xml($services.localization.render(
-      'fileManager.action.upload.destinationFolder', ['__replace__']).replace('{{', '{​{')).replace(
+      'fileManager.action.upload.destinationFolder', ['__replace__']).replace('{', '{​')).replace(
         '__replace__', '{{drive.location.node.text}}')
   &lt;/h3&gt;
   &lt;input type="file" on-file-select="uploadFiles($files)" multiple
     folder-selection-enabled="folderSelectionEnabled" /&gt;
   &lt;label ng-show="folderSelectionSupported"&gt;
     &lt;input type="checkbox" ng-model="folderSelectionEnabled" /&gt;
-    $escapetool.xml($services.localization.render('fileManager.action.upload.enableFolderSelection').replace('{{', '{​{'))
+    $escapetool.xml($services.localization.render('fileManager.action.upload.enableFolderSelection').replace('{', '{​'))
   &lt;/label&gt;
   &lt;div ng-if="dropSupported" on-file-drop="uploadFiles($files)" drag-over-class="active"
       class="file-drop-zone"&gt;
-    $escapetool.xml($services.localization.render('fileManager.action.upload.dropZoneHint').replace('{{', '{​{'))
+    $escapetool.xml($services.localization.render('fileManager.action.upload.dropZoneHint').replace('{', '{​'))
   &lt;/div&gt;
   &lt;ul class="uploads"&gt;
     &lt;li class="upload loading uploads-pending" ng-show="drive.uploads.pending.length &gt; 0"&gt;
       $escapetool.xml($services.localization.render('fileManager.action.upload.pendingUploadsCount',
-        ['__replace__']).replace('{{', '{​{')).replace('__replace__', '{{drive.uploads.pending.length}}')
+        ['__replace__']).replace('{', '{​')).replace('__replace__', '{{drive.uploads.pending.length}}')
     &lt;/li&gt;
     &lt;li class="upload" ng-repeat="upload in drive.uploads.running" file-upload-status="upload"&gt;&lt;/li&gt;
     &lt;li class="upload" ng-repeat="upload in drive.uploads.finished" file-upload-status="upload"&gt;&lt;/li&gt;
@@ -379,19 +379,19 @@
         ({{ upload.file.size | bytes }}) {{ upload.file.date | timeAgo }}
       &lt;/span&gt;
       $escapetool.xml($services.localization.render('fileManager.action.upload.destinationPath',
-        ['__replace__']).replace('{{', '{​{')).replace('__replace__', '{{upload.path.join(" / ")}}')
+        ['__replace__']).replace('{', '{​')).replace('__replace__', '{{upload.path.join(" / ")}}')
     &lt;/span&gt;
   &lt;/div&gt;
   &lt;div class="progress-container {{upload.status}}" ng-if="upload.status != 'Done'"&gt;
     &lt;xprogress value="{{upload.loaded}}" max="{{upload.total}}"&gt;&lt;/xprogress&gt;
     &lt;input type="image" src="$xwiki.getSkinFile('icons/silk/cancel.png')" ng-if="upload.status == 'InProgress'"
       class="cancel icon"
-      title="$escapetool.xml($services.localization.render('fileManager.action.upload.cancelHint').replace('{{', '{​{'))"
+      title="$escapetool.xml($services.localization.render('fileManager.action.upload.cancelHint').replace('{', '{​'))"
       ng-click="upload.abort()" /&gt;
     &lt;div class="progress-info"&gt;
       &lt;span ng-if="upload.status == 'InProgress' &amp;&amp; upload.estimatedRemainingTime"&gt;
         $escapetool.xml($services.localization.render('fileManager.action.upload.estimatedRemainingTime',
-          ['__replace__']).replace('{{', '{​{')).replace('__replace__', '{{ upload.estimatedRemainingTime | duration }}')
+          ['__replace__']).replace('{', '{​')).replace('__replace__', '{{ upload.estimatedRemainingTime | duration }}')
         &amp;#8212;
       &lt;/span&gt;
       &lt;span ng-if="upload.status == 'Aborted'"&gt;
@@ -399,7 +399,7 @@
         &amp;#8212;
       &lt;/span&gt;
       $escapetool.xml($services.localization.render('fileManager.action.upload.bytesSent',
-        ['__replace1__', '__replace2__']).replace('{{', '{​{')).replace(
+        ['__replace1__', '__replace2__']).replace('{', '{​')).replace(
           '__replace1__', '{{ upload.loaded | bytes }}').replace('__replace2__', '{{ upload.total | bytes }}')
     &lt;/div&gt;
   &lt;/div&gt;
@@ -410,14 +410,14 @@
     &lt;div class="btn-toolbar" role="toolbar"&gt;
       &lt;div class="btn-group"&gt;
         &lt;button type="button" class="btn btn-default" ng-click="drive.viewer = 'files'"
-            title="$escapetool.xml($services.localization.render('fileManager.action.backToFileList').replace('{{', '{​{'))"&gt;
+            title="$escapetool.xml($services.localization.render('fileManager.action.backToFileList').replace('{', '{​'))"&gt;
           &lt;img src="$xwiki.getSkinFile('icons/silk/arrow_left.png')" class="icon"
             alt="" /&gt;
-          $escapetool.xml($services.localization.render('fileManager.action.back').replace('{{', '{​{'))
+          $escapetool.xml($services.localization.render('fileManager.action.back').replace('{', '{​'))
         &lt;/button&gt;
       &lt;/div&gt;
     &lt;/div&gt;
-    &lt;h3&gt;$escapetool.xml($services.localization.render('fileManager.action.recentDownloads').replace('{{', '{​{'))&lt;/h3&gt;
+    &lt;h3&gt;$escapetool.xml($services.localization.render('fileManager.action.recentDownloads').replace('{', '{​'))&lt;/h3&gt;
     &lt;ul class="downloads"&gt;
       &lt;li class="download"
           ng-repeat="download in downloadsInProgress = (drive.jobs | filter:isDownloadReady(false))"&gt;
@@ -431,7 +431,7 @@
         &lt;div class="progress-container"&gt;
           &lt;xprogress value="{{download.progress.offset}}" max="1"&gt;&lt;/xprogress&gt;
           &lt;div class="progress-info"&gt;
-            $escapetool.xml($services.localization.render('fileManager.action.download.buildingPackage').replace('{{', '{​{'))
+            $escapetool.xml($services.localization.render('fileManager.action.download.buildingPackage').replace('{', '{​'))
           &lt;/div&gt;
         &lt;/div&gt;
       &lt;/li&gt;
@@ -443,7 +443,7 @@
         &lt;/span&gt;
       &lt;/li&gt;
       &lt;li class="download" ng-show="downloadsInProgress.length == 0 &amp;&amp; downloadsReady.length == 0"&gt;
-        $escapetool.xml($services.localization.render('fileManager.action.noRecentDownloads').replace('{{', '{​{'))
+        $escapetool.xml($services.localization.render('fileManager.action.noRecentDownloads').replace('{', '{​'))
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/div&gt;
@@ -452,7 +452,7 @@
 #macro (maybeDisplayJobs)
   &lt;ul ng-cloak ng-if="drive.location.type == 'jobs'" class="jobs"&gt;
     &lt;li ng-if="drive.jobs.length == 0"&gt;
-      $escapetool.xml($services.localization.render('fileManager.action.noRecentTasks').replace('{{', '{​{'))
+      $escapetool.xml($services.localization.render('fileManager.action.noRecentTasks').replace('{', '{​'))
     &lt;/li&gt;
     &lt;li class="job" ng-repeat="job in drive.jobs | filter:{state: '!FINISHED'}:true"&gt;
       #displayJob
